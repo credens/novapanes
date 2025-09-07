@@ -1,0 +1,245 @@
+/* General Body Styles */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #FEFBF5;
+    color: #000;
+    overflow-x: hidden; /* Prevents horizontal scrollbar */
+}
+
+/* Header and Navigation */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 50px;
+    flex-wrap: wrap; /* Allows nav to wrap on smaller screens */
+}
+
+.main-nav {
+    display: flex;
+    gap: 40px;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+}
+
+.logo {
+    margin: 0 50px;
+}
+
+.logo img {
+    width: 150px;
+}
+
+/* Hero Section */
+.hero-background {
+    background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
+    padding-bottom: 100px;
+}
+
+.hero-section {
+    position: relative;
+    display: flex; /* Changed for better control */
+    align-items: center; /* Vertically align text and image */
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 50px;
+}
+
+.hero-text {
+    flex: 1; /* Allows text to take available space */
+    z-index: 10; /* Ensures text is above image if they overlap */
+}
+
+.hero-text h1 {
+    font-family: 'Lora', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    max-width: 700px;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.hero-image {
+    /* Removed absolute positioning for a more flexible layout */
+    flex-shrink: 0; /* Prevents the image from shrinking */
+    margin-left: -100px; /* Creates the overlap effect */
+}
+
+.hero-image img {
+    /* Set max-width for responsiveness and kept a good base size */
+    max-width: 100%;
+    width: 550px; 
+    height: auto; /* Maintain aspect ratio */
+}
+
+
+/* Bottom Section: Form and Map */
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 50px;
+    gap: 100px;
+}
+
+.contact-form-container,
+.contact-info-container {
+    flex: 1;
+    min-width: 280px; /* Prevents them from getting too squished */
+}
+
+h2 {
+    font-family: 'Lora', serif;
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+/* Contact Form */
+.contact-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form-container input,
+.contact-form-container textarea {
+    border: 1px solid #000;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    background-color: transparent;
+}
+
+.contact-form-container button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* Contact Info & Map */
+.map-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.map-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.map-link {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    color: #000;
+    font-size: 0.9rem;
+}
+
+/* --- RESPONSIVE STYLES --- */
+
+/* For Tablets and Smaller Desktops */
+@media (max-width: 1024px) {
+    .hero-section {
+        flex-direction: column; /* Stack text and image vertically */
+        text-align: center;
+    }
+
+    .hero-text h1 {
+        font-size: 4rem; /* Reduce font size */
+        max-width: 100%; /* Allow text to take full width */
+    }
+
+    .hero-image {
+        margin: 40px 0 0 0; /* Remove overlap and add space at the top */
+    }
+
+    .hero-image img {
+        width: 450px; /* Adjust image size for tablets */
+    }
+
+    .bottom-section {
+        gap: 50px;
+    }
+}
+
+
+/* For Mobile Phones */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .logo {
+        margin: 0;
+        order: -1; /* Move logo to the top */
+    }
+    
+    .hero-section {
+        padding: 0 20px;
+        margin-top: 20px;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5rem; /* Further reduce font size for mobile */
+    }
+
+    .hero-image img {
+        width: 100%; /* Make image take full width of its container */
+        max-width: 350px;
+    }
+
+    .bottom-section {
+        flex-direction: column; /* Stack form and map vertically */
+        padding: 0 20px;
+        margin-top: 60px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+}```
+
+### How to Deploy Your Changes
+
+Now that you've updated the code, follow the same Git workflow you learned to push the changes to your live site.
+
+1.  **Open your terminal** and navigate to your project directory.
+    ```bash
+    cd /path/to/your/nova-panes-site
+    ```
+
+2.  **Add** the modified CSS file to staging.
+    ```bash
+    git add styles.css
+    ```
+    *(You can also use `git add .` to add all changed files.)*
+
+3.  **Commit** the change with a clear message.
+    ```bash
+    git commit -m "Make website responsive for tablet and mobile"
+    ```
+
+4.  **Push** the commit to GitHub.
+    ```bash
+    git push
+    ```
+
+After a minute or two, your live website will be updated. You can test the responsiveness by resizing your browser window or by using the developer tools in your browser (usually by pressing `F12` or `Cmd+Option+I`).
