@@ -217,29 +217,66 @@ h2 {
     }
 }```
 
-### How to Deploy Your Changes
+/* --- PRODUCTS SECTION STYLES --- */
 
-Now that you've updated the code, follow the same Git workflow you learned to push the changes to your live site.
+.products-section {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 50px;
+    text-align: center;
+}
 
-1.  **Open your terminal** and navigate to your project directory.
-    ```bash
-    cd /path/to/your/nova-panes-site
-    ```
+.product-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
+    gap: 30px; /* Space between the cards */
+    margin-top: 40px;
+}
 
-2.  **Add** the modified CSS file to staging.
-    ```bash
-    git add styles.css
-    ```
-    *(You can also use `git add .` to add all changed files.)*
+.product-card {
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures the image corners are rounded */
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-3.  **Commit** the change with a clear message.
-    ```bash
-    git commit -m "Make website responsive for tablet and mobile"
-    ```
+.product-card:hover {
+    transform: translateY(-5px); /* Lifts the card up slightly on hover */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
 
-4.  **Push** the commit to GitHub.
-    ```bash
-    git push
-    ```
+.product-card img {
+    width: 100%;
+    height: 250px; /* Gives all images a uniform height */
+    object-fit: cover; /* Ensures images cover the area without distortion */
+    display: block;
+}
 
-After a minute or two, your live website will be updated. You can test the responsiveness by resizing your browser window or by using the developer tools in your browser (usually by pressing `F12` or `Cmd+Option+I`).
+.product-card h3 {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    margin: 20px;
+}
+
+
+/* --- RESPONSIVE STYLES FOR PRODUCTS --- */
+
+/* For Tablets */
+@media (max-width: 1024px) {
+    .product-gallery {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+    }
+    .products-section {
+        padding: 0 20px;
+    }
+}
+
+/* For Mobile Phones */
+@media (max-width: 768px) {
+    .product-gallery {
+        grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+}
