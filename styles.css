@@ -271,6 +271,84 @@ h2 {
     margin-bottom: 15px;
 }
 
+/* --- FLOATING MODAL STYLES --- */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: modalAppear 0.3s ease-out;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    display: block;
+}
+
+.modal-title {
+    padding: 20px;
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    text-align: center;
+    border-top: 1px solid #E0E0E0;
+    background-color: #f9f9f9;
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
 /* --- RESPONSIVE STYLES --- */
 
 /* For Tablets and Smaller Desktops (less than 1024px) */
@@ -354,50 +432,9 @@ h2 {
     .about-us-content p {
         font-size: 1rem;
     }
-}
 
-/* --- MODAL (FLOATING IMAGE) STYLES --- */
-
-.image-modal {
-    display: none; /* Hidden initially */
-    position: fixed; /* Makes the element "float" over everything else */
-    z-index: 1000;   /* Ensures it's on top of all other content */
-    left: 0;
-    top: 0;
-    width: 100%;     /* Covers the full screen */
-    height: 100%;
-    background-color: rgba(0,0,0,0.9); /* Dark, semi-transparent background */
-    align-items: center;
-    justify-content: center;
-}
-
-/* When the modal is shown, use flexbox for centering */
-.image-modal[style*="block"] {
-    display: flex !important;
-}
-
-.modal-content {
-    max-width: 90%;
-    max-height: 90vh;
-    object-fit: contain; /* Maintains aspect ratio */
-    border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-}
-
-.close-modal {
-    position: absolute;
-    top: 20px;
-    right: 35px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    z-index: 1001;
-}
-
-.close-modal:hover,
-.close-modal:focus {
-    color: #ccc;
-    text-decoration: none;
+    .modal-content-wrapper {
+        max-width: 95vw;
+        max-height: 95vh;
+    }
 }

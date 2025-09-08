@@ -43,32 +43,32 @@
         <div class="product-gallery">
             
             <div class="product-card">
-                <img src="productos/pan-de-papa-1.png" alt="Pan de papa con parmesano">
+                <img src="productos/pan-de-papa-1.png" alt="Pan de papa con parmesano" data-title="Pan de papa con parmesano">
                 <h3>Pan de papa con parmesano</h3>
             </div>
 
            <div class="product-card">
-                <img src="productos/lomito-1.jpg" alt="Pan de lomito / pancho doble con queso">
+                <img src="productos/lomito-1.jpg" alt="Pan de lomito / pancho doble con queso" data-title="Pan de lomito / pancho doble con queso">
                 <h3>Pan de lomito / pancho doble con queso</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/sesamo.jpg" alt="Pan de papa con sésamo">
+                <img src="productos/sesamo.jpg" alt="Pan de papa con sésamo" data-title="Pan de papa con sésamo">
                 <h3>Pan de papa con sésamo</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/pancho-1.png" alt="Pan de panchos">
+                <img src="productos/pancho-1.png" alt="Pan de panchos" data-title="Pan de panchos">
                 <h3>Pan de panchos</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional">
+                <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional" data-title="Pan de hamburguesa tradicional">
                 <h3>Pan de hamburguesa tradicional</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/pan-de-molde-1.png" alt="Pan de molde">
+                <img src="productos/pan-de-molde-1.png" alt="Pan de molde" data-title="Pan de molde">
                 <h3>Pan de molde</h3>
             </div>
 
@@ -109,40 +109,56 @@
         </div>
     </section>
 
-    <!-- The Modal/Lightbox for displaying images -->
+    <!-- The Floating Modal -->
     <div id="imageModal" class="image-modal">
         <span class="close-modal">&times;</span>
-        <img class="modal-content" id="modalImage">
+        <div class="modal-content-wrapper">
+            <img class="modal-image" id="modalImage">
+            <div class="modal-title" id="modalTitle"></div>
+        </div>
     </div>
 
     <script>
-        // Get the modal, the modal image, and the close button
+        // Get modal elements
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImage");
+        const modalTitle = document.getElementById("modalTitle");
         const closeModal = document.querySelector(".close-modal");
 
         // Get all product images
         const productImages = document.querySelectorAll(".product-card img");
 
-        // Loop through all product images and add a click event listener
+        // Add click event to all product images
         productImages.forEach(img => {
             img.addEventListener("click", function() {
                 modal.style.display = "block";
                 modalImg.src = this.src;
+                modalTitle.textContent = this.getAttribute("data-title") || this.alt;
+                
+                // Prevent body scrolling when modal is open
+                document.body.style.overflow = "hidden";
             });
         });
 
         // Function to close the modal
         function hideModal() {
             modal.style.display = "none";
+            document.body.style.overflow = "auto"; // Restore scrolling
         }
 
-        // When the user clicks on <span> (x), close the modal
+        // Close modal when clicking the X button
         closeModal.addEventListener("click", hideModal);
 
-        // When the user clicks anywhere on the modal background, close it
+        // Close modal when clicking outside the image
         modal.addEventListener("click", function(event) {
             if (event.target === modal) {
+                hideModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape" && modal.style.display === "block") {
                 hideModal();
             }
         });
