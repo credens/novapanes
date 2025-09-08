@@ -25,6 +25,11 @@ header {
     text-decoration: none;
     color: #000;
     font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: #B5651D; /* A subtle hover effect */
 }
 
 .logo {
@@ -77,6 +82,13 @@ header {
     height: auto; /* Maintain aspect ratio */
 }
 
+/* Section Divider */
+.section-divider {
+    border: none;
+    border-top: 1px solid #E0E0E0; /* Light gray line */
+    width: 80%; /* Adjust width as needed */
+    margin: 80px auto; /* Center the line and add vertical space */
+}
 
 /* Bottom Section: Form and Map */
 .bottom-section {
@@ -118,6 +130,11 @@ h2 {
     background-color: transparent;
 }
 
+.contact-form-container input::placeholder,
+.contact-form-container textarea::placeholder {
+    color: #666;
+}
+
 .contact-form-container button {
     background-color: #000;
     color: #fff;
@@ -127,20 +144,28 @@ h2 {
     font-size: 1rem;
     cursor: pointer;
     text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+.contact-form-container button:hover {
+    background-color: #333;
 }
 
 /* Contact Info & Map */
 .map-container {
-    border: 1px solid #ccc;
+    border: 1px solid #E0E0E0;
     padding: 10px;
     border-radius: 8px;
     text-align: center;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .map-container img {
     max-width: 100%;
     height: auto;
     display: block;
+    border-radius: 5px;
 }
 
 .map-link {
@@ -149,73 +174,14 @@ h2 {
     text-align: center;
     color: #000;
     font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-/* --- RESPONSIVE STYLES --- */
-
-/* For Tablets and Smaller Desktops */
-@media (max-width: 1024px) {
-    .hero-section {
-        flex-direction: column; /* Stack text and image vertically */
-        text-align: center;
-    }
-
-    .hero-text h1 {
-        font-size: 4rem; /* Reduce font size */
-        max-width: 100%; /* Allow text to take full width */
-    }
-
-    .hero-image {
-        margin: 40px 0 0 0; /* Remove overlap and add space at the top */
-    }
-
-    .hero-image img {
-        width: 450px; /* Adjust image size for tablets */
-    }
-
-    .bottom-section {
-        gap: 50px;
-    }
+.map-link:hover {
+    color: #B5651D;
 }
 
-
-/* For Mobile Phones */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .logo {
-        margin: 0;
-        order: -1; /* Move logo to the top */
-    }
-    
-    .hero-section {
-        padding: 0 20px;
-        margin-top: 20px;
-    }
-
-    .hero-text h1 {
-        font-size: 2.5rem; /* Further reduce font size for mobile */
-    }
-
-    .hero-image img {
-        width: 100%; /* Make image take full width of its container */
-        max-width: 350px;
-    }
-
-    .bottom-section {
-        flex-direction: column; /* Stack form and map vertically */
-        padding: 0 20px;
-        margin-top: 60px;
-    }
-
-    h2 {
-        font-size: 2rem;
-    }
-}```
 
 /* --- PRODUCTS SECTION STYLES --- */
 
@@ -261,22 +227,124 @@ h2 {
     margin: 20px;
 }
 
+/* --- ABOUT US SECTION STYLES --- */
+.about-us-section {
+    max-width: 900px;
+    margin: 80px auto;
+    padding: 0 50px;
+    text-align: center;
+}
 
-/* --- RESPONSIVE STYLES FOR PRODUCTS --- */
+.about-us-content {
+    background-color: #fff;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    text-align: left; /* Align text left within the box */
+}
 
-/* For Tablets */
+.about-us-content h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.about-us-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* --- RESPONSIVE STYLES --- */
+
+/* For Tablets and Smaller Desktops */
 @media (max-width: 1024px) {
+    .hero-section {
+        flex-direction: column; /* Stack text and image vertically */
+        text-align: center;
+    }
+
+    .hero-text h1 {
+        font-size: 4rem; /* Reduce font size */
+        max-width: 100%; /* Allow text to take full width */
+    }
+
+    .hero-image {
+        margin: 40px 0 0 0; /* Remove overlap and add space at the top */
+    }
+
+    .hero-image img {
+        width: 450px; /* Adjust image size for tablets */
+    }
+
+    .bottom-section {
+        gap: 50px;
+    }
+
     .product-gallery {
         grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
     }
-    .products-section {
+    .products-section,
+    .about-us-section {
         padding: 0 20px;
     }
 }
 
+
 /* For Mobile Phones */
 @media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .logo {
+        margin: 0;
+        order: -1; /* Move logo to the top */
+    }
+    
+    .hero-section {
+        padding: 0 20px;
+        margin-top: 20px;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5rem; /* Further reduce font size for mobile */
+    }
+
+    .hero-image img {
+        width: 100%; /* Make image take full width of its container */
+        max-width: 350px;
+    }
+
+    .bottom-section {
+        flex-direction: column; /* Stack form and map vertically */
+        padding: 0 20px;
+        margin-top: 60px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
     .product-gallery {
         grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+
+    .about-us-section {
+        padding: 0 20px;
+    }
+
+    .about-us-content {
+        padding: 25px;
+    }
+
+    .about-us-content p {
+        font-size: 1rem;
+    }
+
+    .section-divider {
+        margin: 60px auto;
     }
 }
