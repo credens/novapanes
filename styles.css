@@ -359,45 +359,20 @@ h2 {
 
 /* --- MODAL (FLOATING IMAGE) STYLES --- */
 
-/* The Modal (background) */
 .image-modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    display: none; /* It's hidden initially */
+    position: fixed; /* This is the key! It makes the element "float" or "hover" over everything else */
+    z-index: 1000;   /* This ensures it's on top of all other content */
     left: 0;
     top: 0;
-    width: 100%;
+    width: 100%;     /* Covers the full screen */
     height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.9);
-    padding: 20px;
-    box-sizing: border-box;
+    background-color: rgba(0,0,0,0.9); /* The dark, semi-transparent background */
 }
 
-/* Modal Content (the image) */
 .modal-content {
-    margin: auto;
+    margin: auto;   /* This centers the image inside the black overlay */
     display: block;
     max-width: 90%;
     max-height: 90vh;
-    width: auto;
-    height: auto;
-}
-
-/* The Close Button */
-.close-modal {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #f1f1f1;
-    font-size: 40px;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.close-modal:hover,
-.close-modal:focus {
-    color: #bbb;
-    text-decoration: none;
-    cursor: pointer;
 }
