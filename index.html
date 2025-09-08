@@ -31,7 +31,7 @@
                 <h1>Juntate con amigos y disfruta de los mejores panes.</h1>
             </div>
             <div class="hero-image">
-                <img src="panes.png" alt="Paquete de Pan de Papa NOVA Panes">
+                <img src="panes.png" alt="Paquete de Pan de Papa NOVA Panes" id="heroImage">
             </div>
         </main>
     </div>
@@ -43,35 +43,44 @@
         <div class="product-gallery">
             
             <div class="product-card">
-                <img src="productos/pan-de-papa-1.png" alt="Pan de papa con parmesano" data-title="Pan de papa con parmesano">
+                <img src="productos/pan-de-papa-1.png" alt="Pan de papa con parmesano" 
+                     data-title="Pan de papa con parmesano" 
+                     data-images='["productos/pan-de-papa-1.png"]'>
                 <h3>Pan de papa con parmesano</h3>
             </div>
 
            <div class="product-card">
                 <img src="productos/lomito-1.jpg" alt="Pan de lomito / pancho doble con queso" 
                      data-title="Pan de lomito / pancho doble con queso"
-                     data-images='["productos/lomito-1.jpg", "productos/pancho-doble.png"]'
-                     data-alt-texts='["Pan de lomito / pancho doble con queso - Vista 1", "Pan de lomito / pancho doble con queso - Vista 2"]'>
+                     data-images='["productos/lomito-1.jpg", "productos/pancho-doble.png", "productos/pancho-doble-2.png"]'>
                 <h3>Pan de lomito / pancho doble con queso</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/sesamo.jpg" alt="Pan de papa con sésamo" data-title="Pan de papa con sésamo">
+                <img src="productos/sesamo.jpg" alt="Pan de papa con sésamo" 
+                     data-title="Pan de papa con sésamo"
+                     data-images='["productos/sesamo.jpg"]'>
                 <h3>Pan de papa con sésamo</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/pancho-1.png" alt="Pan de panchos" data-title="Pan de panchos">
+                <img src="productos/pancho-1.png" alt="Pan de panchos" 
+                     data-title="Pan de panchos"
+                     data-images='["productos/pancho-1.png"]'>
                 <h3>Pan de panchos</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional" data-title="Pan de hamburguesa tradicional">
+                <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional" 
+                     data-title="Pan de hamburguesa tradicional"
+                     data-images='["productos/hamburguesa-simple2.png"]'>
                 <h3>Pan de hamburguesa tradicional</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/pan-de-molde-1.png" alt="Pan de molde" data-title="Pan de molde">
+                <img src="productos/pan-de-molde-1.png" alt="Pan de molde" 
+                     data-title="Pan de molde"
+                     data-images='["productos/pan-de-molde-1.png"]'>
                 <h3>Pan de molde</h3>
             </div>
 
@@ -163,33 +172,40 @@
     <script>
         // Random Hero Image Functionality
         const heroImages = [
-            'hero-images/panes.png',
-            'hero-images/imagen2.jpg',
-            'hero-images/imagen3.jpg',
-            'hero-images/imagen4.jpg',
-            'hero-images/imagen5.jpg'
-            // Agrega más imágenes según las que tengas en la carpeta
+            'hero-images/hero-pan.png',
+            'hero-images/hero-pan-1.png',
+            'hero-images/hero-pan-2.png'
         ];
 
         // Function to get random hero image
         function setRandomHeroImage() {
             const heroImg = document.getElementById('heroImage');
-            const randomIndex = Math.floor(Math.random() * heroImages.length);
-            const randomImage = heroImages[randomIndex];
-            
-            heroImg.src = randomImage;
-            
-            // Optional: Update alt text based on the image
-            heroImg.alt = `Productos NOVA Panes - ${randomIndex + 1}`;
+            if (heroImg) { 
+                const randomIndex = Math.floor(Math.random() * heroImages.length);
+                const randomImage = heroImages[randomIndex];
+                
+                heroImg.src = randomImage;
+                
+                // Optional: Update alt text based on the image
+                heroImg.alt = `NOVA Panes - Imagen Principal ${randomIndex + 1}`;
+            }
         }
 
         // Set random image on page load
         document.addEventListener('DOMContentLoaded', setRandomHeroImage);
 
-        // Simple modal functionality
+        // MODAL FUNCTIONALITY
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImage");
+        const modalTitle = document.getElementById("modalTitle");
         const closeModal = document.querySelector(".close-modal");
+        const modalNav = document.getElementById("modalNav");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const modalCounter = document.getElementById("modalCounter");
+
+        let currentImages = []; // Stores the array of images for the current product
+        let currentIndex = 0; // Stores the current image index
 
         // Get all product images
         const productImages = document.querySelectorAll(".product-card img");
@@ -198,24 +214,70 @@
         productImages.forEach(img => {
             img.addEventListener("click", function() {
                 modal.style.display = "block";
-                modalImg.src = this.src;
-                modalImg.alt = this.alt;
-                
-                // Prevent body scrolling when modal is open
-                document.body.style.overflow = "hidden";
+                document.body.style.overflow = "hidden"; // Prevent body scrolling
+
+                modalTitle.textContent = this.dataset.title || ""; // Set product title
+
+                // Get images from data-images attribute
+                const imagesData = this.dataset.images;
+                if (imagesData) {
+                    currentImages = JSON.parse(imagesData);
+                    currentIndex = 0; // Start with the first image
+                    updateModalContent();
+                } else {
+                    // Fallback for single image if data-images is not present or invalid
+                    currentImages = [this.src];
+                    currentIndex = 0;
+                    updateModalContent();
+                }
+
+                // Show/hide navigation based on number of images
+                if (currentImages.length > 1) {
+                    modalNav.style.display = "flex";
+                } else {
+                    modalNav.style.display = "none";
+                }
             });
+        });
+
+        function updateModalContent() {
+            if (currentImages.length > 0) {
+                modalImg.src = currentImages[currentIndex];
+                // Alt text is not displayed visually in modal, but good for accessibility
+                modalImg.alt = modalTitle.textContent + ` - Imagen ${currentIndex + 1}`;
+                modalCounter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
+            }
+        }
+
+        // Navigation for modal
+        prevBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent modal from closing when clicking button
+            if (currentImages.length > 1) {
+                currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+                updateModalContent();
+            }
+        });
+
+        nextBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent modal from closing when clicking button
+            if (currentImages.length > 1) {
+                currentIndex = (currentIndex + 1) % currentImages.length;
+                updateModalContent();
+            }
         });
 
         // Function to close the modal
         function hideModal() {
             modal.style.display = "none";
             document.body.style.overflow = "auto"; // Restore scrolling
+            currentImages = []; // Clear images
+            currentIndex = 0; // Reset index
         }
 
         // Close modal when clicking the X button
         closeModal.addEventListener("click", hideModal);
 
-        // Close modal when clicking outside the image
+        // Close modal when clicking outside the image (but not on nav buttons)
         modal.addEventListener("click", function(event) {
             if (event.target === modal) {
                 hideModal();
@@ -229,7 +291,7 @@
             }
         });
 
-        // Contact Form Handler
+        // Contact Form Handler (no changes needed here)
         const contactForm = document.querySelector('form');
         if (contactForm) {
             contactForm.addEventListener('submit', function(e) {
