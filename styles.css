@@ -1,395 +1,3 @@
-/* General Body Styles */
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background-color: #FEFBF5;
-    color: #000;
-    overflow-x: hidden; /* Prevents horizontal scrollbar */
-}
-
-/* Header and Navigation */
-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 50px;
-    flex-wrap: wrap; /* Allows nav to wrap on smaller screens */
-}
-
-.main-nav {
-    display: flex;
-    gap: 40px;
-}
-
-.main-nav a {
-    text-decoration: none;
-    color: #000;
-    font-size: 16px;
-    transition: color 0.3s ease;
-}
-
-.main-nav a:hover {
-    color: #B5651D; /* A subtle hover effect */
-}
-
-.logo {
-    margin: 0 50px;
-}
-
-.logo img {
-    width: 150px;
-}
-
-/* Hero Section */
-.hero-background {
-    background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
-    padding-bottom: 100px;
-}
-
-.hero-section {
-    position: relative;
-    display: flex; /* Changed for better control */
-    align-items: center; /* Vertically align text and image */
-    max-width: 1200px;
-    margin: 40px auto 0;
-    padding: 0 50px;
-}
-
-.hero-text {
-    flex: 1; /* Allows text to take available space */
-    z-index: 10; /* Ensures text is above image if they overlap */
-}
-
-.hero-text h1 {
-    font-family: 'Lora', serif;
-    font-size: 5rem;
-    font-weight: 700;
-    max-width: 700px;
-    line-height: 1.2;
-    margin: 0;
-}
-
-.hero-image {
-    /* Removed absolute positioning for a more flexible layout */
-    flex-shrink: 0; /* Prevents the image from shrinking */
-    margin-left: -100px; /* Creates the overlap effect */
-}
-
-.hero-image img {
-    /* Set max-width for responsiveness and kept a good base size */
-    max-width: 100%;
-    width: 550px; 
-    height: auto; /* Maintain aspect ratio */
-}
-
-/* Section Divider */
-.section-divider {
-    border: none;
-    border-top: 1px solid #E0E0E0; /* Light gray line */
-    width: 80%; /* Adjust width as needed */
-    margin: 80px auto; /* Center the line and add vertical space */
-}
-
-/* Bottom Section: Form and Map */
-.bottom-section {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 80px auto;
-    padding: 0 50px;
-    gap: 100px;
-}
-
-.contact-form-container,
-.contact-info-container {
-    flex: 1;
-    min-width: 280px; /* Prevents them from getting too squished */
-}
-
-h2 {
-    font-family: 'Lora', serif;
-    font-size: 2.5rem;
-    margin-top: 0;
-    margin-bottom: 30px;
-}
-
-/* Contact Form */
-.contact-form-container form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.contact-form-container input,
-.contact-form-container textarea {
-    border: 1px solid #000;
-    border-radius: 8px;
-    padding: 15px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    background-color: transparent;
-}
-
-.contact-form-container input::placeholder,
-.contact-form-container textarea::placeholder {
-    color: #666;
-}
-
-.contact-form-container button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 15px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease;
-}
-
-.contact-form-container button:hover {
-    background-color: #333;
-}
-
-/* Form Messages */
-.form-message {
-    margin-top: 15px;
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    display: none;
-}
-
-.form-message.success {
-    display: block;
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.form-message.error {
-    display: block;
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-/* Contact Info & Map */
-.contact-info-container h2 {
-    text-align: center; /* Center the "Dónde Encontrarnos" title */
-}
-
-.map-container {
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    overflow: hidden;
-}
-
-.map-container iframe {
-    width: 100%;
-    height: 300px;
-    border: none;
-    display: block;
-}
-
-.map-info {
-    padding: 20px;
-    text-align: left;
-}
-
-.map-info p {
-    margin: 8px 0;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.map-info strong {
-    color: #B5651D;
-}
-
-.map-link {
-    display: inline-block;
-    margin-top: 15px;
-    color: #000;
-    font-size: 0.9rem;
-    text-decoration: none;
-    padding: 8px 16px;
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.map-link:hover {
-    color: #fff;
-    background-color: #B5651D;
-    border-color: #B5651D;
-}
-
-
-/* --- PRODUCTS SECTION STYLES --- */
-
-.products-section {
-    max-width: 1200px;
-    margin: 80px auto;
-    padding: 0 50px;
-    text-align: center;
-}
-
-.product-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
-    gap: 30px; /* Space between the cards */
-    margin-top: 40px;
-}
-
-.product-card {
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    overflow: hidden; /* Ensures the image corners are rounded */
-    text-align: center;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px); /* Lifts the card up slightly on hover */
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-
-.product-card img {
-    width: 100%;
-    height: 250px; /* Gives all images a uniform height */
-    object-fit: cover; /* Ensures images cover the area without distortion */
-    display: block;
-    transition: transform 0.3s ease; /* Smooth transition for image hover */
-    cursor: pointer; /* Indicates the image is clickable */
-}
-
-.product-card img:hover {
-    transform: scale(1.05); /* Slightly zoom in image on hover */
-}
-
-.product-card h3 {
-    font-family: 'Lora', serif;
-    font-size: 1.5rem;
-    margin: 20px;
-}
-
-/* --- ABOUT US SECTION STYLES --- */
-.about-us-section {
-    margin: 80px auto;
-    padding: 0 50px; /* Default padding for desktop */
-    text-align: center; /* Ensures content inside is centered horizontally if it doesn't fill the width */
-}
-
-/* To make it full width while keeping content max-width and centered */
-.about-us-section.full-width {
-    max-width: 100%; /* Make the section itself full width */
-}
-
-.about-us-content {
-    max-width: 900px; /* Constrain content width */
-    margin: 0 auto; /* Center the content box */
-    background-color: #fff;
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    text-align: left; /* Align text left within the box */
-}
-
-.about-us-content h2 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.about-us-content p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-/* --- FLOATING MODAL STYLES --- */
-.image-modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-}
-
-.modal-content-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 90vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    animation: modalAppear 0.3s ease-out;
-}
-
-.modal-image {
-    width: 100%;
-    height: auto;
-    max-height: 80vh;
-    object-fit: contain;
-    display: block;
-}
-
-.modal-title {
-    padding: 20px;
-    font-family: 'Lora', serif;
-    font-size: 1.5rem;
-    text-align: center;
-    border-top: 1px solid #E0E0E0;
-    background-color: #f9f9f9;
-}
-
-.close-modal {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: white;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.close-modal:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-    transform: scale(1.1);
-}
-
-@keyframes modalAppear {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
 /* --- FOOTER STYLES --- */
 .footer {
     background-color: #B5651D;
@@ -397,12 +5,18 @@ h2 {
     text-align: center;
     padding: 30px 20px;
     margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer p {
     margin: 0 0 15px 0;
     font-size: 1rem;
     line-height: 1.4;
+    text-align: center;
+    width: 100%;
 }
 
 .footer-links {
@@ -412,6 +26,7 @@ h2 {
     flex-wrap: wrap;
     gap: 15px;
     margin-top: 10px;
+    width: 100%;
 }
 
 .footer-btn {
@@ -423,6 +38,7 @@ h2 {
     font-size: 0.9rem;
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
 }
 
 .footer-btn:hover {
@@ -444,6 +60,7 @@ h2 {
 .phone-text {
     color: #fff;
     font-size: 0.9rem;
+    text-align: center;
 }
 
 .footer-divider {
@@ -453,6 +70,10 @@ h2 {
 
 /* Make footer responsive */
 @media (max-width: 600px) {
+    .footer {
+        padding: 25px 15px;
+    }
+    
     .footer p {
         font-size: 0.9rem;
         margin-bottom: 20px;
@@ -461,6 +82,7 @@ h2 {
     .footer-links {
         flex-direction: column;
         gap: 10px;
+        align-items: center;
     }
     
     .footer-divider {
@@ -469,95 +91,6 @@ h2 {
     
     .footer-btn, .phone-text {
         font-size: 0.85rem;
-    }
-}
-
-/* --- RESPONSIVE STYLES --- */
-
-/* For Tablets and Smaller Desktops (less than 1024px) */
-@media (max-width: 1024px) {
-    header {
-        padding: 20px 30px; /* Adjust header padding */
-    }
-
-    .main-nav {
-        gap: 25px; /* Reduce gap between nav items */
-    }
-
-    .logo {
-        margin: 0 30px; /* Adjust logo margin */
-    }
-
-    .hero-section {
-        flex-direction: column; /* Stack text and image vertically */
         text-align: center;
-        padding: 0 30px;
-    }
-
-    .hero-text h1 {
-        font-size: 4rem; /* Reduce font size */
-        max-width: 100%; /* Allow text to take full width */
-    }
-
-    .hero-image {
-        margin: 40px 0 0; /* Reset margin for vertical stacking */
-    }
-
-    .bottom-section {
-        flex-direction: column; /* Stack form and map vertically */
-        gap: 60px;
-        padding: 0 30px;
-    }
-
-    .product-gallery {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
-    }
-}
-
-/* For Mobile Phones (less than 600px) */
-@media (max-width: 600px) {
-    body {
-        /* This can help prevent text size from changing on mobile orientation change */
-        -webkit-text-size-adjust: 100%;
-    }
-    
-    header {
-        flex-direction: column; /* Stack logo and navs vertically */
-        gap: 20px;
-    }
-
-    .logo {
-        order: -1; /* Move logo to the top */
-        margin: 0;
-    }
-
-    .hero-text h1 {
-        font-size: 3rem; /* Further reduce font size */
-    }
-
-    .hero-image img {
-        width: 100%; /* Make image take full width */
-        max-width: 350px;
-    }
-
-    h2 {
-        font-size: 2rem;
-    }
-
-    .product-gallery {
-        grid-template-columns: 1fr; /* 1 column for mobile */
-    }
-
-    .about-us-content {
-        padding: 30px 20px;
-    }
-
-    .about-us-content p {
-        font-size: 1rem;
-    }
-
-    .modal-content-wrapper {
-        max-width: 95vw;
-        max-height: 95vh;
     }
 }
