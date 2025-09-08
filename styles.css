@@ -530,7 +530,7 @@ h2 {
     }
     
     .main-nav a {
-        font-size: 16px; /* Keep readable size on mobile */
+        font-size: 18px; /* Slightly bigger on mobile but not too big */
     }
 
     .hero-text h1 {
