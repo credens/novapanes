@@ -109,5 +109,44 @@
         </div>
     </section>
 
+    <!-- The Modal/Lightbox for displaying images -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Get the modal, the modal image, and the close button
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const closeModal = document.querySelector(".close-modal");
+
+        // Get all product images
+        const productImages = document.querySelectorAll(".product-card img");
+
+        // Loop through all product images and add a click event listener
+        productImages.forEach(img => {
+            img.addEventListener("click", function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            });
+        });
+
+        // Function to close the modal
+        function hideModal() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        closeModal.addEventListener("click", hideModal);
+
+        // When the user clicks anywhere on the modal background, close it
+        modal.addEventListener("click", function(event) {
+            if (event.target === modal) {
+                hideModal();
+            }
+        });
+    </script>
+
 </body>
 </html>

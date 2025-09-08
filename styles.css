@@ -224,6 +224,7 @@ h2 {
     object-fit: cover; /* Ensures images cover the area without distortion */
     display: block;
     transition: transform 0.3s ease; /* Smooth transition for image hover */
+    cursor: pointer; /* Indicates the image is clickable */
 }
 
 .product-card img:hover {
@@ -298,4 +299,105 @@ h2 {
     }
 
     .hero-image {
-        margin: 40px
+        margin: 40px 0 0; /* Reset margin for vertical stacking */
+    }
+
+    .bottom-section {
+        flex-direction: column; /* Stack form and map vertically */
+        gap: 60px;
+        padding: 0 30px;
+    }
+
+    .product-gallery {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+    }
+}
+
+/* For Mobile Phones (less than 600px) */
+@media (max-width: 600px) {
+    body {
+        /* This can help prevent text size from changing on mobile orientation change */
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    header {
+        flex-direction: column; /* Stack logo and navs vertically */
+        gap: 20px;
+    }
+
+    .logo {
+        order: -1; /* Move logo to the top */
+        margin: 0;
+    }
+
+    .hero-text h1 {
+        font-size: 3rem; /* Further reduce font size */
+    }
+
+    .hero-image img {
+        width: 100%; /* Make image take full width */
+        max-width: 350px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .product-gallery {
+        grid-template-columns: 1fr; /* 1 column for mobile */
+    }
+
+    .about-us-content {
+        padding: 30px 20px;
+    }
+
+    .about-us-content p {
+        font-size: 1rem;
+    }
+}
+
+
+/* --- MODAL (FLOATING IMAGE) STYLES --- */
+
+/* The Modal (background) */
+.image-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.9);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Modal Content (the image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+}
+
+/* The Close Button */
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
