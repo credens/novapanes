@@ -161,20 +161,35 @@
     </div>
 
     <script>
-        // Get modal elements
+        // Random Hero Image Functionality
+        const heroImages = [
+            'hero-images/panes.png',
+            'hero-images/imagen2.jpg',
+            'hero-images/imagen3.jpg',
+            'hero-images/imagen4.jpg',
+            'hero-images/imagen5.jpg'
+            // Agrega más imágenes según las que tengas en la carpeta
+        ];
+
+        // Function to get random hero image
+        function setRandomHeroImage() {
+            const heroImg = document.getElementById('heroImage');
+            const randomIndex = Math.floor(Math.random() * heroImages.length);
+            const randomImage = heroImages[randomIndex];
+            
+            heroImg.src = randomImage;
+            
+            // Optional: Update alt text based on the image
+            heroImg.alt = `Productos NOVA Panes - ${randomIndex + 1}`;
+        }
+
+        // Set random image on page load
+        document.addEventListener('DOMContentLoaded', setRandomHeroImage);
+
+        // Simple modal functionality
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImage");
-        const modalTitle = document.getElementById("modalTitle");
-        const modalNav = document.getElementById("modalNav");
-        const modalCounter = document.getElementById("modalCounter");
-        const prevBtn = document.getElementById("prevBtn");
-        const nextBtn = document.getElementById("nextBtn");
         const closeModal = document.querySelector(".close-modal");
-
-        // Variables for image navigation
-        let currentImages = [];
-        let currentImageIndex = 0;
-        let currentAltTexts = [];
 
         // Get all product images
         const productImages = document.querySelectorAll(".product-card img");
@@ -182,69 +197,13 @@
         // Add click event to all product images
         productImages.forEach(img => {
             img.addEventListener("click", function() {
-                // Check if this product has multiple images
-                const imagesData = this.getAttribute("data-images");
-                const altTextsData = this.getAttribute("data-alt-texts");
-                
-                if (imagesData) {
-                    // Multiple images
-                    currentImages = JSON.parse(imagesData);
-                    currentAltTexts = altTextsData ? JSON.parse(altTextsData) : currentImages.map(() => this.alt);
-                    currentImageIndex = 0;
-                    modalNav.style.display = "flex";
-                } else {
-                    // Single image
-                    currentImages = [this.src];
-                    currentAltTexts = [this.alt];
-                    currentImageIndex = 0;
-                    modalNav.style.display = "none";
-                }
-                
-                showModalImage();
                 modal.style.display = "block";
+                modalImg.src = this.src;
+                modalImg.alt = this.alt;
                 
                 // Prevent body scrolling when modal is open
                 document.body.style.overflow = "hidden";
             });
-        });
-
-        // Function to show current image in modal
-        function showModalImage() {
-            modalImg.src = currentImages[currentImageIndex];
-            modalImg.alt = currentAltTexts[currentImageIndex];
-            modalTitle.textContent = currentAltTexts[currentImageIndex];
-            
-            if (currentImages.length > 1) {
-                modalCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
-            }
-        }
-
-        // Navigation functions
-        function showNextImage() {
-            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
-            showModalImage();
-        }
-
-        function showPrevImage() {
-            currentImageIndex = currentImageIndex === 0 ? currentImages.length - 1 : currentImageIndex - 1;
-            showModalImage();
-        }
-
-        // Event listeners for navigation
-        nextBtn.addEventListener("click", showNextImage);
-        prevBtn.addEventListener("click", showPrevImage);
-
-        // Keyboard navigation
-        document.addEventListener("keydown", function(event) {
-            if (modal.style.display === "block") {
-                if (event.key === "ArrowRight") {
-                    if (currentImages.length > 1) showNextImage();
-                } else if (event.key === "ArrowLeft") {
-                    if (currentImages.length > 1) showPrevImage();
-                } else if (event.key === "Escape") {
-                    hideModal();
-                }
-            }
         });
 
         // Function to close the modal
@@ -263,7 +222,14 @@
             }
         });
 
-        // Contact Form Handler - Note: This needs to be updated if you have a form with these IDs
+        // Close modal with Escape key
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape" && modal.style.display === "block") {
+                hideModal();
+            }
+        });
+
+        // Contact Form Handler
         const contactForm = document.querySelector('form');
         if (contactForm) {
             contactForm.addEventListener('submit', function(e) {

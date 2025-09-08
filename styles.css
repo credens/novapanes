@@ -584,6 +584,16 @@ h2 {
         width: 100%; /* Make image take full width */
         min-width: 200px; /* Smaller minimum for mobile */
         max-width: 350px;
+        border-radius: 15px; /* Smaller radius for mobile */
+    }
+    
+    .hero-image::before {
+        filter: blur(8px); /* Even less blur on mobile */
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border-radius: 20px;
     }
 
     h2 {
