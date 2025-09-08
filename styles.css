@@ -356,23 +356,48 @@ h2 {
     }
 }
 
-
 /* --- MODAL (FLOATING IMAGE) STYLES --- */
 
 .image-modal {
-    display: none; /* It's hidden initially */
-    position: fixed; /* This is the key! It makes the element "float" or "hover" over everything else */
-    z-index: 1000;   /* This ensures it's on top of all other content */
+    display: none; /* Hidden initially */
+    position: fixed; /* Makes the element "float" over everything else */
+    z-index: 1000;   /* Ensures it's on top of all other content */
     left: 0;
     top: 0;
     width: 100%;     /* Covers the full screen */
     height: 100%;
-    background-color: rgba(0,0,0,0.9); /* The dark, semi-transparent background */
+    background-color: rgba(0,0,0,0.9); /* Dark, semi-transparent background */
+    display: flex;   /* Use flexbox for better centering */
+    align-items: center;
+    justify-content: center;
+}
+
+.image-modal[style*="block"] {
+    display: flex !important; /* Override inline display:block with flex */
 }
 
 .modal-content {
-    margin: auto;   /* This centers the image inside the black overlay */
-    display: block;
     max-width: 90%;
     max-height: 90vh;
+    object-fit: contain; /* Maintains aspect ratio */
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 1001;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #ccc;
+    text-decoration: none;
 }
