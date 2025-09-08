@@ -92,10 +92,16 @@
     <section id="contacto" class="bottom-section">
         <div class="contact-form-container">
             <h2>Contacto</h2>
-            <form action="#" method="post">
-                <input type="text" name="nombre" placeholder="Nombre" required>
-                <input type="email" name="email" placeholder="Correo electrónico" required>
-                <textarea name="mensaje" placeholder="Mensaje" rows="4" required></textarea>
+            <form action="https://formsubmit.co/panes.nova@gmail.com" method="POST">
+                <!-- FormSubmit configuration -->
+                <input type="hidden" name="_subject" value="Nuevo mensaje desde NOVA Panes">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                
+                <input type="text" name="nombre" placeholder="Nombre *" required>
+                <input type="email" name="email" placeholder="Correo electrónico">
+                <input type="tel" name="telefono" placeholder="Teléfono *" required>
+                <textarea name="mensaje" placeholder="Mensaje" rows="4"></textarea>
                 <button type="submit">Enviar</button>
             </form>
         </div>
@@ -161,6 +167,46 @@
             if (event.key === "Escape" && modal.style.display === "block") {
                 hideModal();
             }
+        });
+
+        // Contact Form Handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const messageDiv = document.getElementById('formMessage');
+            const formData = new FormData(this);
+            
+            // Show loading state
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+            messageDiv.className = 'form-message';
+            messageDiv.textContent = '';
+            
+            // Send form data
+            fetch('contact.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageDiv.className = 'form-message success';
+                    messageDiv.textContent = data.message;
+                    this.reset(); // Clear form
+                } else {
+                    messageDiv.className = 'form-message error';
+                    messageDiv.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                messageDiv.className = 'form-message error';
+                messageDiv.textContent = 'Error de conexión. Inténtalo de nuevo.';
+            })
+            .finally(() => {
+                submitBtn.textContent = 'Enviar';
+                submitBtn.disabled = false;
+            });
         });
     </script>
 
