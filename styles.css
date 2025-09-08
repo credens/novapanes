@@ -81,7 +81,7 @@ header {
     border-radius: 20px; /* Bordes redondeados */
     overflow: hidden; /* Oculta el desbordamiento de la imagen al aplicar object-fit */
     /* Valor inicial para la variable CSS que usará el ::before */
-    --hero-image-url: url('hero-images/hero-pan.png'); 
+    --hero-image-url: url('hero-images/hero-pan.png');
 }
 
 .hero-image img {

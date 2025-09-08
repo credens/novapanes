@@ -1,3 +1,5 @@
+--- START OF FILE index.html ---
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -30,9 +32,8 @@
             <div class="hero-text">
                 <h1>Juntate con amigos y disfruta de los mejores panes.</h1>
             </div>
-            <div class="hero-image" id="heroImageContainer"> <!-- Added id here for JS to target -->
-                <!-- La imagen inicial es un placeholder que será reemplazado por JS -->
-                <img src="hero-images/hero-pan.png" alt="Panes NOVA" id="heroImage"> 
+            <div class="hero-image" id="heroImageContainer">
+                <img src="hero-images/hero-pan.png" alt="Panes NOVA" id="heroImage">
             </div>
         </main>
     </div>
@@ -42,44 +43,44 @@
     <section id="productos" class="products-section">
         <h2>Nuestros Productos</h2>
         <div class="product-gallery">
-            
+
             <div class="product-card">
-                <img src="productos/pan-de-papa-1.png" alt="Pan de papa con parmesano" 
-                     data-title="Pan de papa con parmesano" 
+                <img src="productos/pan-de-papa-1.png" alt="Pan de papa con parmesano"
+                     data-title="Pan de papa con parmesano"
                      data-images='["productos/pan-de-papa-1.png"]'>
                 <h3>Pan de papa con parmesano</h3>
             </div>
 
            <div class="product-card">
-                <img src="productos/lomito-1.jpg" alt="Pan de lomito / pancho doble con queso" 
+                <img src="productos/lomito-1.jpg" alt="Pan de lomito / pancho doble con queso"
                      data-title="Pan de lomito / pancho doble con queso"
                      data-images='["productos/lomito-1.jpg", "productos/pancho-doble.png", "productos/pancho-doble-2.png"]'>
                 <h3>Pan de lomito / pancho doble con queso</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/sesamo.jpg" alt="Pan de papa con sésamo" 
+                <img src="productos/sesamo.jpg" alt="Pan de papa con sésamo"
                      data-title="Pan de papa con sésamo"
                      data-images='["productos/sesamo.jpg"]'>
                 <h3>Pan de papa con sésamo</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/pancho-1.png" alt="Pan de panchos" 
+                <img src="productos/pancho-1.png" alt="Pan de panchos"
                      data-title="Pan de panchos"
                      data-images='["productos/pancho-1.png"]'>
                 <h3>Pan de panchos</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional" 
+                <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional"
                      data-title="Pan de hamburguesa tradicional"
                      data-images='["productos/hamburguesa-simple2.png"]'>
                 <h3>Pan de hamburguesa tradicional</h3>
             </div>
 
             <div class="product-card">
-                <img src="productos/pan-de-molde-1.png" alt="Pan de molde" 
+                <img src="productos/pan-de-molde-1.png" alt="Pan de molde"
                      data-title="Pan de molde"
                      data-images='["productos/pan-de-molde-1.png"]'>
                 <h3>Pan de molde</h3>
@@ -110,7 +111,7 @@
                 <input type="hidden" name="_subject" value="Nuevo mensaje desde NOVA Panes">
                 <input type="hidden" name="_captcha" value="false">
                 <input type="hidden" name="_template" value="table">
-                
+
                 <input type="text" name="nombre" placeholder="Nombre *" required>
                 <input type="email" name="email" placeholder="Correo electrónico">
                 <input type="tel" name="telefono" placeholder="Teléfono *" required>
@@ -122,13 +123,13 @@
         <div class="contact-info-container">
             <h2>Dónde Encontrarnos</h2>
             <div class="map-container">
-                <iframe 
+                <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa%2C%20ex%20Batistta%20e%20Hijos!5e0!3m2!1ses-419!2sar!4v1757366780914!5m2!1ses-419!2sar"
-                    width="100%" 
-                    height="300" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy" 
+                    width="100%"
+                    height="300"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
                 <div class="map-info">
@@ -162,7 +163,7 @@
             <img class="modal-image" id="modalImage">
             <div class="modal-title" id="modalTitle"></div>
             <!-- Navigation for multiple images -->
-            <div class="modal-nav" id="modalNav" style="display: none;">
+            <div class="modal-nav" id="modalNav">
                 <button class="modal-nav-btn" id="prevBtn">❮</button>
                 <span class="modal-counter" id="modalCounter"></span>
                 <button class="modal-nav-btn" id="nextBtn">❯</button>
@@ -181,7 +182,122 @@
         // Function to get random hero image
         function setRandomHeroImage() {
             const heroImg = document.getElementById('heroImage');
-            const heroImageContainer = document.getElementById('heroImageContainer'); // Get the container
-            if (heroImg && heroImageContainer) { 
+            const heroImageContainer = document.getElementById('heroImageContainer');
+            if (heroImg && heroImageContainer) {
                 const randomIndex = Math.floor(Math.random() * heroImages.length);
-                const randomImage
+                const randomImageSrc = heroImages[randomIndex]; // Corrected line
+                heroImg.src = randomImageSrc;
+                heroImageContainer.style.setProperty('--hero-image-url', `url('${randomImageSrc}')`);
+            }
+        }
+
+        // Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', setRandomHeroImage);
+
+
+        // MODAL FUNCTIONALITY
+
+        const imageModal = document.getElementById('imageModal');
+        const closeModal = document.querySelector('.close-modal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const productCards = document.querySelectorAll('.product-card img'); // Select images within product cards
+        const modalNav = document.getElementById('modalNav');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const modalCounter = document.getElementById('modalCounter');
+
+        let currentImages = [];
+        let currentImageIndex = 0;
+        let currentTitle = '';
+
+        // Function to open the modal
+        function openModal(images, title, startIndex = 0) {
+            currentImages = images;
+            currentTitle = title;
+            currentImageIndex = startIndex;
+
+            updateModalContent();
+            imageModal.style.display = 'block';
+
+            // Show/hide navigation based on number of images
+            if (currentImages.length > 1) {
+                modalNav.style.display = 'flex'; // Use flex to display buttons horizontally
+            } else {
+                modalNav.style.display = 'none';
+            }
+        }
+
+        // Function to update modal content (image, title, counter)
+        function updateModalContent() {
+            modalImage.src = currentImages[currentImageIndex];
+            modalTitle.textContent = currentTitle;
+            if (currentImages.length > 1) {
+                modalCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+            }
+        }
+
+        // Event listener for product card images to open the modal
+        productCards.forEach(img => {
+            img.addEventListener('click', function() {
+                const imagesString = this.getAttribute('data-images');
+                const title = this.getAttribute('data-title');
+                try {
+                    const imagesArray = JSON.parse(imagesString);
+                    openModal(imagesArray, title, 0); // Open with the first image
+                } catch (e) {
+                    console.error("Error parsing data-images JSON:", e);
+                    // Fallback to single image if JSON parsing fails
+                    openModal([this.src], title, 0);
+                }
+            });
+        });
+
+        // Event listener for closing the modal
+        closeModal.addEventListener('click', () => {
+            imageModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside the content
+        imageModal.addEventListener('click', (event) => {
+            if (event.target === imageModal) {
+                imageModal.style.display = 'none';
+            }
+        });
+
+        // Keyboard navigation for closing modal and changing images
+        document.addEventListener('keydown', (e) => {
+            if (imageModal.style.display === 'block') {
+                if (e.key === 'Escape') {
+                    imageModal.style.display = 'none';
+                } else if (e.key === 'ArrowLeft') {
+                    if (currentImages.length > 1) {
+                        currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+                        updateModalContent();
+                    }
+                } else if (e.key === 'ArrowRight') {
+                    if (currentImages.length > 1) {
+                        currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+                        updateModalContent();
+                    }
+                }
+            }
+        });
+
+        // Navigation button listeners
+        prevBtn.addEventListener('click', () => {
+            if (currentImages.length > 1) {
+                currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+                updateModalContent();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentImages.length > 1) {
+                currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+                updateModalContent();
+            }
+        });
+    </script>
+</body>
+</html>
