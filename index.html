@@ -48,7 +48,10 @@
             </div>
 
            <div class="product-card">
-                <img src="productos/lomito-1.jpg" alt="Pan de lomito / pancho doble con queso" data-title="Pan de lomito / pancho doble con queso">
+                <img src="productos/lomito-1.jpg" alt="Pan de lomito / pancho doble con queso" 
+                     data-title="Pan de lomito / pancho doble con queso"
+                     data-images='["productos/lomito-1.jpg", "productos/pancho-doble.png"]'
+                     data-alt-texts='["Pan de lomito / pancho doble con queso - Vista 1", "Pan de lomito / pancho doble con queso - Vista 2"]'>
                 <h3>Pan de lomito / pancho doble con queso</h3>
             </div>
 
@@ -148,6 +151,12 @@
         <div class="modal-content-wrapper">
             <img class="modal-image" id="modalImage">
             <div class="modal-title" id="modalTitle"></div>
+            <!-- Navigation for multiple images -->
+            <div class="modal-nav" id="modalNav" style="display: none;">
+                <button class="modal-nav-btn" id="prevBtn">❮</button>
+                <span class="modal-counter" id="modalCounter"></span>
+                <button class="modal-nav-btn" id="nextBtn">❯</button>
+            </div>
         </div>
     </div>
 
@@ -156,7 +165,16 @@
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImage");
         const modalTitle = document.getElementById("modalTitle");
+        const modalNav = document.getElementById("modalNav");
+        const modalCounter = document.getElementById("modalCounter");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
         const closeModal = document.querySelector(".close-modal");
+
+        // Variables for image navigation
+        let currentImages = [];
+        let currentImageIndex = 0;
+        let currentAltTexts = [];
 
         // Get all product images
         const productImages = document.querySelectorAll(".product-card img");
@@ -164,13 +182,69 @@
         // Add click event to all product images
         productImages.forEach(img => {
             img.addEventListener("click", function() {
+                // Check if this product has multiple images
+                const imagesData = this.getAttribute("data-images");
+                const altTextsData = this.getAttribute("data-alt-texts");
+                
+                if (imagesData) {
+                    // Multiple images
+                    currentImages = JSON.parse(imagesData);
+                    currentAltTexts = altTextsData ? JSON.parse(altTextsData) : currentImages.map(() => this.alt);
+                    currentImageIndex = 0;
+                    modalNav.style.display = "flex";
+                } else {
+                    // Single image
+                    currentImages = [this.src];
+                    currentAltTexts = [this.alt];
+                    currentImageIndex = 0;
+                    modalNav.style.display = "none";
+                }
+                
+                showModalImage();
                 modal.style.display = "block";
-                modalImg.src = this.src;
-                modalTitle.textContent = this.getAttribute("data-title") || this.alt;
                 
                 // Prevent body scrolling when modal is open
                 document.body.style.overflow = "hidden";
             });
+        });
+
+        // Function to show current image in modal
+        function showModalImage() {
+            modalImg.src = currentImages[currentImageIndex];
+            modalImg.alt = currentAltTexts[currentImageIndex];
+            modalTitle.textContent = currentAltTexts[currentImageIndex];
+            
+            if (currentImages.length > 1) {
+                modalCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+            }
+        }
+
+        // Navigation functions
+        function showNextImage() {
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            showModalImage();
+        }
+
+        function showPrevImage() {
+            currentImageIndex = currentImageIndex === 0 ? currentImages.length - 1 : currentImageIndex - 1;
+            showModalImage();
+        }
+
+        // Event listeners for navigation
+        nextBtn.addEventListener("click", showNextImage);
+        prevBtn.addEventListener("click", showPrevImage);
+
+        // Keyboard navigation
+        document.addEventListener("keydown", function(event) {
+            if (modal.style.display === "block") {
+                if (event.key === "ArrowRight") {
+                    if (currentImages.length > 1) showNextImage();
+                } else if (event.key === "ArrowLeft") {
+                    if (currentImages.length > 1) showPrevImage();
+                } else if (event.key === "Escape") {
+                    hideModal();
+                }
+            }
         });
 
         // Function to close the modal
@@ -189,52 +263,14 @@
             }
         });
 
-        // Close modal with Escape key
-        document.addEventListener("keydown", function(event) {
-            if (event.key === "Escape" && modal.style.display === "block") {
-                hideModal();
-            }
-        });
-
-        // Contact Form Handler
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const messageDiv = document.getElementById('formMessage');
-            const formData = new FormData(this);
-            
-            // Show loading state
-            submitBtn.textContent = 'Enviando...';
-            submitBtn.disabled = true;
-            messageDiv.className = 'form-message';
-            messageDiv.textContent = '';
-            
-            // Send form data
-            fetch('contact.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    messageDiv.className = 'form-message success';
-                    messageDiv.textContent = data.message;
-                    this.reset(); // Clear form
-                } else {
-                    messageDiv.className = 'form-message error';
-                    messageDiv.textContent = data.message;
-                }
-            })
-            .catch(error => {
-                messageDiv.className = 'form-message error';
-                messageDiv.textContent = 'Error de conexión. Inténtalo de nuevo.';
-            })
-            .finally(() => {
-                submitBtn.textContent = 'Enviar';
-                submitBtn.disabled = false;
+        // Contact Form Handler - Note: This needs to be updated if you have a form with these IDs
+        const contactForm = document.querySelector('form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                // FormSubmit will handle the form submission
+                // You can add custom success/error handling here if needed
             });
-        });
+        }
     </script>
 
 </body>
