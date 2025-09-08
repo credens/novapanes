@@ -49,16 +49,19 @@ header {
 
 .hero-section {
     position: relative;
-    display: flex; /* Changed for better control */
-    align-items: center; /* Vertically align text and image */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content when not enough space for justified */
     max-width: 1200px;
     margin: 40px auto 0;
     padding: 0 50px;
+    gap: 80px; /* Aumentado el espacio entre texto e imagen */
 }
 
 .hero-text {
-    flex: 1; /* Allows text to take available space */
-    z-index: 10; /* Ensures text is above image if they overlap */
+    flex: 1;
+    z-index: 10;
+    min-width: 300px; /* Evita que el texto se comprima demasiado */
 }
 
 .hero-text h1 {
@@ -71,16 +74,37 @@ header {
 }
 
 .hero-image {
-    /* Removed absolute positioning for a more flexible layout */
-    flex-shrink: 0; /* Prevents the image from shrinking */
-    margin-left: -100px; /* Creates the overlap effect */
+    flex-shrink: 0;
+    position: relative; /* Necesario para el pseudoelemento blur */
+    width: 550px; /* Ancho fijo para el contenedor */
+    height: 380px; /* Altura fija para el contenedor */
+    border-radius: 20px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta el desbordamiento de la imagen al aplicar object-fit */
 }
 
 .hero-image img {
-    /* Set max-width for responsiveness and kept a good base size */
-    max-width: 100%;
-    width: 550px; 
-    height: auto; /* Maintain aspect ratio */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cropa la imagen para que llene el contenedor */
+    display: block;
+    border-radius: 20px; /* Asegura que la imagen también tenga los bordes redondeados */
+}
+
+.hero-image::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* Extiende el blur un poco fuera del borde para que se vea completo */
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: inherit; /* Hereda el fondo del padre (que en este caso no tiene, pero es una buena práctica) */
+    background-image: var(--hero-image-url); /* Usará una variable CSS definida por JS */
+    background-size: cover;
+    background-position: center;
+    filter: blur(15px); /* Intensidad del blur */
+    z-index: -1; /* Manda el blur detrás de la imagen */
+    border-radius: 25px; /* Ligeramente más grande que la imagen para que el blur sea visible */
+    transition: background-image 0.5s ease; /* Suaviza el cambio de blur al cambiar la imagen */
 }
 
 /* Section Divider */
@@ -509,90 +533,102 @@ h2 {
 /* For Tablets and Smaller Desktops (less than 1024px) */
 @media (max-width: 1024px) {
     header {
-        padding: 40px 30px; /* Increased from 20px to 40px */
+        padding: 40px 30px;
     }
 
     .main-nav {
-        gap: 35px; /* Increased from 25px to 35px */
+        gap: 35px;
     }
 
     .logo {
-        margin: 0 50px; /* Increased from 30px to 50px */
+        margin: 0 50px;
     }
     
     .logo img {
-        width: 180px; /* Slightly smaller for tablets but still bigger than original */
+        width: 180px;
     }
 
     .hero-section {
-        flex-direction: column; /* Stack text and image vertically */
+        flex-direction: column;
         text-align: center;
         padding: 0 30px;
+        gap: 40px; /* Reduced gap for smaller screens */
     }
 
     .hero-text h1 {
-        font-size: 4rem; /* Reduce font size */
-        max-width: 100%; /* Allow text to take full width */
+        font-size: 4rem;
+        max-width: 100%;
     }
 
     .hero-image {
-        margin: 40px 0 0; /* Reset margin for vertical stacking */
+        margin: 0; /* Reset margin for vertical stacking */
+        width: 450px; /* Adjust size for tablet */
+        height: 300px;
+    }
+    
+    .hero-image::before {
+        top: -8px; /* Adjust blur extension for tablet */
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        filter: blur(12px); /* Slightly less blur for tablet */
+        border-radius: 23px;
     }
 
     .bottom-section {
-        flex-direction: column; /* Stack form and map vertically */
+        flex-direction: column;
         gap: 60px;
         padding: 0 30px;
     }
 
     .product-gallery {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 /* For Mobile Phones (less than 600px) */
 @media (max-width: 600px) {
     body {
-        /* This can help prevent text size from changing on mobile orientation change */
         -webkit-text-size-adjust: 100%;
     }
     
     header {
-        flex-direction: column; /* Stack logo and navs vertically */
-        gap: 25px; /* Increased from 20px to 25px */
-        padding: 30px 20px; /* Added more padding for mobile */
+        flex-direction: column;
+        gap: 25px;
+        padding: 30px 20px;
     }
 
     .logo {
-        order: -1; /* Move logo to the top */
+        order: -1;
         margin: 0;
     }
     
     .logo img {
-        width: 160px; /* Bigger than original even on mobile */
+        width: 160px;
     }
     
     .main-nav a {
-        font-size: 18px; /* Slightly bigger on mobile but not too big */
+        font-size: 18px;
     }
 
     .hero-text h1 {
-        font-size: clamp(1.8rem, 5vw, 3rem); /* Even smaller responsive range for mobile */
+        font-size: clamp(1.8rem, 5vw, 3rem);
     }
 
-    .hero-image img {
+    .hero-image {
         width: 100%; /* Make image take full width */
-        min-width: 200px; /* Smaller minimum for mobile */
-        max-width: 350px;
+        min-width: 280px; /* Smaller minimum for mobile */
+        max-width: 350px; /* Max width to prevent it from being too big */
+        height: 220px; /* Adjusted height for mobile */
         border-radius: 15px; /* Smaller radius for mobile */
     }
     
     .hero-image::before {
-        filter: blur(8px); /* Even less blur on mobile */
-        top: -5px;
+        top: -5px; /* Adjust blur extension for mobile */
         left: -5px;
         right: -5px;
         bottom: -5px;
+        filter: blur(8px); /* Even less blur on mobile */
         border-radius: 20px;
     }
 
@@ -601,7 +637,7 @@ h2 {
     }
 
     .product-gallery {
-        grid-template-columns: 1fr; /* 1 column for mobile */
+        grid-template-columns: 1fr;
     }
 
     .about-us-content {
@@ -617,7 +653,6 @@ h2 {
         max-height: 95vh;
     }
 
-    /* Make footer responsive */
     .footer {
         padding: 25px 15px;
     }
@@ -642,7 +677,6 @@ h2 {
         text-align: center;
     }
 
-    /* Mobile responsive styles for modal navigation */
     .modal-nav {
         padding: 10px;
         gap: 15px;
