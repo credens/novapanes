@@ -152,6 +152,10 @@ h2 {
 }
 
 /* Contact Info & Map */
+.contact-info-container h2 {
+    text-align: center; /* Center the "Dónde Encontrarnos" title */
+}
+
 .map-container {
     border: 1px solid #E0E0E0;
     padding: 10px;
@@ -229,13 +233,19 @@ h2 {
 
 /* --- ABOUT US SECTION STYLES --- */
 .about-us-section {
-    max-width: 900px;
     margin: 80px auto;
-    padding: 0 50px;
-    text-align: center;
+    padding: 0 50px; /* Default padding for desktop */
+    text-align: center; /* Ensures content inside is centered horizontally if it doesn't fill the width */
+}
+
+/* To make it full width while keeping content max-width and centered */
+.about-us-section.full-width {
+    max-width: 100%; /* Make the section itself full width */
 }
 
 .about-us-content {
+    max-width: 900px; /* Constrain content width */
+    margin: 0 auto; /* Center the content box */
     background-color: #fff;
     border: 1px solid #E0E0E0;
     border-radius: 8px;
@@ -257,11 +267,24 @@ h2 {
 
 /* --- RESPONSIVE STYLES --- */
 
-/* For Tablets and Smaller Desktops */
+/* For Tablets and Smaller Desktops (less than 1024px) */
 @media (max-width: 1024px) {
+    header {
+        padding: 20px 30px; /* Adjust header padding */
+    }
+
+    .main-nav {
+        gap: 25px; /* Reduce gap between nav items */
+    }
+
+    .logo {
+        margin: 0 30px; /* Adjust logo margin */
+    }
+
     .hero-section {
         flex-direction: column; /* Stack text and image vertically */
         text-align: center;
+        padding: 0 30px;
     }
 
     .hero-text h1 {
@@ -277,26 +300,51 @@ h2 {
         width: 450px; /* Adjust image size for tablets */
     }
 
-    .bottom-section {
-        gap: 50px;
+    .section-divider {
+        margin: 60px auto; /* Adjust divider margin */
+    }
+
+    .products-section {
+        padding: 0 30px;
     }
 
     .product-gallery {
         grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
     }
-    .products-section,
+    
     .about-us-section {
-        padding: 0 20px;
+        padding: 0 30px; /* Adjust padding for about us section */
+    }
+
+    .about-us-content {
+        padding: 30px; /* Adjust padding inside about us content box */
+    }
+
+    .bottom-section {
+        flex-direction: column; /* Stack form and map vertically */
+        padding: 0 30px;
+        margin-top: 60px;
+        gap: 60px; /* Adjust gap between bottom sections */
+    }
+
+    .contact-info-container h2,
+    .contact-form-container h2 {
+        text-align: center; /* Center contact titles on tablets */
     }
 }
 
 
-/* For Mobile Phones */
+/* For Mobile Phones (less than 768px) */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
         gap: 20px;
         padding: 20px;
+    }
+
+    .main-nav {
+        gap: 15px; /* Smaller gap for mobile nav */
+        font-size: 0.9rem;
     }
 
     .logo {
@@ -315,21 +363,32 @@ h2 {
 
     .hero-image img {
         width: 100%; /* Make image take full width of its container */
-        max-width: 350px;
-    }
-
-    .bottom-section {
-        flex-direction: column; /* Stack form and map vertically */
-        padding: 0 20px;
-        margin-top: 60px;
+        max-width: 300px; /* Limit max size on very small screens */
     }
 
     h2 {
         font-size: 2rem;
     }
 
+    .section-divider {
+        margin: 40px auto; /* Further reduce divider margin for mobile */
+        width: 90%;
+    }
+
+    .products-section {
+        padding: 0 20px;
+    }
+
     .product-gallery {
         grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+
+    .product-card img {
+        height: 200px; /* Smaller image height on mobile */
+    }
+
+    .product-card h3 {
+        font-size: 1.3rem;
     }
 
     .about-us-section {
@@ -344,7 +403,9 @@ h2 {
         font-size: 1rem;
     }
 
-    .section-divider {
-        margin: 60px auto;
+    .bottom-section {
+        padding: 0 20px;
+        margin-top: 40px;
+        gap: 40px;
     }
 }
