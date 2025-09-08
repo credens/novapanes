@@ -1,96 +1,73 @@
-/* --- FOOTER STYLES --- */
-.footer {
-    background-color: #B5651D;
-    color: #fff;
-    text-align: center;
-    padding: 30px 20px;
-    margin-top: 40px;
+/* Header and Navigation */
+header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    padding: 50px 50px; /* Increased from 30px to 50px */
+    flex-wrap: wrap; /* Allows nav to wrap on smaller screens */
 }
 
-.footer p {
-    margin: 0 0 15px 0;
-    font-size: 1rem;
-    line-height: 1.4;
-    text-align: center;
-    width: 100%;
-}
-
-.footer-links {
+.main-nav {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 10px;
-    width: 100%;
+    gap: 50px; /* Increased from 40px to 50px */
 }
 
-.footer-btn {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
+.main-nav a {
     text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center;
+    color: #000;
+    font-size: 18px; /* Increased from 16px to 18px */
+    font-weight: 500; /* Added some weight to make nav items more prominent */
+    transition: color 0.3s ease;
 }
 
-.footer-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.main-nav a:hover {
+    color: #B5651D; /* A subtle hover effect */
 }
 
-.whatsapp-btn:hover {
-    background-color: #25D366;
-    border-color: #25D366;
+.logo {
+    margin: 0 70px; /* Increased from 50px to 70px */
 }
 
-.instagram-btn:hover {
-    background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
-    border-color: transparent;
+.logo img {
+    width: 200px; /* Increased from 150px to 200px */
 }
 
-.phone-text {
-    color: #fff;
-    font-size: 0.9rem;
-    text-align: center;
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    header {
+        padding: 40px 30px; /* Increased from 20px to 40px */
+    }
+
+    .main-nav {
+        gap: 35px; /* Increased from 25px to 35px */
+    }
+
+    .logo {
+        margin: 0 50px; /* Increased from 30px to 50px */
+    }
+    
+    .logo img {
+        width: 180px; /* Slightly smaller for tablets but still bigger than original */
+    }
 }
 
-.footer-divider {
-    color: rgba(255, 255, 255, 0.6);
-    margin: 0 5px;
-}
-
-/* Make footer responsive */
 @media (max-width: 600px) {
-    .footer {
-        padding: 25px 15px;
+    header {
+        flex-direction: column; /* Stack logo and navs vertically */
+        gap: 25px; /* Increased from 20px to 25px */
+        padding: 30px 20px; /* Added more padding for mobile */
+    }
+
+    .logo {
+        order: -1; /* Move logo to the top */
+        margin: 0;
     }
     
-    .footer p {
-        font-size: 0.9rem;
-        margin-bottom: 20px;
+    .logo img {
+        width: 160px; /* Bigger than original even on mobile */
     }
     
-    .footer-links {
-        flex-direction: column;
-        gap: 10px;
-        align-items: center;
-    }
-    
-    .footer-divider {
-        display: none;
-    }
-    
-    .footer-btn, .phone-text {
-        font-size: 0.85rem;
-        text-align: center;
+    .main-nav a {
+        font-size: 16px; /* Keep readable size on mobile */
     }
 }
