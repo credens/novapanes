@@ -30,7 +30,7 @@
             <div class="hero-text">
                 <h1>Juntate con amigos y disfruta de los mejores panes.</h1>
             </div>
-            <div class="hero-image">
+            <div class="hero-image" id="heroImageContainer"> <!-- Added id here for JS to target -->
                 <!-- La imagen inicial es un placeholder que será reemplazado por JS -->
                 <img src="hero-images/hero-pan.png" alt="Panes NOVA" id="heroImage"> 
             </div>
@@ -172,3 +172,16 @@
 
     <script>
         // Random Hero Image Functionality
+        const heroImages = [
+            'hero-images/hero-pan.png',
+            'hero-images/hero-pan-1.png',
+            'hero-images/hero-pan-2.png'
+        ];
+
+        // Function to get random hero image
+        function setRandomHeroImage() {
+            const heroImg = document.getElementById('heroImage');
+            const heroImageContainer = document.getElementById('heroImageContainer'); // Get the container
+            if (heroImg && heroImageContainer) { 
+                const randomIndex = Math.floor(Math.random() * heroImages.length);
+                const randomImage

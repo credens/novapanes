@@ -80,6 +80,8 @@ header {
     height: 380px; /* Altura fija para el contenedor */
     border-radius: 20px; /* Bordes redondeados */
     overflow: hidden; /* Oculta el desbordamiento de la imagen al aplicar object-fit */
+    /* Valor inicial para la variable CSS que usará el ::before */
+    --hero-image-url: url('hero-images/hero-pan.png'); 
 }
 
 .hero-image img {
@@ -97,8 +99,7 @@ header {
     left: -10px;
     right: -10px;
     bottom: -10px;
-    background: inherit; /* Hereda el fondo del padre (que en este caso no tiene, pero es una buena práctica) */
-    background-image: var(--hero-image-url); /* Usará una variable CSS definida por JS */
+    background-image: var(--hero-image-url); /* Usa la variable CSS */
     background-size: cover;
     background-position: center;
     filter: blur(15px); /* Intensidad del blur */
