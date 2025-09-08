@@ -534,11 +534,12 @@ h2 {
     }
 
     .hero-text h1 {
-        font-size: 3rem; /* Further reduce font size */
+        font-size: clamp(1.8rem, 5vw, 3rem); /* Even smaller responsive range for mobile */
     }
 
     .hero-image img {
         width: 100%; /* Make image take full width */
+        min-width: 200px; /* Smaller minimum for mobile */
         max-width: 350px;
     }
 
