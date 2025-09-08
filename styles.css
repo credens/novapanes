@@ -223,6 +223,11 @@ h2 {
     height: 250px; /* Gives all images a uniform height */
     object-fit: cover; /* Ensures images cover the area without distortion */
     display: block;
+    transition: transform 0.3s ease; /* Smooth transition for image hover */
+}
+
+.product-card img:hover {
+    transform: scale(1.05); /* Slightly zoom in image on hover */
 }
 
 .product-card h3 {
@@ -293,119 +298,4 @@ h2 {
     }
 
     .hero-image {
-        margin: 40px 0 0 0; /* Remove overlap and add space at the top */
-    }
-
-    .hero-image img {
-        width: 450px; /* Adjust image size for tablets */
-    }
-
-    .section-divider {
-        margin: 60px auto; /* Adjust divider margin */
-    }
-
-    .products-section {
-        padding: 0 30px;
-    }
-
-    .product-gallery {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
-    }
-    
-    .about-us-section {
-        padding: 0 30px; /* Adjust padding for about us section */
-    }
-
-    .about-us-content {
-        padding: 30px; /* Adjust padding inside about us content box */
-    }
-
-    .bottom-section {
-        flex-direction: column; /* Stack form and map vertically */
-        padding: 0 30px;
-        margin-top: 60px;
-        gap: 60px; /* Adjust gap between bottom sections */
-    }
-
-    .contact-info-container h2,
-    .contact-form-container h2 {
-        text-align: center; /* Center contact titles on tablets */
-    }
-}
-
-
-/* For Mobile Phones (less than 768px) */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .main-nav {
-        gap: 15px; /* Smaller gap for mobile nav */
-        font-size: 0.9rem;
-    }
-
-    .logo {
-        margin: 0;
-        order: -1; /* Move logo to the top */
-    }
-    
-    .hero-section {
-        padding: 0 20px;
-        margin-top: 20px;
-    }
-
-    .hero-text h1 {
-        font-size: 2.5rem; /* Further reduce font size for mobile */
-    }
-
-    .hero-image img {
-        width: 100%; /* Make image take full width of its container */
-        max-width: 300px; /* Limit max size on very small screens */
-    }
-
-    h2 {
-        font-size: 2rem;
-    }
-
-    .section-divider {
-        margin: 40px auto; /* Further reduce divider margin for mobile */
-        width: 90%;
-    }
-
-    .products-section {
-        padding: 0 20px;
-    }
-
-    .product-gallery {
-        grid-template-columns: 1fr; /* 1 column on mobile */
-    }
-
-    .product-card img {
-        height: 200px; /* Smaller image height on mobile */
-    }
-
-    .product-card h3 {
-        font-size: 1.3rem;
-    }
-
-    .about-us-section {
-        padding: 0 20px;
-    }
-
-    .about-us-content {
-        padding: 25px;
-    }
-
-    .about-us-content p {
-        font-size: 1rem;
-    }
-
-    .bottom-section {
-        padding: 0 20px;
-        margin-top: 40px;
-        gap: 40px;
-    }
-}
+        margin: 40px
