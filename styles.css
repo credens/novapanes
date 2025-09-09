@@ -108,6 +108,51 @@ header {
     transition: background-image 0.5s ease; /* Suaviza el cambio de blur al cambiar la imagen */
 }
 
+/* Hero CTA Button */
+.hero-cta {
+    margin-top: 40px;
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #B5651D, #D17A2A);
+    color: #fff;
+    text-decoration: none;
+    padding: 18px 36px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(181, 101, 29, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(181, 101, 29, 0.4);
+    background: linear-gradient(135deg, #D17A2A, #B5651D);
+}
+
+.cta-button:active {
+    transform: translateY(-1px);
+}
+
 /* Section Divider */
 .section-divider {
     border: none;
@@ -253,7 +298,6 @@ h2 {
     border-color: #B5651D;
 }
 
-
 /* --- PRODUCTS SECTION STYLES --- */
 
 .products-section {
@@ -302,6 +346,79 @@ h2 {
     font-family: 'Lora', serif;
     font-size: 1.5rem;
     margin: 20px;
+}
+
+/* Product Actions Preview */
+.product-actions-preview {
+    padding: 15px 20px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafafa;
+}
+
+.price-preview {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #B5651D;
+}
+
+.shop-link {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.shop-link:hover {
+    background: #B5651D;
+    transform: translateY(-1px);
+}
+
+/* Products CTA */
+.products-cta {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.view-all-products {
+    display: inline-block;
+    background: linear-gradient(135deg, #000, #333);
+    color: #fff;
+    text-decoration: none;
+    padding: 16px 32px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.view-all-products::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.view-all-products:hover::before {
+    left: 100%;
+}
+
+.view-all-products:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #B5651D, #D17A2A);
 }
 
 /* --- ABOUT US SECTION STYLES --- */
@@ -587,6 +704,36 @@ h2 {
     }
 }
 
+/* For Mobile Phones (less than 768px) */
+@media (max-width: 768px) {
+    .hero-cta {
+        margin-top: 30px;
+        text-align: center;
+    }
+    
+    .cta-button {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+    
+    .product-actions-preview {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .shop-link {
+        text-align: center;
+        padding: 10px 16px;
+    }
+    
+    .view-all-products {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+}
+
 /* For Mobile Phones (less than 600px) */
 @media (max-width: 600px) {
     body {
@@ -692,5 +839,30 @@ h2 {
     .modal-counter {
         font-size: 12px;
         min-width: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-cta {
+        margin-top: 25px;
+    }
+    
+    .cta-button {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        width: 90%;
+        max-width: 280px;
+        text-align: center;
+    }
+    
+    .price-preview {
+        font-size: 1.1rem;
+    }
+    
+    .view-all-products {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        width: 90%;
+        max-width: 300px;
     }
 }
