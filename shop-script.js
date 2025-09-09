@@ -1,69 +1,5 @@
-// Datos de productos
-const products = [
-    {
-        id: 1,
-        name: "Pan de papa con parmesano",
-        description: "Suave pan de papa con un toque de parmesano que le da un sabor único.",
-        price: 1500,
-        image: "productos/pan-de-papa-1.png",
-        category: "papa",
-        stock: 20
-    },
-    {
-        id: 2,
-        name: "Pan de lomito",
-        description: "Perfecto para lomitos y sandwiches. Suave y resistente.",
-        price: 1800,
-        image: "productos/lomito-1.jpg",
-        category: "hamburguesa",
-        stock: 15
-    },
-    {
-        id: 3,
-        name: "Pan de papa con sésamo",
-        description: "Pan de papa decorado con semillas de sésamo tostadas.",
-        price: 1600,
-        image: "productos/sesamo.jpg",
-        category: "papa",
-        stock: 18
-    },
-    {
-        id: 4,
-        name: "Pan de panchos",
-        description: "Ideal para hot dogs y panchos. Suave y esponjoso.",
-        price: 1200,
-        image: "productos/pancho-1.png",
-        category: "pancho",
-        stock: 25
-    },
-    {
-        id: 5,
-        name: "Pan de hamburguesa tradicional",
-        description: "El clásico pan para hamburguesas, suave y con la forma perfecta.",
-        price: 1400,
-        image: "productos/hamburguesa-simple2.png",
-        category: "hamburguesa",
-        stock: 22
-    },
-    {
-        id: 6,
-        name: "Pan de molde",
-        description: "Pan de molde ideal para tostadas y sandwiches.",
-        price: 2000,
-        image: "productos/pan-de-molde-1.png",
-        category: "molde",
-        stock: 10
-    },
-    {
-        id: 7,
-        name: "Pancho doble con queso",
-        description: "Pan especial para panchos dobles, con un toque de queso.",
-        price: 1700,
-        image: "productos/pancho-doble.png",
-        category: "pancho",
-        stock: 12
-    }
-];
+// Variable global para almacenar los productos que se cargarán desde el JSON
+let products = [];
 
 // Estado del carrito
 let cart = [];
@@ -79,19 +15,47 @@ const cartTotal = document.getElementById('cartTotal');
 
 // Inicializar la tienda
 document.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
-    setupEventListeners();
-    updateCartDisplay();
+    // Usamos fetch para cargar los datos de los productos desde el archivo JSON
+    fetch('products.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // Convertimos la respuesta a formato JSON
+        })
+        .then(data => {
+            products = data; // Guardamos los datos en nuestra variable global
+            
+            // --- ¡MUY IMPORTANTE! ---
+            // Ahora que ya tenemos los productos, llamamos a las funciones de inicialización
+            renderProducts();
+            setupEventListeners();
+            updateCartDisplay();
+        })
+        .catch(error => {
+            // Manejar el error en caso de que el archivo JSON no se pueda cargar
+            console.error('Error al cargar los productos:', error);
+            if(shopProducts) {
+                shopProducts.innerHTML = '<p style="text-align: center; color: red;">No se pudieron cargar los productos. Por favor, intente más tarde.</p>';
+            }
+        });
 });
 
 // Renderizar productos
 function renderProducts(filter = 'all') {
+    if (!shopProducts) return; // Salir si el contenedor de productos no existe
+    
     shopProducts.innerHTML = '';
     
     const filteredProducts = filter === 'all' 
         ? products 
         : products.filter(product => product.category === filter);
     
+    if (filteredProducts.length === 0 && filter !== 'all') {
+        shopProducts.innerHTML = '<p style="text-align: center;">No hay productos en esta categoría.</p>';
+        return;
+    }
+
     filteredProducts.forEach(product => {
         const productHTML = `
             <div class="product-item" data-category="${product.category}">
@@ -129,35 +93,48 @@ function setupEventListeners() {
     });
 
     // Carrito flotante
-    cartFloating.addEventListener('click', openCartModal);
+    if (cartFloating) cartFloating.addEventListener('click', openCartModal);
 
     // Cerrar modales
-    document.querySelector('.close-cart').addEventListener('click', closeCartModal);
-    document.querySelector('.close-checkout').addEventListener('click', closeCheckout);
+    const closeCartBtn = document.querySelector('.close-cart');
+    const closeCheckoutBtn = document.querySelector('.close-checkout');
+    if (closeCartBtn) closeCartBtn.addEventListener('click', closeCartModal);
+    if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', closeCheckout);
 
     // Acciones del carrito
-    document.getElementById('clearCart').addEventListener('click', clearCart);
-    document.getElementById('checkout').addEventListener('click', openCheckout);
+    const clearCartBtn = document.getElementById('clearCart');
+    const checkoutBtn = document.getElementById('checkout');
+    if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
+    if (checkoutBtn) checkoutBtn.addEventListener('click', openCheckout);
 
     // Form de checkout
-    document.getElementById('checkoutForm').addEventListener('submit', handleCheckout);
+    const checkoutForm = document.getElementById('checkoutForm');
+    if (checkoutForm) checkoutForm.addEventListener('submit', handleCheckout);
 
     // Cerrar modales al hacer click fuera
-    cartModal.addEventListener('click', function(e) {
-        if (e.target === cartModal) closeCartModal();
-    });
+    if (cartModal) {
+        cartModal.addEventListener('click', function(e) {
+            if (e.target === cartModal) closeCartModal();
+        });
+    }
 
-    checkoutModal.addEventListener('click', function(e) {
-        if (e.target === checkoutModal) closeCheckout();
-    });
+    if (checkoutModal) {
+        checkoutModal.addEventListener('click', function(e) {
+            if (e.target === checkoutModal) closeCheckout();
+        });
+    }
 }
 
 // Cambiar cantidad
 function changeQuantity(productId, change) {
     const qtyInput = document.getElementById(`qty-${productId}`);
+    if (!qtyInput) return;
+    
     let newValue = parseInt(qtyInput.value) + change;
     const product = products.find(p => p.id === productId);
     
+    if (!product) return;
+
     if (newValue < 1) newValue = 1;
     if (newValue > product.stock) newValue = product.stock;
     
@@ -167,8 +144,12 @@ function changeQuantity(productId, change) {
 // Agregar al carrito
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
-    const quantity = parseInt(document.getElementById(`qty-${productId}`).value);
+    if (!product) return;
     
+    const quantityInput = document.getElementById(`qty-${productId}`);
+    if (!quantityInput) return;
+    
+    const quantity = parseInt(quantityInput.value);
     const existingItem = cart.find(item => item.id === productId);
     
     if (existingItem) {
@@ -179,10 +160,15 @@ function addToCart(productId) {
             return;
         }
     } else {
-        cart.push({
-            ...product,
-            quantity: quantity
-        });
+        if (quantity <= product.stock) {
+            cart.push({
+                ...product,
+                quantity: quantity
+            });
+        } else {
+            alert(`Solo quedan ${product.stock} unidades disponibles`);
+            return;
+        }
     }
     
     updateCartDisplay();
@@ -204,14 +190,16 @@ function updateCartDisplay() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
-    cartCount.textContent = totalItems;
-    cartTotal.textContent = totalPrice.toLocaleString();
+    if (cartCount) cartCount.textContent = totalItems;
+    if (cartTotal) cartTotal.textContent = totalPrice.toLocaleString();
     
     // Mostrar/ocultar carrito flotante
-    if (totalItems > 0) {
-        cartFloating.style.display = 'block';
-    } else {
-        cartFloating.style.display = 'none';
+    if (cartFloating) {
+        if (totalItems > 0) {
+            cartFloating.style.display = 'block';
+        } else {
+            cartFloating.style.display = 'none';
+        }
     }
     
     renderCartItems();
@@ -219,6 +207,8 @@ function updateCartDisplay() {
 
 // Renderizar items del carrito
 function renderCartItems() {
+    if (!cartItems) return;
+    
     if (cart.length === 0) {
         cartItems.innerHTML = '<div class="empty-cart-message">Tu carrito está vacío</div>';
         return;
@@ -229,7 +219,7 @@ function renderCartItems() {
             <img src="${item.image}" alt="${item.name}" class="cart-item-image">
             <div class="cart-item-info">
                 <div class="cart-item-title">${item.name}</div>
-                <div class="cart-item-price">${item.price.toLocaleString()}</div>
+                <div class="cart-item-price">$${item.price.toLocaleString()}</div>
             </div>
             <div class="cart-item-quantity">
                 <button class="cart-qty-btn" onclick="updateCartItemQuantity(${item.id}, ${item.quantity - 1})">-</button>
@@ -245,6 +235,8 @@ function renderCartItems() {
 function updateCartItemQuantity(productId, newQuantity) {
     const product = products.find(p => p.id === productId);
     const cartItem = cart.find(item => item.id === productId);
+    
+    if (!product || !cartItem) return;
     
     if (newQuantity <= 0) {
         removeFromCart(productId);
@@ -276,13 +268,15 @@ function clearCart() {
 
 // Abrir modal del carrito
 function openCartModal() {
-    cartModal.style.display = 'block';
-    renderCartItems();
+    if (cartModal) {
+        cartModal.style.display = 'block';
+        renderCartItems();
+    }
 }
 
 // Cerrar modal del carrito
 function closeCartModal() {
-    cartModal.style.display = 'none';
+    if (cartModal) cartModal.style.display = 'none';
 }
 
 // Abrir checkout
@@ -293,13 +287,15 @@ function openCheckout() {
     }
     
     closeCartModal();
-    checkoutModal.style.display = 'block';
-    renderOrderSummary();
+    if (checkoutModal) {
+        checkoutModal.style.display = 'block';
+        renderOrderSummary();
+    }
 }
 
 // Cerrar checkout
 function closeCheckout() {
-    checkoutModal.style.display = 'none';
+    if (checkoutModal) checkoutModal.style.display = 'none';
 }
 
 // Renderizar resumen del pedido
@@ -309,14 +305,16 @@ function renderOrderSummary() {
     
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
-    orderItems.innerHTML = cart.map(item => `
-        <div class="order-item">
-            <span>${item.name} x ${item.quantity}</span>
-            <span>${(item.price * item.quantity).toLocaleString()}</span>
-        </div>
-    `).join('');
+    if (orderItems) {
+        orderItems.innerHTML = cart.map(item => `
+            <div class="order-item">
+                <span>${item.name} x ${item.quantity}</span>
+                <span>$${(item.price * item.quantity).toLocaleString()}</span>
+            </div>
+        `).join('');
+    }
     
-    orderTotal.textContent = totalPrice.toLocaleString();
+    if (orderTotal) orderTotal.textContent = totalPrice.toLocaleString();
 }
 
 // Manejar checkout
@@ -354,7 +352,7 @@ function handleCheckout(e) {
     updateCartDisplay();
     closeCheckout();
     
-    alert('¡Pedido enviado! Te contactaremos pronto para confirmar los detalles.');
+    alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para que completes el envío. Te contactaremos pronto para confirmar los detalles.');
 }
 
 // Crear mensaje para WhatsApp
@@ -373,19 +371,19 @@ function createWhatsAppMessage(orderData) {
         message += `📝 *Referencias:* ${orderData.customer.referencias}\n`;
     }
     
-    message += `💳 *Método de pago:* ${orderData.metodoPago}\n\n`;
+    message += `\n💳 *Método de pago:* ${orderData.metodoPago}\n\n`;
     
     message += `🛒 *PRODUCTOS:*\n`;
     orderData.items.forEach(item => {
-        message += `• ${item.name} x${item.quantity} - ${(item.price * item.quantity).toLocaleString()}\n`;
+        message += `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}\n`;
     });
     
-    message += `\n💰 *TOTAL: ${orderData.total.toLocaleString()}*`;
+    message += `\n💰 *TOTAL: $${orderData.total.toLocaleString()}*`;
     
     return message;
 }
 
-// Abrir modal de producto (reutilizar el del index)
+// Abrir modal de producto (reutilizar el del index o crear uno simple)
 function openProductModal(imageSrc, title) {
     // Verificar si existe el modal del producto del index.html
     const existingModal = document.getElementById('imageModal');
@@ -396,17 +394,17 @@ function openProductModal(imageSrc, title) {
         const modalTitle = document.getElementById('modalTitle');
         const modalNav = document.getElementById('modalNav');
         
-        modalImage.src = imageSrc;
-        modalTitle.textContent = title;
-        modalNav.style.display = 'none'; // Ocultar navegación para imagen única
+        if (modalImage) modalImage.src = imageSrc;
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalNav) modalNav.style.display = 'none'; // Ocultar navegación para imagen única
         
         existingModal.style.display = 'block';
     } else {
-        // Crear modal simple si no existe
+        // Crear modal simple si no existe (fallback)
         const modal = document.createElement('div');
         modal.innerHTML = `
             <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center;" onclick="this.remove()">
-                <div style="max-width: 90%; max-height: 90%; background: white; border-radius: 12px; overflow: hidden;" onclick="event.stopPropagation()">
+                <div style="max-width: 90%; max-height: 90%; background: white; border-radius: 12px; overflow: hidden; animation: modalAppear 0.3s;" onclick="event.stopPropagation()">
                     <img src="${imageSrc}" style="width: 100%; height: auto; display: block;">
                     <div style="padding: 20px; text-align: center; font-family: 'Lora', serif; font-size: 1.2rem;">${title}</div>
                 </div>
