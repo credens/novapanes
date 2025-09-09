@@ -133,41 +133,82 @@
 
     <hr class="section-divider">
 
-    <section id="contacto" class="bottom-section">
-        <div class="contact-form-container">
-            <h2>Contacto</h2>
-            <form action="https://formsubmit.co/panes.nova@gmail.com" method="POST">
-                <!-- FormSubmit configuration -->
-                <input type="hidden" name="_subject" value="Nuevo mensaje desde NOVA Panes">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
+<section id="contacto" class="bottom-section">
+    <div class="contact-form-container">
+        <h2>Contacto</h2>
+        <form id="contactForm" action="contact.php" method="POST">
+            <input type="text" name="nombre" placeholder="Nombre *" required>
+            <input type="email" name="email" placeholder="Correo electrónico">
+            <input type="tel" name="telefono" placeholder="Teléfono *" required>
+            <textarea name="mensaje" placeholder="Mensaje" rows="4"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        
+        <!-- Message display area -->
+        <div id="formMessage" class="form-message"></div>
+    </div>
 
-                <input type="text" name="nombre" placeholder="Nombre *" required>
-                <input type="email" name="email" placeholder="Correo electrónico">
-                <input type="tel" name="telefono" placeholder="Teléfono *" required>
-                <textarea name="mensaje" placeholder="Mensaje" rows="4"></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
-
-        <div class="contact-info-container">
-            <h2>Dónde Encontrarnos</h2>
-            <div class="map-container">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa%2C%20ex%20Batistta%20e%20Hijos!5e0!3m2!1ses-419!2sar!4v1757366780914!5m2!1ses-419!2sar"
-                    width="100%"
-                    height="300"
-                    style="border:0;"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-                <div class="map-info">
-                    <a href="https://maps.app.goo.gl/oJNFji4nYeB3hSBB6" target="_blank" class="map-link">Ver en Google Maps</a>
-                </div>
+    <div class="contact-info-container">
+        <h2>Dónde Encontrarnos</h2>
+        <div class="map-container">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa%2C%20ex%20Batistta%20e%20Hijos!5e0!3m2!1ses-419!2sar!4v1757366780914!5m2!1ses-419!2sar"
+                width="100%"
+                height="300"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <div class="map-info">
+                <a href="https://maps.app.goo.gl/oJNFji4nYeB3hSBB6" target="_blank" class="map-link">Ver en Google Maps</a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<script>
+// Form handling with AJAX
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const messageDiv = document.getElementById('formMessage');
+    const submitButton = this.querySelector('button[type="submit"]');
+    
+    // Show loading state
+    submitButton.textContent = 'Enviando...';
+    submitButton.disabled = true;
+    messageDiv.style.display = 'none';
+    
+    fetch('contact.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        messageDiv.textContent = data.message;
+        messageDiv.className = 'form-message ' + (data.success ? 'success' : 'error');
+        messageDiv.style.display = 'block';
+        
+        if (data.success) {
+            // Reset form on success
+            document.getElementById('contactForm').reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        messageDiv.textContent = 'Error al enviar el mensaje. Inténtalo de nuevo.';
+        messageDiv.className = 'form-message error';
+        messageDiv.style.display = 'block';
+    })
+    .finally(() => {
+        // Reset button state
+        submitButton.textContent = 'Enviar';
+        submitButton.disabled = false;
+    });
+});
+</script>
 
     <hr class="section-divider">
 
