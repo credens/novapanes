@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVA Panes - Shop</title>
+    
+    <!-- SEO: Título optimizado -->
+    <title>Tienda Online - NOVA Panes</title>
+
+    <!-- SEO: Meta Descripción -->
+    <meta name="description" content="Comprá online los mejores panes de papa. Elegí tus favoritos, añadilos al carrito y recibilos en tu casa. Pan para hamburguesas, panchos, lomitos y más.">
+    
+    <!-- SEO: Open Graph Tags para Redes Sociales -->
+    <meta property="og:title" content="Tienda Online - NOVA Panes">
+    <meta property="og:description" content="Hacé tu pedido de pan de papa fresco y artesanal. ¡Fácil, rápido y delicioso!">
+    <meta property="og:image" content="https://www.tudominio.com/hero-images/hero-pan-1.png"> <!-- Cambiar a URL completa cuando el sitio esté online -->
+    <meta property="og:url" content="https://www.tudominio.com/shop.html"> <!-- Cambiar a URL completa cuando el sitio esté online -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_AR">
+
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,10 +31,11 @@
             <a href="index.html#productos">Productos</a>
         </nav>
         <div class="logo">
-            <img src="logo.png" alt="NOVA Panes Logo">
+            <!-- SEO: Alt text para el logo -->
+            <img src="logo.png" alt="Logo de NOVA Panes - Tienda">
         </div>
         <nav class="main-nav">
-            <a href="shop.html">Shop</a>
+            <a href="shop.html" class="active">Shop</a>
             <a href="index.html#quienes-somos">Quiénes Somos</a>
             <a href="index.html#contacto">Contacto</a>
         </nav>
@@ -34,7 +49,7 @@
     </div>
 
     <!-- Carrito flotante -->
-    <div id="cartFloating" class="cart-floating">
+    <div id="cartFloating" class="cart-floating" style="display: none;">
         <div class="cart-icon">
             🛒 <span id="cartCount">0</span>
         </div>
@@ -104,7 +119,7 @@
                 </div>
 
                 <div class="checkout-actions">
-                    <button type="button" class="btn-secondary" onclick="closeCheckout()">Cancelar</button>
+                    <button type="button" class="btn-secondary close-checkout-btn">Cancelar</button>
                     <button type="submit" class="btn-primary">Confirmar Pedido</button>
                 </div>
             </form>
@@ -125,7 +140,7 @@
 
         <!-- Productos -->
         <div class="shop-products" id="shopProducts">
-            <!-- Los productos se cargarán dinámicamente -->
+            <!-- Los productos se cargarán dinámicamente aquí -->
         </div>
     </main>
 
@@ -147,5 +162,16 @@
     </footer>
 
     <script src="shop-script.js"></script>
+    <script>
+        // Pequeño script para cerrar el modal de checkout con el botón de cancelar
+        document.querySelectorAll('.close-checkout-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const checkoutModal = document.getElementById('checkoutModal');
+                if (checkoutModal) {
+                    checkoutModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
