@@ -18,8 +18,10 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="es_AR">
 
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="shop-styles.css">
+    <!-- PERFORMANCE: Usando las versiones minificadas de los CSS -->
+    <link rel="stylesheet" href="styles.min.css">
+    <link rel="stylesheet" href="shop-styles.min.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -31,7 +33,6 @@
             <a href="index.html#productos">Productos</a>
         </nav>
         <div class="logo">
-            <!-- SEO: Alt text para el logo -->
             <img src="logo.png" alt="Logo de NOVA Panes - Tienda">
         </div>
         <nav class="main-nav">
@@ -127,7 +128,6 @@
     </div>
 
     <main class="shop-main">
-        <!-- Filtros -->
         <div class="shop-filters">
             <div class="filter-container">
                 <button class="filter-btn active" data-filter="all">Todos</button>
@@ -138,7 +138,6 @@
             </div>
         </div>
 
-        <!-- Productos -->
         <div class="shop-products" id="shopProducts">
             <!-- Los productos se cargarán dinámicamente aquí -->
         </div>
@@ -161,9 +160,11 @@
         </div>
     </footer>
 
-    <script src="shop-script.js"></script>
+    <!-- PERFORMANCE: Usando la versión minificada del JS -->
+    <script src="shop-script.min.js"></script>
+    
     <script>
-        // Pequeño script para cerrar el modal de checkout con el botón de cancelar
+        // Pequeño script para que el botón "Cancelar" del checkout también cierre el modal
         document.querySelectorAll('.close-checkout-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const checkoutModal = document.getElementById('checkoutModal');
