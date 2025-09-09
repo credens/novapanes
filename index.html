@@ -63,7 +63,7 @@
     }
     </script>
     
-    <!-- PERFORMANCE: Usando la versión minificada del CSS -->
+    <!-- Archivo CSS original -->
     <link rel="stylesheet" href="styles.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,7 +96,6 @@
                 </div>
             </div>
             <div class="hero-image" id="heroImageContainer">
-                <!-- PERFORMANCE: La imagen principal (above the fold) no lleva lazy loading para que cargue de inmediato -->
                 <img src="hero-images/hero-pan.png" alt="Variedad de panes artesanales de NOVA Panes" id="heroImage">
             </div>
         </main>
@@ -109,7 +108,6 @@
         <div class="product-gallery">
 
             <div class="product-card">
-                <!-- PERFORMANCE: Añadido loading="lazy" y decoding="async" -->
                 <img src="productos/pan-de-papa-1.png" alt="Pan de papa artesanal con parmesano"
                      data-title="Pan de papa con parmesano"
                      data-images='["productos/pan-de-papa-1.png"]' loading="lazy" decoding="async">
@@ -121,7 +119,6 @@
             </div>
 
            <div class="product-card">
-                <!-- PERFORMANCE: Añadido loading="lazy" y decoding="async" -->
                 <img src="productos/lomito-1.jpg" alt="Pan de lomito largo y pan de pancho doble con queso"
                      data-title="Pan de lomito / pancho doble con queso"
                      data-images='["productos/lomito-1.jpg", "productos/pancho-doble.png", "productos/pancho-doble-2.png"]' loading="lazy" decoding="async">
@@ -133,7 +130,6 @@
             </div>
 
             <div class="product-card">
-                <!-- PERFORMANCE: Añadido loading="lazy" y decoding="async" -->
                 <img src="productos/sesamo.jpg" alt="Pan de papa cubierto con semillas de sésamo"
                      data-title="Pan de papa con sésamo"
                      data-images='["productos/sesamo.jpg"]' loading="lazy" decoding="async">
@@ -145,7 +141,6 @@
             </div>
 
             <div class="product-card">
-                <!-- PERFORMANCE: Añadido loading="lazy" y decoding="async" -->
                 <img src="productos/pancho-1.png" alt="Panes suaves y esponjosos para panchos"
                      data-title="Pan de panchos"
                      data-images='["productos/pancho-1.png"]' loading="lazy" decoding="async">
@@ -157,7 +152,6 @@
             </div>
 
             <div class="product-card">
-                <!-- PERFORMANCE: Añadido loading="lazy" y decoding="async" -->
                 <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional clásico y suave"
                      data-title="Pan de hamburguesa tradicional"
                      data-images='["productos/hamburguesa-simple2.png"]' loading="lazy" decoding="async">
@@ -169,7 +163,6 @@
             </div>
 
             <div class="product-card">
-                <!-- PERFORMANCE: Añadido loading="lazy" y decoding="async" -->
                 <img src="productos/pan-de-molde-1.png" alt="Pan de molde blanco ideal para sandwiches y tostadas"
                      data-title="Pan de molde"
                      data-images='["productos/pan-de-molde-1.png"]' loading="lazy" decoding="async">
@@ -218,7 +211,6 @@
         <div class="contact-info-container">
             <h2>Dónde Encontrarnos</h2>
             <div class="map-container">
-                <!-- PERFORMANCE: Añadido loading="lazy" al iframe del mapa -->
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa%2C%20ex%20Batistta%20e%20Hijos!5e0!3m2!1ses-419!2sar!4v1757366780914!5m2!1ses-419!2sar"
                     width="100%"
@@ -236,20 +228,7 @@
     </section>
 
     <script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this), messageDiv = document.getElementById('formMessage'), submitButton = this.querySelector('button[type="submit"]');
-        submitButton.textContent = 'Enviando...', submitButton.disabled = true, messageDiv.style.display = 'none';
-        fetch('contact.php', { method: 'POST', body: formData }).then(response => response.json())
-        .then(data => {
-            messageDiv.textContent = data.message, messageDiv.className = 'form-message ' + (data.success ? 'success' : 'error'), messageDiv.style.display = 'block';
-            if (data.success) document.getElementById('contactForm').reset();
-        }).catch(error => {
-            console.error('Error:', error), messageDiv.textContent = 'Error al enviar el mensaje. Inténtalo de nuevo.', messageDiv.className = 'form-message error', messageDiv.style.display = 'block';
-        }).finally(() => {
-            submitButton.textContent = 'Enviar', submitButton.disabled = false;
-        });
-    });
+    document.getElementById('contactForm').addEventListener('submit', function(e) { e.preventDefault(); const t = new FormData(this), n = document.getElementById("formMessage"), o = this.querySelector('button[type="submit"]'); o.textContent = "Enviando...", o.disabled = !0, n.style.display = "none", fetch("contact.php", { method: "POST", body: t }).then(e => e.json()).then(e => { n.textContent = e.message, n.className = "form-message " + (e.success ? "success" : "error"), n.style.display = "block", e.success && document.getElementById("contactForm").reset() }).catch(e => { console.error("Error:", e), n.textContent = "Error al enviar el mensaje. Inténtalo de nuevo.", n.className = "form-message error", n.style.display = "block" }).finally(() => { o.textContent = "Enviar", o.disabled = !1 }) });
     </script>
     
     <hr class="section-divider">
