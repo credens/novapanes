@@ -1,10 +1,10 @@
-// Variable global para almacenar los productos que se cargarán desde el JSON
-let products = [];
+// ===================================================
+//      ARCHIVO shop-script.js (VERSIÓN FINAL)
+// ===================================================
 
-// Estado del carrito
+let products = [];
 let cart = [];
 
-// Elementos del DOM
 const shopProducts = document.getElementById('shopProducts');
 const cartFloating = document.getElementById('cartFloating');
 const cartModal = document.getElementById('cartModal');
@@ -13,20 +13,16 @@ const cartCount = document.getElementById('cartCount');
 const cartItems = document.getElementById('cartItems');
 const cartTotal = document.getElementById('cartTotal');
 
-// Inicializar la tienda
 document.addEventListener('DOMContentLoaded', function() {
-    // Usamos fetch para cargar los datos de los productos desde el archivo JSON
     fetch('products.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok. Status: ' + response.statusText);
             }
-            return response.json(); // Convertimos la respuesta a formato JSON
+            return response.json();
         })
         .then(data => {
-            products = data; // Guardamos los datos en nuestra variable global
-            
-            // Una vez que tenemos los datos, renderizamos todo lo demás
+            products = data;
             renderProducts();
             setupEventListeners();
             updateCartDisplay();
@@ -34,17 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error al cargar o procesar los productos:', error);
             if(shopProducts) {
-                shopProducts.innerHTML = '<p style="text-align: center; color: red;">Error: No se pudieron cargar los productos. Revisa la consola (F12) para más detalles.</p>';
+                shopProducts.innerHTML = '<p style="text-align: center; color: red;">Error: No se pudieron cargar los productos.</p>';
             }
         });
 });
 
-// Renderizar productos
 function renderProducts(filter = 'all') {
     if (!shopProducts) return;
-    
     shopProducts.innerHTML = '';
-    
     const filteredProducts = filter === 'all' 
         ? products 
         : products.filter(product => product.category === filter);
@@ -79,7 +72,6 @@ function renderProducts(filter = 'all') {
     });
 }
 
-// Configurar event listeners
 function setupEventListeners() {
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -88,54 +80,39 @@ function setupEventListeners() {
             renderProducts(this.dataset.filter);
         });
     });
-
     if (cartFloating) cartFloating.addEventListener('click', openCartModal);
-
     const closeCartBtn = document.querySelector('.close-cart');
     if (closeCartBtn) closeCartBtn.addEventListener('click', closeCartModal);
-
     const closeCheckoutBtn = document.querySelector('.close-checkout');
     if(closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', closeCheckout);
-
     const clearCartBtn = document.getElementById('clearCart');
     if(clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
-    
     const checkoutBtn = document.getElementById('checkout');
     if(checkoutBtn) checkoutBtn.addEventListener('click', openCheckout);
-
     const checkoutForm = document.getElementById('checkoutForm');
     if(checkoutForm) checkoutForm.addEventListener('submit', handleCheckout);
-
     if (cartModal) cartModal.addEventListener('click', e => { if (e.target === cartModal) closeCartModal(); });
     if (checkoutModal) checkoutModal.addEventListener('click', e => { if (e.target === checkoutModal) closeCheckout(); });
 }
 
-// Cambiar cantidad
 function changeQuantity(productId, change) {
     const qtyInput = document.getElementById(`qty-${productId}`);
     if (!qtyInput) return;
-    
     let newValue = parseInt(qtyInput.value) + change;
     const product = products.find(p => p.id === productId);
     if (!product) return;
-
     if (newValue < 1) newValue = 1;
     if (newValue > product.stock) newValue = product.stock;
-    
     qtyInput.value = newValue;
 }
 
-// Agregar al carrito
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
-
     const quantityInput = document.getElementById(`qty-${productId}`);
     if (!quantityInput) return;
-
     const quantity = parseInt(quantityInput.value);
     const existingItem = cart.find(item => item.id === productId);
-    
     if (existingItem) {
         if (existingItem.quantity + quantity <= product.stock) {
             existingItem.quantity += quantity;
@@ -145,49 +122,39 @@ function addToCart(productId) {
         }
     } else {
         if (quantity > product.stock) {
-             alert(`Solo quedan ${product.stock} unidades disponibles`);
+            alert(`Solo quedan ${product.stock} unidades disponibles`);
             return;
         }
         cart.push({ ...product, quantity: quantity });
     }
-    
     updateCartDisplay();
-    
     const btn = event.target;
     const originalText = btn.textContent;
     btn.textContent = '¡Agregado!';
     btn.style.background = '#4CAF50';
-    
     setTimeout(() => {
         btn.textContent = originalText;
         btn.style.background = '#B5651D';
     }, 1000);
 }
 
-// Actualizar display del carrito
 function updateCartDisplay() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
     if (cartCount) cartCount.textContent = totalItems;
     if (cartTotal) cartTotal.textContent = totalPrice.toLocaleString();
-    
     if (cartFloating) {
         cartFloating.style.display = totalItems > 0 ? 'block' : 'none';
     }
-    
     renderCartItems();
 }
 
-// Renderizar items del carrito
 function renderCartItems() {
     if (!cartItems) return;
-    
     if (cart.length === 0) {
         cartItems.innerHTML = '<div class="empty-cart-message">Tu carrito está vacío</div>';
         return;
     }
-    
     cartItems.innerHTML = cart.map(item => `
         <div class="cart-item">
             <img src="${item.image}" alt="${item.name}" class="cart-item-image">
@@ -205,34 +172,27 @@ function renderCartItems() {
     `).join('');
 }
 
-// Actualizar cantidad en el carrito
 function updateCartItemQuantity(productId, newQuantity) {
     const product = products.find(p => p.id === productId);
     const cartItem = cart.find(item => item.id === productId);
-    
     if (!product || !cartItem) return;
-    
     if (newQuantity <= 0) {
         removeFromCart(productId);
         return;
     }
-    
     if (newQuantity > product.stock) {
         alert(`Solo quedan ${product.stock} unidades disponibles`);
         return;
     }
-    
     cartItem.quantity = newQuantity;
     updateCartDisplay();
 }
 
-// Remover del carrito
 function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
     updateCartDisplay();
 }
 
-// Limpiar carrito
 function clearCart() {
     if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
         cart = [];
@@ -240,7 +200,6 @@ function clearCart() {
     }
 }
 
-// Abrir modal del carrito
 function openCartModal() {
     if (cartModal) {
         cartModal.style.display = 'block';
@@ -248,18 +207,15 @@ function openCartModal() {
     }
 }
 
-// Cerrar modal del carrito
 function closeCartModal() {
     if (cartModal) cartModal.style.display = 'none';
 }
 
-// Abrir checkout
 function openCheckout() {
     if (cart.length === 0) {
         alert('Tu carrito está vacío');
         return;
     }
-    
     closeCartModal();
     if (checkoutModal) {
         checkoutModal.style.display = 'block';
@@ -267,17 +223,14 @@ function openCheckout() {
     }
 }
 
-// Cerrar checkout
 function closeCheckout() {
     if (checkoutModal) checkoutModal.style.display = 'none';
 }
 
-// Renderizar resumen del pedido
 function renderOrderSummary() {
     const orderItems = document.getElementById('orderItems');
     const orderTotal = document.getElementById('orderTotal');
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
     if (orderItems) {
         orderItems.innerHTML = cart.map(item => `
             <div class="order-item">
@@ -286,34 +239,70 @@ function renderOrderSummary() {
             </div>
         `).join('');
     }
-    
     if (orderTotal) orderTotal.textContent = totalPrice.toLocaleString();
 }
 
-// Manejar checkout
-function handleCheckout(e) {
+async function handleCheckout(e) {
     e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const orderData = {
-        customer: { nombre: formData.get('nombre'), email: formData.get('email'), telefono: formData.get('telefono'), direccion: formData.get('direccion'), ciudad: formData.get('ciudad'), codigoPostal: formData.get('codigoPostal'), referencias: formData.get('referencias') },
-        metodoPago: formData.get('metodoPago'),
-        items: cart,
-        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-    };
-    
-    console.log('Pedido enviado:', orderData);
-    const whatsappMessage = createWhatsAppMessage(orderData);
-    const whatsappUrl = `https://wa.me/5491164372200?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    cart = [];
-    updateCartDisplay();
-    closeCheckout();
-    alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para que completes el envío. Te contactaremos pronto para confirmar los detalles.');
+    const form = e.target;
+    const formData = new FormData(form);
+    const metodoPago = formData.get('metodoPago');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Procesando...';
+    submitButton.disabled = true;
+
+    if (metodoPago === 'mercadopago') {
+        try {
+            const orderData = {
+                items: cart.map(item => ({
+                    id: item.id,
+                    title: item.name,
+                    quantity: item.quantity,
+                    unit_price: item.price
+                })),
+                payer: {
+                    name: formData.get('nombre'),
+                    email: formData.get('email'),
+                    phone: { number: formData.get('telefono') }
+                }
+            };
+            const response = await fetch('http://localhost:3000/create-preference', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'No se pudo generar el link de pago.');
+            }
+            const preference = await response.json();
+            window.location.href = preference.init_point;
+        } catch (error) {
+            console.error('Error al procesar el pago con Mercado Pago:', error);
+            alert(`Error: ${error.message}`);
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        }
+    } else {
+        const orderData = {
+            customer: { nombre: formData.get('nombre'), email: formData.get('email'), telefono: formData.get('telefono'), direccion: formData.get('direccion'), ciudad: formData.get('ciudad'), codigoPostal: formData.get('codigoPostal'), referencias: formData.get('referencias') },
+            metodoPago: metodoPago,
+            items: cart,
+            total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        };
+        const whatsappMessage = createWhatsAppMessage(orderData);
+        const whatsappUrl = `https://wa.me/5491164372200?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappUrl, '_blank');
+        cart = [];
+        updateCartDisplay();
+        closeCheckout();
+        alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para que completes el envío.');
+        submitButton.textContent = originalButtonText;
+        submitButton.disabled = false;
+    }
 }
 
-// Crear mensaje para WhatsApp
 function createWhatsAppMessage(orderData) {
     let message = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n`;
     message += `👤 *Cliente:* ${orderData.customer.nombre}\n`;
@@ -331,18 +320,15 @@ function createWhatsAppMessage(orderData) {
     return message;
 }
 
-// Abrir modal de producto
 function openProductModal(imageSrc, title) {
     const existingModal = document.getElementById('imageModal');
     if (existingModal) {
         const modalImage = document.getElementById('modalImage');
         const modalTitle = document.getElementById('modalTitle');
         const modalNav = document.getElementById('modalNav');
-        
         if (modalImage) modalImage.src = imageSrc;
         if (modalTitle) modalTitle.textContent = title;
         if (modalNav) modalNav.style.display = 'none';
-        
         existingModal.style.display = 'block';
     } else {
         const modal = document.createElement('div');
