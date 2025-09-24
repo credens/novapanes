@@ -1,0 +1,868 @@
+/* General Body Styles */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #FEFBF5;
+    color: #000;
+    overflow-x: hidden; /* Prevents horizontal scrollbar */
+}
+
+/* Header and Navigation */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 50px; /* Increased from 30px to 50px */
+    flex-wrap: wrap; /* Allows nav to wrap on smaller screens */
+}
+
+.main-nav {
+    display: flex;
+    gap: 50px; /* Increased from 40px to 50px */
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #000;
+    font-size: 18px; /* Increased from 16px to 18px */
+    font-weight: 500; /* Added some weight to make nav items more prominent */
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: #B5651D; /* A subtle hover effect */
+}
+
+.logo {
+    margin: 0 70px; /* Increased from 50px to 70px */
+}
+
+.logo img {
+    width: 200px; /* Increased from 150px to 200px */
+}
+
+/* Hero Section */
+.hero-background {
+    background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
+    padding-bottom: 100px;
+}
+
+.hero-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content when not enough space for justified */
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 50px;
+    gap: 80px; /* Aumentado el espacio entre texto e imagen */
+}
+
+.hero-text {
+    flex: 1;
+    z-index: 10;
+    min-width: 300px; /* Evita que el texto se comprima demasiado */
+}
+
+.hero-text h1 {
+    font-family: 'Lora', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    max-width: 700px;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.hero-image {
+    flex-shrink: 0;
+    position: relative; /* Necesario para el pseudoelemento blur */
+    width: 550px; /* Ancho fijo para el contenedor */
+    height: 380px; /* Altura fija para el contenedor */
+    border-radius: 20px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta el desbordamiento de la imagen al aplicar object-fit */
+    /* Valor inicial para la variable CSS que usará el ::before */
+    --hero-image-url: url('hero-images/hero-pan.png');
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cropa la imagen para que llene el contenedor */
+    display: block;
+    border-radius: 20px; /* Asegura que la imagen también tenga los bordes redondeados */
+}
+
+.hero-image::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* Extiende el blur un poco fuera del borde para que se vea completo */
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-image: var(--hero-image-url); /* Usa la variable CSS */
+    background-size: cover;
+    background-position: center;
+    filter: blur(15px); /* Intensidad del blur */
+    z-index: -1; /* Manda el blur detrás de la imagen */
+    border-radius: 25px; /* Ligeramente más grande que la imagen para que el blur sea visible */
+    transition: background-image 0.5s ease; /* Suaviza el cambio de blur al cambiar la imagen */
+}
+
+/* Hero CTA Button */
+.hero-cta {
+    margin-top: 40px;
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #B5651D, #D17A2A);
+    color: #fff;
+    text-decoration: none;
+    padding: 18px 36px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(181, 101, 29, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(181, 101, 29, 0.4);
+    background: linear-gradient(135deg, #D17A2A, #B5651D);
+}
+
+.cta-button:active {
+    transform: translateY(-1px);
+}
+
+/* Section Divider */
+.section-divider {
+    border: none;
+    border-top: 1px solid #E0E0E0; /* Light gray line */
+    width: 80%; /* Adjust width as needed */
+    margin: 80px auto; /* Center the line and add vertical space */
+}
+
+/* Bottom Section: Form and Map */
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 50px;
+    gap: 100px;
+}
+
+.contact-form-container,
+.contact-info-container {
+    flex: 1;
+    min-width: 280px; /* Prevents them from getting too squished */
+}
+
+h2 {
+    font-family: 'Lora', serif;
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+/* Contact Form */
+.contact-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form-container input,
+.contact-form-container textarea {
+    border: 1px solid #000;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    background-color: transparent;
+}
+
+.contact-form-container input::placeholder,
+.contact-form-container textarea::placeholder {
+    color: #666;
+}
+
+.contact-form-container button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+.contact-form-container button:hover {
+    background-color: #333;
+}
+
+/* Form Messages */
+.form-message {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: none;
+}
+
+.form-message.success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.form-message.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Contact Info & Map */
+.contact-info-container h2 {
+    text-align: center; /* Center the "Dónde Encontrarnos" title */
+}
+
+.map-container {
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 300px;
+    border: none;
+    display: block;
+}
+
+.map-info {
+    padding: 20px;
+    text-align: left;
+}
+
+.map-info p {
+    margin: 8px 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.map-info strong {
+    color: #B5651D;
+}
+
+.map-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #000;
+    font-size: 0.9rem;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.map-link:hover {
+    color: #fff;
+    background-color: #B5651D;
+    border-color: #B5651D;
+}
+
+/* --- PRODUCTS SECTION STYLES --- */
+
+.products-section {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 50px;
+    text-align: center;
+}
+
+.product-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
+    gap: 30px; /* Space between the cards */
+    margin-top: 40px;
+}
+
+.product-card {
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures the image corners are rounded */
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* Lifts the card up slightly on hover */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 250px; /* Gives all images a uniform height */
+    object-fit: cover; /* Ensures images cover the area without distortion */
+    display: block;
+    transition: transform 0.3s ease; /* Smooth transition for image hover */
+    cursor: pointer; /* Indicates the image is clickable */
+}
+
+.product-card img:hover {
+    transform: scale(1.05); /* Slightly zoom in image on hover */
+}
+
+.product-card h3 {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    margin: 20px;
+}
+
+/* Product Actions Preview */
+.product-actions-preview {
+    padding: 15px 20px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafafa;
+}
+
+.price-preview {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #B5651D;
+}
+
+.shop-link {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.shop-link:hover {
+    background: #B5651D;
+    transform: translateY(-1px);
+}
+
+/* Products CTA */
+.products-cta {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.view-all-products {
+    display: inline-block;
+    background: linear-gradient(135deg, #000, #333);
+    color: #fff;
+    text-decoration: none;
+    padding: 16px 32px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.view-all-products::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.view-all-products:hover::before {
+    left: 100%;
+}
+
+.view-all-products:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #B5651D, #D17A2A);
+}
+
+/* --- ABOUT US SECTION STYLES --- */
+.about-us-section {
+    margin: 80px auto;
+    padding: 0 50px; /* Default padding for desktop */
+    text-align: center; /* Ensures content inside is centered horizontally if it doesn't fill the width */
+}
+
+/* To make it full width while keeping content max-width and centered */
+.about-us-section.full-width {
+    max-width: 100%; /* Make the section itself full width */
+}
+
+.about-us-content {
+    max-width: 900px; /* Constrain content width */
+    margin: 0 auto; /* Center the content box */
+    background-color: #fff;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    text-align: left; /* Align text left within the box */
+}
+
+.about-us-content h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.about-us-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* --- FLOATING MODAL STYLES --- */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: modalAppear 0.3s ease-out;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    display: block;
+}
+
+.modal-title {
+    padding: 20px;
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    text-align: center;
+    border-top: 1px solid #E0E0E0;
+    background-color: #f9f9f9;
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+/* Modal Navigation Styles */
+.modal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #E0E0E0;
+}
+
+.modal-nav-btn {
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-nav-btn:hover {
+    background-color: #B5651D;
+    transform: scale(1.1);
+}
+
+.modal-nav-btn:active {
+    transform: scale(0.95);
+}
+
+.modal-counter {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #666;
+    min-width: 60px;
+    text-align: center;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* --- FOOTER STYLES --- */
+.footer {
+    background-color: #B5651D;
+    color: #fff;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer p {
+    margin: 0 0 15px 0;
+    font-size: 1rem;
+    line-height: 1.4;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.footer-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.footer-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.whatsapp-btn:hover {
+    background-color: #25D366;
+    border-color: #25D366;
+}
+
+.instagram-btn:hover {
+    background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+    border-color: transparent;
+}
+
+.phone-text {
+    color: #fff;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.footer-divider {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 5px;
+}
+
+/* --- RESPONSIVE STYLES --- */
+
+/* For Tablets and Smaller Desktops (less than 1024px) */
+@media (max-width: 1024px) {
+    header {
+        padding: 40px 30px;
+    }
+
+    .main-nav {
+        gap: 35px;
+    }
+
+    .logo {
+        margin: 0 50px;
+    }
+    
+    .logo img {
+        width: 180px;
+    }
+
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 0 30px;
+        gap: 40px; /* Reduced gap for smaller screens */
+    }
+
+    .hero-text h1 {
+        font-size: 4rem;
+        max-width: 100%;
+    }
+
+    .hero-image {
+        margin: 0; /* Reset margin for vertical stacking */
+        width: 450px; /* Adjust size for tablet */
+        height: 300px;
+    }
+    
+    .hero-image::before {
+        top: -8px; /* Adjust blur extension for tablet */
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        filter: blur(12px); /* Slightly less blur for tablet */
+        border-radius: 23px;
+    }
+
+    .bottom-section {
+        flex-direction: column;
+        gap: 60px;
+        padding: 0 30px;
+    }
+
+    .product-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* For Mobile Phones (less than 768px) */
+@media (max-width: 768px) {
+    .hero-cta {
+        margin-top: 30px;
+        text-align: center;
+    }
+    
+    .cta-button {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+    
+    .product-actions-preview {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .shop-link {
+        text-align: center;
+        padding: 10px 16px;
+    }
+    
+    .view-all-products {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+}
+
+/* For Mobile Phones (less than 600px) */
+@media (max-width: 600px) {
+    body {
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    header {
+        flex-direction: column;
+        gap: 25px;
+        padding: 30px 20px;
+    }
+
+    .logo {
+        order: -1;
+        margin: 0;
+    }
+    
+    .logo img {
+        width: 160px;
+    }
+    
+    .main-nav a {
+        font-size: 18px;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+    }
+
+    .hero-image {
+        width: 100%; /* Make image take full width */
+        min-width: 280px; /* Smaller minimum for mobile */
+        max-width: 350px; /* Max width to prevent it from being too big */
+        height: 220px; /* Adjusted height for mobile */
+        border-radius: 15px; /* Smaller radius for mobile */
+    }
+    
+    .hero-image::before {
+        top: -5px; /* Adjust blur extension for mobile */
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        filter: blur(8px); /* Even less blur on mobile */
+        border-radius: 20px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .product-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .about-us-content {
+        padding: 30px 20px;
+    }
+
+    .about-us-content p {
+        font-size: 1rem;
+    }
+
+    .modal-content-wrapper {
+        max-width: 95vw;
+        max-height: 95vh;
+    }
+
+    .footer {
+        padding: 25px 15px;
+    }
+    
+    .footer p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .footer-divider {
+        display: none;
+    }
+    
+    .footer-btn, .phone-text {
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    .modal-nav {
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .modal-nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+
+    .modal-counter {
+        font-size: 12px;
+        min-width: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-cta {
+        margin-top: 25px;
+    }
+    
+    .cta-button {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        width: 90%;
+        max-width: 280px;
+        text-align: center;
+    }
+    
+    .price-preview {
+        font-size: 1.1rem;
+    }
+    
+    .view-all-products {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        width: 90%;
+        max-width: 300px;
+    }
+}

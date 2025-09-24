@@ -1,0 +1,173 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #B5651D;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.section {
+    margin-bottom: 40px;
+}
+
+.password-section {
+    background-color: #fffbe6;
+    border: 1px solid #ffe58f;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+.password-section .info {
+    font-size: 0.85em;
+    color: #8c6d3f;
+    margin-top: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button, .btn-edit, .btn-delete {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+button[type="submit"] {
+    background-color: #B5651D;
+}
+
+button[type="submit"]:hover {
+    background-color: #8B4A15;
+}
+
+#savePasswordBtn {
+    background-color: #28a745;
+}
+#savePasswordBtn:hover {
+    background-color: #218838;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #f9f9f9;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    font-weight: 600;
+}
+
+.btn-edit {
+    background-color: #007bff;
+    margin-right: 5px;
+}
+.btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+}
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+.back-link:hover {
+    text-decoration: underline;
+}

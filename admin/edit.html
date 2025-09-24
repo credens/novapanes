@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto - NOVA Panes</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Editar Producto</h1>
+
+        <div class="section">
+            <form id="editProductForm">
+                <input type="hidden" id="productId" name="id">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Nombre del Producto:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Precio:</label>
+                        <input type="number" id="price" name="price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">Stock:</label>
+                        <input type="number" id="stock" name="stock" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Categoría:</label>
+                        <select id="category" name="category" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="hamburguesa">Hamburguesa</option>
+                            <option value="pancho">Pancho</option>
+                            <option value="papa">Papa</option>
+                            <option value="molde">Molde</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="description">Descripción:</label>
+                        <textarea id="description" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Imagen Actual:</label>
+                        <img id="currentImage" src="" alt="Imagen actual del producto" width="100">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="image">Subir Nueva Imagen (opcional):</label>
+                        <input type="file" id="image" name="image" accept="image/*">
+                    </div>
+                </div>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+        
+        <a href="admin.html" class="back-link">Volver al Panel</a>
+    </div>
+
+    <script src="edit.js"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Online - NOVA Panes</title>
+    <meta name="description" content="Comprá online los mejores panes de papa. Elegí tus favoritos, añadilos al carrito y recibilos en tu casa. Pan para hamburguesas, panchos, lomitos y más.">
+    
+    <!-- SEO & Social Media Tags - CORREGIDO -->
+    <meta property="og:title" content="Tienda Online - NOVA Panes">
+    <meta property="og:description" content="Hacé tu pedido de pan de papa fresco y artesanal. ¡Fácil, rápido y delicioso!">
+    <meta property="og:image" content="https://novapanes.com.ar/hero-images/hero-pan-1.png">
+    <meta property="og:url" content="https://novapanes.com.ar/shop.html">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_AR">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shop-styles.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <a href="index.html">Inicio</a>
+            <a href="index.html#productos">Productos</a>
+        </nav>
+        <div class="logo">
+            <img src="logo.png" alt="Logo de NOVA Panes - Tienda">
+        </div>
+        <nav class="main-nav">
+            <a href="shop.html" class="active">Shop</a>
+            <a href="index.html#quienes-somos">Quiénes Somos</a>
+            <a href="index.html#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <div class="shop-hero">
+        <div class="shop-hero-content">
+            <h1>Tienda Online</h1>
+            <p>Comprá nuestros panes frescos y recibilos en tu casa</p>
+        </div>
+    </div>
+
+    <!-- Floating Cart -->
+    <div id="cartFloating" class="cart-floating" style="display: none;">
+        <div class="cart-icon">
+            🛒 <span id="cartCount">0</span>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h2>Tu Carrito</h2>
+                <span class="close-cart">&times;</span>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Cart items will be dynamically filled here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <strong>Total: $<span id="cartTotal">0</span></strong>
+                </div>
+                <div class="cart-actions">
+                    <button id="clearCart" class="btn-secondary">Vaciar Carrito</button>
+                    <button id="checkout" class="btn-primary">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="checkout-modal">
+        <div class="checkout-modal-content">
+            <div class="checkout-header">
+                <h2>Finalizar Compra</h2>
+                <span class="close-checkout">&times;</span>
+            </div>
+            <form id="checkoutForm" class="checkout-form">
+                <div class="form-section">
+                    <h3>Datos de Contacto</h3>
+                    <input type="text" name="nombre" placeholder="Nombre completo *" required>
+                    <input type="email" name="email" placeholder="Email *" required>
+                    <input type="tel" name="telefono" placeholder="Teléfono *" required>
+                </div>
+                <div class="form-section">
+                    <h3>Dirección de Entrega</h3>
+                    <input type="text" name="direccion" placeholder="Dirección *" required>
+                    <input type="text" name="ciudad" placeholder="Ciudad *" required>
+                    <input type="text" name="codigoPostal" placeholder="Código Postal">
+                    <textarea name="referencias" placeholder="Referencias adicionales (ej. entre calles, color de la puerta)" rows="2"></textarea>
+                </div>
+                <div class="form-section">
+                    <h3>Método de Pago</h3>
+                    <select name="metodoPago" required>
+                        <option value="">Seleccionar método *</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="transferencia">Transferencia Bancaria</option>
+                        <option value="mercadopago">Mercado Pago (Tarjeta de Crédito/Débito)</option>
+                    </select>
+                </div>
+                <div class="order-summary">
+                    <h3>Resumen del Pedido</h3>
+                    <div id="orderItems">
+                        <!-- Order summary items will be dynamically filled here -->
+                    </div>
+                    <div class="order-total">
+                        <strong>Total: $<span id="orderTotal">0</span></strong>
+                    </div>
+                </div>
+                <div class="checkout-actions">
+                    <button type="button" class="btn-secondary close-checkout-btn">Cancelar</button>
+                    <button type="submit" class="btn-primary">Confirmar Pedido</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main class="shop-main">
+        <div class="shop-filters">
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="hamburguesa">Hamburguesa</button>
+                <button class="filter-btn" data-filter="pancho">Pancho</button>
+                <button class="filter-btn" data-filter="papa">Papa</button>
+                <button class="filter-btn" data-filter="molde">Molde</button>
+            </div>
+        </div>
+        <div class="shop-products" id="shopProducts">
+            <!-- Products will be dynamically loaded here by shop-script.js -->
+        </div>
+    </main>
+
+    <hr class="section-divider">
+
+    <footer class="footer">
+        <p>NOVA Panes® es una marca registrada de Grupo FeSa</p>
+        <div class="footer-links">
+            <a href="https://wa.me/5491164372200" target="_blank" class="footer-btn whatsapp-btn">
+                📱 WhatsApp
+            </a>
+            <span class="footer-divider">|</span>
+            <span class="phone-text">Tel: +54 9 11 6437 2200</span>
+            <span class="footer-divider">|</span>
+            <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">
+                📷 @nova.panes
+            </a>
+        </div>
+    </footer>
+
+    <!-- Main Shop Script -->
+    <script src="shop-script.js"></script>
+    
+    <!-- Helper script for closing the checkout modal -->
+    <script>
+        document.querySelectorAll('.close-checkout-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const checkoutModal = document.getElementById('checkoutModal');
+                if (checkoutModal) {
+                    checkoutModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
