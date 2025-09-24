@@ -22,7 +22,7 @@ const mp = new MercadoPago('APP_USR-0211d259-056d-496b-b0b4-fe9472a24689', {
 document.addEventListener('DOMContentLoaded', function() {
     // La ruta 'products.json' es relativa a la carpeta 'public',
     // por lo que el servidor la encontrará correctamente.
-    fetch('products.json')
+    fetch('/products')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok. Status: ' + response.statusText);

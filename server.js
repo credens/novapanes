@@ -143,6 +143,16 @@ app.use('/api', adminRouter);
 // ==========================================
 const createPreferenceValidationRules = () => [ /* ... reglas ... */ ];
 
+app.get('/products', (req, res) => {
+    try {
+        const products = JSON.parse(fs.readFileSync(PRODUCTS_FILE_PATH, 'utf-8'));
+        res.json(products);
+    } catch (error) {
+        console.error('Error al leer products.json:', error);
+        res.status(500).json({ message: 'Error interno del servidor al obtener productos.' });
+    }
+});
+
 app.post('/create-preference', createPreferenceValidationRules(), async (req, res) => {
     // ... tu lógica de mercado pago ...
     try {
