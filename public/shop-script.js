@@ -13,6 +13,12 @@ const cartCount = document.getElementById('cartCount');
 const cartItems = document.getElementById('cartItems');
 const cartTotal = document.getElementById('cartTotal');
 
+// INICIALIZACIÓN DE MERCADO PAGO SDK
+const mp = new MercadoPago('APP_USR-0211d259-056d-496b-b0b4-fe9472a24689', {
+    locale: 'es-AR'
+});
+// ------------------
+
 document.addEventListener('DOMContentLoaded', function() {
     // La ruta 'products.json' es relativa a la carpeta 'public',
     // por lo que el servidor la encontrará correctamente.
