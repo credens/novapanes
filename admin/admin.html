@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - NOVA Panes</title>
-    <link rel="stylesheet" href="admin-styles.css">
+    <!-- La ruta es correcta si el servidor sirve /admin como carpeta estática -->
+    <link rel="stylesheet" href="admin-styles.css"> 
 </head>
 <body>
 
@@ -15,7 +16,8 @@
             <h2>Acceso a API</h2>
             <input type="password" id="apiPassword" placeholder="Contraseña de Administrador">
             <button id="savePasswordBtn">Guardar Contraseña</button>
-            <p class="info">La contraseña se guardará solo para esta sesión.</p>
+            <p class="info">La contraseña se guardará solo para esta sesión en tu navegador.</p>
+            <p class="info">Recuerda configurar ADMIN_PASSWORD_HASH en tu archivo .env en el servidor.</p>
         </div>
 
         <div class="section">
@@ -28,11 +30,11 @@
                     </div>
                     <div class="form-group">
                         <label for="price">Precio:</label>
-                        <input type="number" id="price" name="price" step="0.01" required>
+                        <input type="number" id="price" name="price" step="0.01" required min="0">
                     </div>
                     <div class="form-group">
                         <label for="stock">Stock:</label>
-                        <input type="number" id="stock" name="stock" required>
+                        <input type="number" id="stock" name="stock" required min="0">
                     </div>
                     <div class="form-group">
                         <label for="category">Categoría:</label>
@@ -71,6 +73,7 @@
                 </thead>
                 <tbody id="productsTableBody">
                     <!-- Los productos se cargarán aquí dinámicamente -->
+                    <tr><td colspan="5">Cargando productos o esperando contraseña...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -78,6 +81,7 @@
         <a href="/" class="back-link">Volver al Sitio Principal</a>
     </div>
 
+    <!-- La ruta es correcta si el servidor sirve /admin como carpeta estática -->
     <script src="admin.js"></script>
 </body>
 </html>

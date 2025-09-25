@@ -62,6 +62,7 @@
             </div>
             <div id="cartItems" class="cart-items">
                 <!-- Cart items will be dynamically filled here -->
+                <div class="empty-cart-message">Tu carrito está vacío</div>
             </div>
             <div class="cart-footer">
                 <div class="cart-total">
@@ -87,11 +88,11 @@
                     <h3>Datos de Contacto</h3>
                     <input type="text" name="nombre" placeholder="Nombre completo *" required>
                     <input type="email" name="email" placeholder="Email *" required>
-                    <input type="tel" name="telefono" placeholder="Teléfono *" required>
+                    <input type="tel" name="telefono" placeholder="Teléfono (ej. 1123456789) *" pattern="[0-9]{10}" title="Por favor, introduce 10 dígitos numéricos (ej. 1123456789)" required>
                 </div>
                 <div class="form-section">
                     <h3>Dirección de Entrega</h3>
-                    <input type="text" name="direccion" placeholder="Dirección *" required>
+                    <input type="text" name="direccion" placeholder="Dirección (calle y número) *" required>
                     <input type="text" name="ciudad" placeholder="Ciudad *" required>
                     <input type="text" name="codigoPostal" placeholder="Código Postal">
                     <textarea name="referencias" placeholder="Referencias adicionales (ej. entre calles, color de la puerta)" rows="2"></textarea>
@@ -134,42 +135,11 @@
         </div>
         <div class="shop-products" id="shopProducts">
             <!-- Products will be dynamically loaded here by shop-script.js -->
+            <p style="text-align: center;">Cargando productos...</p>
         </div>
     </main>
 
     <hr class="section-divider">
 
     <footer class="footer">
-        <p>NOVA Panes® es una marca registrada de Grupo FeSa</p>
-        <div class="footer-links">
-            <a href="https://wa.me/5491164372200" target="_blank" class="footer-btn whatsapp-btn">
-                📱 WhatsApp
-            </a>
-            <span class="footer-divider">|</span>
-            <span class="phone-text">Tel: +54 9 11 6437 2200</span>
-            <span class="footer-divider">|</span>
-            <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">
-                📷 @nova.panes
-            </a>
-        </div>
-    </footer>
-
-    <!-- SDK de Mercado Pago -->
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-
-    <!-- Main Shop Script -->
-    <script src="shop-script.js"></script>
-    
-    <!-- Helper script for closing the checkout modal -->
-    <script>
-        document.querySelectorAll('.close-checkout-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const checkoutModal = document.getElementById('checkoutModal');
-                if (checkoutModal) {
-                    checkoutModal.style.display = 'none';
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+        <p>NOVA Panes® es una marca registrada
