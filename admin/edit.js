@@ -1,3 +1,4 @@
+// --- START OF FILE edit.js ---
 document.addEventListener('DOMContentLoaded', () => {
     const editProductForm = document.getElementById('editProductForm');
     const productIdInput = document.getElementById('productId');
@@ -26,7 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(`/api/products/${productId}`, {
+            // ===================== CAMBIO REALIZADO AQUÍ =====================
+            // La ruta ahora apunta a la API de admin protegida
+            const response = await fetch(`/api/admin/products/${productId}`, {
+            // ===================== FIN DEL CAMBIO ==========================
                 headers: { 'Authorization': password }
             });
 
@@ -61,7 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(editProductForm);
         
         try {
-            const response = await fetch(`/api/products/${productId}`, {
+            // ===================== CAMBIO REALIZADO AQUÍ =====================
+            // La ruta ahora apunta a la API de admin protegida
+            const response = await fetch(`/api/admin/products/${productId}`, {
+            // ===================== FIN DEL CAMBIO ==========================
                 method: 'PUT',
                 headers: { 'Authorization': password },
                 body: formData
@@ -81,3 +88,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cargar los datos al iniciar
     loadProductData();
 });
+// --- END OF FILE edit.js ---

@@ -1,3 +1,4 @@
+// --- START OF FILE admin.js ---
 document.addEventListener('DOMContentLoaded', () => {
     const addProductForm = document.getElementById('addProductForm');
     const productsTableBody = document.getElementById('productsTableBody');
@@ -65,9 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>$${product.price.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td>${product.stock}</td>
                     <td>
-                        <!-- Si tuvieras un archivo edit.html real, podrías usarlo -->
-                        <!-- <a href="edit.html?id=${product.id}" class="btn-edit">Editar</a> -->
-                        <button class="btn-edit" data-id="${product.id}" onclick="alert('Funcionalidad de edición no implementada en este ejemplo.')">Editar</button>
+                        <!-- ===================== CAMBIO REALIZADO AQUÍ ===================== -->
+                        <!-- Se reemplazó el botón con una alerta por un enlace funcional -->
+                        <a href="edit.html?id=${product.id}" class="btn-edit">Editar</a>
+                        <!-- ===================== FIN DEL CAMBIO ========================== -->
                         <button class="btn-delete" data-id="${product.id}">Eliminar</button>
                     </td>
                 `;
@@ -155,3 +157,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cargar los productos al iniciar la página
     loadProducts();
 });
+// --- END OF FILE admin.js ---
