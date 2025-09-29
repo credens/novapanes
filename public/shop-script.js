@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // La ruta 'products.json' es relativa a la carpeta 'public',
     // por lo que el servidor la encontrará correctamente.
     // ***** CAMBIO CLAVE AQUÍ *****
-    fetch('products') 
+    fetch('products.json') 
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok. Status: ' + response.statusText);
