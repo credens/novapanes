@@ -107,74 +107,7 @@
 
     <section id="productos" class="products-section">
         <h2>Nuestros Productos</h2>
-        <div class="product-gallery">
-
-            <div class="product-card">
-                <!-- Asegúrate de tener tus imágenes en public/productos/ -->
-                <img src="productos/pan-de-papa-1.png" alt="Pan de papa artesanal con parmesano"
-                     data-title="Pan de papa con parmesano"
-                     data-images='["productos/pan-de-papa-1.png"]' loading="lazy" decoding="async">
-                <h3>Pan de papa con parmesano</h3>
-                <div class="product-actions-preview">
-                    <span class="price-preview">$1.500</span>
-                    <a href="shop.html" class="shop-link">Ver en Shop</a>
-                </div>
-            </div>
-
-           <div class="product-card">
-                <img src="productos/lomito-1.jpg" alt="Pan de lomito largo y pan de pancho doble con queso"
-                     data-title="Pan de lomito / pancho doble con queso"
-                     data-images='["productos/lomito-1.jpg", "productos/pancho-doble.png", "productos/pancho-doble-2.png"]' loading="lazy" decoding="async">
-                <h3>Pan de lomito / pancho doble con queso</h3>
-                <div class="product-actions-preview">
-                    <span class="price-preview">$1.800</span>
-                    <a href="shop.html" class="shop-link">Ver en Shop</a>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <img src="productos/sesamo.jpg" alt="Pan de papa cubierto con semillas de sésamo"
-                     data-title="Pan de papa con sésamo"
-                     data-images='["productos/sesamo.jpg"]' loading="lazy" decoding="async">
-                <h3>Pan de papa con sésamo</h3>
-                <div class="product-actions-preview">
-                    <span class="price-preview">$1.600</span>
-                    <a href="shop.html" class="shop-link">Ver en Shop</a>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <img src="productos/pancho-1.png" alt="Panes suaves y esponjosos para panchos"
-                     data-title="Pan de panchos"
-                     data-images='["productos/pancho-1.png"]' loading="lazy" decoding="async">
-                <h3>Pan de panchos</h3>
-                <div class="product-actions-preview">
-                    <span class="price-preview">$1.200</span>
-                    <a href="shop.html" class="shop-link">Ver en Shop</a>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <img src="productos/hamburguesa-simple2.png" alt="Pan de hamburguesa tradicional clásico y suave"
-                     data-title="Pan de hamburguesa tradicional"
-                     data-images='["productos/hamburguesa-simple2.png"]' loading="lazy" decoding="async">
-                <h3>Pan de hamburguesa tradicional</h3>
-                <div class="product-actions-preview">
-                    <span class="price-preview">$1.400</span>
-                    <a href="shop.html" class="shop-link">Ver en Shop</a>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <img src="productos/pan-de-molde-1.png" alt="Pan de molde blanco ideal para sandwiches y tostadas"
-                     data-title="Pan de molde"
-                     data-images='["productos/pan-de-molde-1.png"]' loading="lazy" decoding="async">
-                <h3>Pan de molde</h3>
-                <div class="product-actions-preview">
-                    <span class="price-preview">$2.000</span>
-                    <a href="shop.html" class="shop-link">Ver en Shop</a>
-                </div>
-            </div>
+        <div class="product-gallery" id="product-gallery-index">
 
         </div>
         
@@ -267,6 +200,51 @@
     
     <script>
         const heroImages=['hero-images/hero-pan.png','hero-images/hero-pan-1.png','hero-images/hero-pan-2.png'];function setRandomHeroImage(){const e=document.getElementById("heroImage"),t=document.getElementById("heroImageContainer");if(e&&t){const n=Math.floor(Math.random()*heroImages.length),o=heroImages[n];e.src=o,t.style.setProperty("--hero-image-url",`url('${o}')`)}}document.addEventListener("DOMContentLoaded",setRandomHeroImage);const imageModal=document.getElementById("imageModal"),closeModal=document.querySelector(".close-modal"),modalImage=document.getElementById("modalImage"),modalTitle=document.getElementById("modalTitle"),productCards=document.querySelectorAll(".product-card img"),modalNav=document.getElementById("modalNav"),prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn"),modalCounter=document.getElementById("modalCounter");let currentImages=[],currentImageIndex=0,currentTitle="";function openModal(e,t,n=0){currentImages=e,currentTitle=t,currentImageIndex=n,updateModalContent(),imageModal.style.display="block",modalNav.style.display=currentImages.length>1?"flex":"none"}function updateModalContent(){modalImage.src=currentImages[currentImageIndex],modalImage.alt=currentTitle,modalTitle.textContent=currentTitle,currentImages.length>1&&(modalCounter.textContent=`${currentImageIndex+1} / ${currentImages.length}`)}productCards.forEach(e=>{e.addEventListener("click",function(){const e=this.getAttribute("data-images"),t=this.getAttribute("data-title");try{const n=JSON.parse(e);openModal(n,t,0)}catch(n){console.error("Error parsing data-images JSON:",n),openModal([this.src],t,0)}})}),closeModal.addEventListener("click",()=>{imageModal.style.display="none"}),imageModal.addEventListener("click",e=>{e.target===imageModal&&(imageModal.style.display="none")}),document.addEventListener("keydown",e=>{"block"===imageModal.style.display&&("Escape"===e.key?imageModal.style.display="none":"ArrowLeft"===e.key?currentImages.length>1&&(currentImageIndex=(currentImageIndex-1+currentImages.length)%currentImages.length,updateModalContent()):"ArrowRight"===e.key&&currentImages.length>1&&(currentImageIndex=(currentImageIndex+1)%currentImages.length,updateModalContent()))}),prevBtn.addEventListener("click",()=>{currentImages.length>1&&(currentImageIndex=(currentImageIndex-1+currentImages.length)%currentImages.length,updateModalContent())}),nextBtn.addEventListener("click",()=>{currentImages.length>1&&(currentImageIndex=(currentImageIndex+1)%currentImages.length,updateModalContent())});
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gallery = document.getElementById('product-gallery-index');
+
+            // Hacemos una petición para obtener los datos de los productos
+            fetch('/products.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No se pudo conectar con el archivo de productos.');
+                    }
+                    return response.json();
+                })
+                .then(products => {
+                    // Limpiamos el contenedor por si había algo
+                    gallery.innerHTML = '';
+                    
+                    // Tomamos solo los primeros 6 productos del array
+                    const productsToShow = products.slice(0, 6);
+
+                    // Creamos el HTML para cada producto
+                    productsToShow.forEach(product => {
+                        const productCardHTML = `
+                            <div class="product-card">
+                                <img src="${product.image}" alt="${product.name}"
+                                     data-title="${product.name}"
+                                     data-images='["${product.image}"]' 
+                                     loading="lazy" decoding="async">
+                                <h3>${product.name}</h3>
+                                <div class="product-actions-preview">
+                                    <!-- El precio ha sido eliminado -->
+                                    <a href="shop.html" class="shop-link">Ver en Shop</a>
+                                </div>
+                            </div>
+                        `;
+                        // Añadimos la tarjeta del producto a la galería
+                        gallery.innerHTML += productCardHTML;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar los productos en la página de inicio:', error);
+                    gallery.innerHTML = '<p style="text-align: center; color: #888;">No se pudieron cargar los productos en este momento.</p>';
+                });
+        });
     </script>
 </body>
 </html>
