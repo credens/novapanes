@@ -6,7 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const { body, validationResult } = require('express-validator'); // Aunque no se usan todas las reglas aquí, se mantiene por si se necesitan
+const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const session = require('express-session');
@@ -24,10 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const { MercadoPagoConfig, Preference } = require('mercadopago');
-// Asegúrate de que este accessToken sea tu ACCESS_TOKEN de producción si estás en producción
-// y de que esté en tu .env para mayor seguridad.
-// Por ejemplo: new MercadoPagoConfig({ accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN });
-const client = new MercadoPagoConfig({ accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN || 'APP_USR-2704302134467517-090918-811730b9fe1b3c013dfe9480874e87d9-2683089128' }); // Fallback para desarrollo, usar .env en producción
+const client = new MercadoPagoConfig({ accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN || 'APP_USR-2704302134467517-090918-811730b9fe1b3c013dfe9480874e87d9-2683089128' });
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -36,13 +33,12 @@ app.use(express.json());
 app.use(cors());
 
 // Configuración de la sesión (para el futuro si se necesita persistencia de login)
-// Asegúrate de configurar SESSION_SECRET en tu archivo .env
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'supersecretkey', // Usar una clave fuerte desde .env
+    secret: process.env.SESSION_SECRET || 'supersecretkey',
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        secure: process.env.NODE_ENV === 'production', // true en producción (HTTPS)
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 // 1 día
     }
@@ -65,7 +61,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const PRODUCTS_FILE_PATH = path.join(__dirname, 'products.json');
+// --- CAMBIO CLAVE AQUÍ ---
+// Define la ruta a products.json, ahora apuntando DENTRO de la carpeta 'public'
+const PRODUCTS_FILE_PATH = path.join(__dirname, 'public', 'products.json');
+// -------------------------
 
 // ==========================================
 //      RUTAS DE API PARA PRODUCTOS (CRUD) - Requieren autenticación de administrador
@@ -104,7 +103,7 @@ adminRouter.use(async (req, res, next) => {
 });
 
 // Todas las rutas de CRUD de productos ahora están bajo '/api/admin' y requieren autenticación
-app.use('/api/admin', adminRouter); // CAMBIADO: La base de las rutas de admin es ahora '/api/admin'
+app.use('/api/admin', adminRouter);
 
 // Obtener todos los productos (admin)
 adminRouter.get('/products', (req, res) => {
@@ -254,7 +253,6 @@ app.get('/products', (req, res) => {
 // ==========================================
 //      RUTA DE MERCADO PAGO
 // ==========================================
-// No se usan reglas de validación en este ejemplo, pero se mantiene la estructura
 const createPreferenceValidationRules = () => []; 
 
 app.post('/create-preference', createPreferenceValidationRules(), async (req, res) => {
