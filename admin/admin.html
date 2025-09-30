@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - NOVA Panes</title>
     <link rel="stylesheet" href="admin-styles.css">
-    <!-- Librería para los iconos (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="dashboard-container" id="adminPanel" style="display: none;">
-        <!-- ===== BARRA LATERAL ===== -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <span class="logo-text">NOVA Panes</span>
@@ -18,50 +16,67 @@
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Resumen</span></a>
                 <a href="#products-section" class="nav-item"><i class="fas fa-box-open"></i><span>Productos</span></a>
-                <a href="#" class="nav-item disabled"><i class="fas fa-receipt"></i><span>Pedidos</span></a>
+                <a href="#orders-section" class="nav-item"><i class="fas fa-receipt"></i><span>Pedidos</span></a>
                 <a href="#" class="nav-item disabled"><i class="fas fa-users"></i><span>Clientes</span></a>
                 <a href="/" class="nav-item"><i class="fas fa-sign-out-alt"></i><span>Salir</span></a>
             </nav>
         </aside>
 
-        <!-- ===== CONTENIDO PRINCIPAL ===== -->
         <main class="main-content">
             <header class="main-header">
                 <h1>Dashboard de Administración</h1>
             </header>
 
-            <!-- Grid de tarjetas de resumen -->
             <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="card-icon"><i class="fas fa-tags"></i></div>
-                    <div class="card-info">
-                        <span class="card-title">Productos Activos</span>
-                        <span class="card-value" id="totalProductsStat">0</span>
+                <a href="#products-section" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="card-icon"><i class="fas fa-box-open"></i></div>
+                        <div class="card-info">
+                            <span class="card-title">Productos Activos</span>
+                            <span class="card-value" id="totalProductsStat">0</span>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="card-icon"><i class="fas fa-layer-group"></i></div>
-                    <div class="card-info">
-                        <span class="card-title">Categorías</span>
-                        <span class="card-value" id="totalCategoriesStat">0</span>
+                </a>
+                <a href="#categories-section" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+                        <div class="card-info">
+                            <span class="card-title">Categorías</span>
+                            <span class="card-value" id="totalCategoriesStat">0</span>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="card-info">
-                        <span class="card-title">Ventas (Ejemplo)</span>
-                        <span class="card-value">$9,328</span>
+                </a>
+                <a href="#orders-section" class="stat-card-link">
+                    <div class="stat-card">
+                        <div class="card-icon"><i class="fas fa-receipt"></i></div>
+                        <div class="card-info">
+                            <span class="card-title">Pedidos Totales</span>
+                            <span class="card-value" id="totalOrdersStat">0</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
+            
+            <section id="orders-section" class="card">
+                <div class="card-header">
+                    <h2>Historial de Pedidos</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
 
-            <!-- Gráfico de Ventas (Ejemplo) -->
-            <div class="card chart-card">
-                <h2>Rendimiento de Ventas (Ejemplo)</h2>
-                <canvas id="salesChart"></canvas>
-            </div>
-
-            <!-- Sección de Gestión de Productos -->
             <section id="products-section" class="card">
                 <div class="card-header">
                     <h2>Lista de Productos</h2>
@@ -84,8 +99,7 @@
                 </div>
             </section>
 
-            <!-- Sección de Gestión de Categorías -->
-            <section class="card">
+            <section id="categories-section" class="card">
                 <div class="card-header">
                     <h2>Gestionar Categorías</h2>
                 </div>
@@ -95,11 +109,9 @@
                     <button type="submit">Añadir Categoría</button>
                 </form>
             </section>
-
         </main>
     </div>
 
-    <!-- Modal para Añadir/Editar Productos (sin cambios en su estructura interna) -->
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-modal-btn">&times;</span>
@@ -107,42 +119,19 @@
             <form id="productForm">
                 <input type="hidden" id="productId" name="id">
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="name">Nombre:</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Precio:</label>
-                        <input type="number" id="price" name="price" step="0.01" required min="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="stock">Stock:</label>
-                        <input type="number" id="stock" name="stock" required min="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Categoría:</label>
-                        <select id="category" name="category" required></select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="description">Descripción:</label>
-                        <textarea id="description" name="description" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Imagen Actual:</label>
-                        <img id="currentImage" src="" alt="Imagen del producto" width="100" style="display: none;">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="image">Imagen del Producto:</label>
-                        <input type="file" id="image" name="image" accept="image/*">
-                    </div>
+                    <div class="form-group"><label for="name">Nombre:</label><input type="text" id="name" name="name" required></div>
+                    <div class="form-group"><label for="price">Precio:</label><input type="number" id="price" name="price" step="0.01" required min="0"></div>
+                    <div class="form-group"><label for="stock">Stock:</label><input type="number" id="stock" name="stock" required min="0"></div>
+                    <div class="form-group"><label for="category">Categoría:</label><select id="category" name="category" required></select></div>
+                    <div class="form-group full-width"><label for="description">Descripción:</label><textarea id="description" name="description" rows="3" required></textarea></div>
+                    <div class="form-group full-width"><label>Imagen Actual:</label><img id="currentImage" src="" alt="Imagen del producto" width="100" style="display: none;"></div>
+                    <div class="form-group full-width"><label for="image">Imagen del Producto:</label><input type="file" id="image" name="image" accept="image/*"></div>
                 </div>
                 <button type="submit">Guardar</button>
             </form>
         </div>
     </div>
-
-    <!-- Librería para los gráficos (Chart.js) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script src="admin.js"></script>
 </body>
 </html>
