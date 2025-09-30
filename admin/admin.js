@@ -1,7 +1,3 @@
-// ===================================================
-//      ARCHIVO admin.js (VERSIÓN CON DIAGNÓSTICO FINAL)
-// ===================================================
-
 document.addEventListener('DOMContentLoaded', () => {
     // Referencias a elementos del DOM
     const adminPanel = document.getElementById('adminPanel');
@@ -13,9 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modalTitle');
     const closeModalBtn = document.querySelector('.close-modal-btn');
     const showAddProductModalBtn = document.getElementById('showAddProductModalBtn');
+    const totalProductsStat = document.getElementById('totalProductsStat');
+    const totalCategoriesStat = document.getElementById('totalCategoriesStat');
 
     let allProducts = [];
     let allCategories = [];
+    let salesChart = null; // Variable para guardar la instancia del gráfico
     const API_BASE_URL = '/api/admin';
 
     // ---- AUTENTICACIÓN ----
@@ -30,19 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ password })
             });
             const result = await response.json();
-
             if (result.success) {
-                console.log("✅ Autenticación exitosa en /verify.");
-                setPassword(password); // Guardamos la contraseña en la sesión
-                loadInitialData(); // Cargamos los datos iniciales
+                setPassword(password);
+                loadInitialData();
             } else {
-                console.error("❌ Autenticación fallida en /verify.");
                 alert('Contraseña incorrecta.');
                 window.location.href = '/';
             }
         } catch (error) {
-            console.error("🚨 Error de red durante la verificación:", error);
-            alert('Error al contactar el servidor para verificar la contraseña.');
+            alert('Error al verificar la contraseña.');
             window.location.href = '/';
         }
     }
@@ -59,59 +54,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- CARGA DE DATOS ----
     async function loadInitialData() {
-        adminPanel.style.display = 'block';
-        const currentPassword = getPassword();
-
-        // --- INICIO DE DIAGNÓSTICO EN EL NAVEGADOR ---
-        console.log("--- Intentando cargar datos iniciales (loadInitialData) ---");
-        console.log(`Contraseña leída de sessionStorage: [${currentPassword}]`);
-        // --- FIN DE DIAGNÓSTICO ---
-
-        if (!currentPassword) {
-            console.error("¡ERROR CRÍTICO! La contraseña no se encontró en sessionStorage. Abortando carga.");
-            alert("Error de sesión. Por favor, intenta de nuevo.");
-            sessionStorage.clear(); // Limpiar sesión para forzar nuevo login
-            window.location.reload();
-            return;
-        }
-
+        adminPanel.style.display = 'flex'; // Cambiado a 'flex' para el nuevo layout
         try {
-            const headers = { 'Authorization': currentPassword };
+            const headers = { 'Authorization': getPassword() };
             const [productsRes, categoriesRes] = await Promise.all([
                 fetch(`${API_BASE_URL}/products`, { headers }),
                 fetch(`${API_BASE_URL}/categories`, { headers })
             ]);
-
-            if (!productsRes.ok || !categoriesRes.ok) {
-                // Leer el mensaje de error del servidor
-                const errorData = productsRes.ok ? await categoriesRes.json() : await productsRes.json();
-                throw new Error(errorData.message || 'No se pudieron cargar los datos.');
-            }
+            if (!productsRes.ok || !categoriesRes.ok) throw new Error('No se pudieron cargar los datos.');
 
             allProducts = await productsRes.json();
             allCategories = await categoriesRes.json();
             
-            console.log("✅ Datos de productos y categorías cargados exitosamente.");
-
+            updateDashboardStats();
             renderProductsTable();
             renderCategoriesList();
             populateCategoryDropdown();
+            renderSalesChart(); // Dibujar el gráfico
         } catch (error) {
-            console.error("🚨 Error durante la carga de datos:", error.message);
-            alert(`Error al cargar los datos: ${error.message}`);
+            alert(error.message);
         }
     }
     
     // ---- RENDERIZADO ----
-    function renderProductsTable() { productsTableBody.innerHTML = ''; allProducts.forEach(product => { const categoryName = allCategories.find(c => c.id === product.category)?.name || 'Sin categoría'; const row = document.createElement('tr'); row.innerHTML = `<td><img src="/${product.image}" alt="${product.name}" width="50"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`; productsTableBody.appendChild(row); }); }
+    function updateDashboardStats() {
+        totalProductsStat.textContent = allProducts.length;
+        totalCategoriesStat.textContent = allCategories.length;
+    }
+
+    function renderProductsTable() { productsTableBody.innerHTML = ''; allProducts.forEach(product => { const categoryName = allCategories.find(c => c.id === product.category)?.name || 'Sin categoría'; const row = document.createElement('tr'); row.innerHTML = `<td><img src="/${product.image}" alt="${product.name}"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`; productsTableBody.appendChild(row); }); }
     function renderCategoriesList() { categoriesList.innerHTML = ''; allCategories.forEach(category => { const div = document.createElement('div'); div.className = 'category-item'; div.innerHTML = `<span>${category.name}</span><button class="btn-delete-category" data-id="${category.id}">&times;</button>`; categoriesList.appendChild(div); }); }
     function populateCategoryDropdown() { const categorySelect = document.getElementById('category'); categorySelect.innerHTML = '<option value="">Seleccionar...</option>'; allCategories.forEach(cat => { categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`; }); }
     
-    // ---- MODAL DE PRODUCTOS ----
+    // ---- RENDERIZADO DEL GRÁFICO ----
+    function renderSalesChart() {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        if (salesChart) {
+            salesChart.destroy(); // Destruir gráfico anterior si existe para evitar duplicados
+        }
+        salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Hace 7 días', 'Hace 6', 'Hace 5', 'Hace 4', 'Hace 3', 'Ayer', 'Hoy'],
+                datasets: [{
+                    label: 'Ventas (Ejemplo)',
+                    data: [12, 19, 3, 5, 2, 3, 9], // Datos de ejemplo
+                    backgroundColor: 'rgba(230, 126, 34, 0.2)',
+                    borderColor: 'rgba(230, 126, 34, 1)',
+                    borderWidth: 2,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // ---- MODAL Y EVENTOS (lógica mayormente sin cambios) ----
     function openModal(mode, productId = null) { productForm.reset(); document.getElementById('currentImage').style.display = 'none'; document.getElementById('image').required = (mode === 'add'); if (mode === 'edit') { const product = allProducts.find(p => p.id === productId); modalTitle.textContent = 'Editar Producto'; productForm.elements['id'].value = product.id; productForm.elements['name'].value = product.name; productForm.elements['price'].value = product.price; productForm.elements['stock'].value = product.stock; productForm.elements['description'].value = product.description; productForm.elements['category'].value = product.category; const currentImage = document.getElementById('currentImage'); currentImage.src = `/${product.image}`; currentImage.style.display = 'block'; } else { modalTitle.textContent = 'Añadir Nuevo Producto'; productForm.elements['id'].value = ''; } productModal.style.display = 'block'; }
     function closeModal() { productModal.style.display = 'none'; }
-
-    // ---- MANEJO DE EVENTOS ----
     showAddProductModalBtn.addEventListener('click', () => openModal('add'));
     closeModalBtn.addEventListener('click', closeModal);
     window.addEventListener('click', (e) => (e.target === productModal) && closeModal());

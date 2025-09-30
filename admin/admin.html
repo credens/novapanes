@@ -3,50 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - NOVA Panes</title>
+    <title>Dashboard - NOVA Panes</title>
     <link rel="stylesheet" href="admin-styles.css">
+    <!-- Librería para los iconos (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Panel principal, oculto hasta la autenticación -->
-        <div id="adminPanel" style="display: none;">
-            <h1>Panel de Administración</h1>
+    <div class="dashboard-container" id="adminPanel" style="display: none;">
+        <!-- ===== BARRA LATERAL ===== -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="logo-text">NOVA Panes</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Resumen</span></a>
+                <a href="#products-section" class="nav-item"><i class="fas fa-box-open"></i><span>Productos</span></a>
+                <a href="#" class="nav-item disabled"><i class="fas fa-receipt"></i><span>Pedidos</span></a>
+                <a href="#" class="nav-item disabled"><i class="fas fa-users"></i><span>Clientes</span></a>
+                <a href="/" class="nav-item"><i class="fas fa-sign-out-alt"></i><span>Salir</span></a>
+            </nav>
+        </aside>
 
-            <!-- Sección para gestionar Categorías -->
-            <div class="section">
-                <h2>Gestionar Categorías</h2>
-                <div id="categoriesList">Cargando categorías...</div>
+        <!-- ===== CONTENIDO PRINCIPAL ===== -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Dashboard de Administración</h1>
+            </header>
+
+            <!-- Grid de tarjetas de resumen -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="card-icon"><i class="fas fa-tags"></i></div>
+                    <div class="card-info">
+                        <span class="card-title">Productos Activos</span>
+                        <span class="card-value" id="totalProductsStat">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+                    <div class="card-info">
+                        <span class="card-title">Categorías</span>
+                        <span class="card-value" id="totalCategoriesStat">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="card-info">
+                        <span class="card-title">Ventas (Ejemplo)</span>
+                        <span class="card-value">$9,328</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de Ventas (Ejemplo) -->
+            <div class="card chart-card">
+                <h2>Rendimiento de Ventas (Ejemplo)</h2>
+                <canvas id="salesChart"></canvas>
+            </div>
+
+            <!-- Sección de Gestión de Productos -->
+            <section id="products-section" class="card">
+                <div class="card-header">
+                    <h2>Lista de Productos</h2>
+                    <button id="showAddProductModalBtn" class="btn-primary">Añadir Producto</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Categoría</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sección de Gestión de Categorías -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Gestionar Categorías</h2>
+                </div>
+                <div id="categoriesList"></div>
                 <form id="addCategoryForm" class="category-form">
                     <input type="text" id="newCategoryName" placeholder="Nombre de nueva categoría" required>
                     <button type="submit">Añadir Categoría</button>
                 </form>
-            </div>
+            </section>
 
-            <!-- Sección para gestionar Productos -->
-            <div class="section">
-                <h2>Lista de Productos</h2>
-                <button id="showAddProductModalBtn">Añadir Nuevo Producto</button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Imagen</th>
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Categoría</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTableBody">
-                        <!-- Los productos se cargarán aquí -->
-                    </tbody>
-                </table>
-            </div>
-            <a href="/" class="back-link">Volver al Sitio Principal</a>
-        </div>
+        </main>
     </div>
 
-    <!-- Modal para Añadir/Editar Productos (inicialmente oculto) -->
+    <!-- Modal para Añadir/Editar Productos (sin cambios en su estructura interna) -->
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-modal-btn">&times;</span>
@@ -68,9 +121,7 @@
                     </div>
                     <div class="form-group">
                         <label for="category">Categoría:</label>
-                        <select id="category" name="category" required>
-                            <!-- Las categorías se cargarán aquí -->
-                        </select>
+                        <select id="category" name="category" required></select>
                     </div>
                     <div class="form-group full-width">
                         <label for="description">Descripción:</label>
@@ -90,6 +141,8 @@
         </div>
     </div>
 
+    <!-- Librería para los gráficos (Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>
