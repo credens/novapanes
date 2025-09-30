@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             products = data;
             renderProducts();
             setupEventListeners();
-            updateCartDisplayFromStorage(); // Cargar carrito al iniciar
+            updateCartDisplayFromStorage();
         })
         .catch(error => {
             console.error('Error al cargar o procesar los productos:', error);
@@ -251,12 +251,7 @@ function renderOrderSummary() {
     const orderTotal = document.getElementById('orderTotal');
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     if (orderItems) {
-        orderItems.innerHTML = cart.map(item => `
-            <div class="order-item">
-                <span>${item.name} x ${item.quantity}</span>
-                <span>$${(item.price * item.quantity).toLocaleString()}</span>
-            </div>
-        `).join('');
+        orderItems.innerHTML = cart.map(item => `<div class="order-item"><span>${item.name} x ${item.quantity}</span><span>$${(item.price * item.quantity).toLocaleString()}</span></div>`).join('');
     }
     if (orderTotal) orderTotal.textContent = totalPrice.toLocaleString();
 }
@@ -295,32 +290,21 @@ function openProductModal(imageSrc, title) {
     }
 }
 
-
-// ===================== FUNCIÓN MODIFICADA =======================
 async function handleCheckout(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     const metodoPago = formData.get('metodoPago');
     const submitButton = form.querySelector('button[type="submit"]');
-    const originalButtonText = submitButton.textContent;
+    
     submitButton.textContent = 'Procesando...';
     submitButton.disabled = true;
 
     if (metodoPago === 'mercadopago') {
         try {
             const orderData = {
-                items: cart.map(item => ({
-                    id: item.id,
-                    title: item.name,
-                    quantity: item.quantity,
-                    unit_price: item.price
-                })),
-                payer: {
-                    name: formData.get('nombre'),
-                    email: formData.get('email'),
-                    phone: { number: formData.get('telefono') }
-                }
+                items: cart.map(item => ({ id: item.id, title: item.name, quantity: item.quantity, unit_price: item.price })),
+                payer: { name: formData.get('nombre'), email: formData.get('email'), phone: { number: formData.get('telefono') } }
             };
             const response = await fetch('/create-preference', {
                 method: 'POST',
@@ -334,13 +318,12 @@ async function handleCheckout(e) {
             const preference = await response.json();
             window.location.href = preference.init_point;
         } catch (error) {
-            console.error('Error al procesar el pago con Mercado Pago:', error);
-            alert(`Error: ${error.message}`);
-            submitButton.textContent = originalButtonText;
+            alert(`Error al procesar el pago con Mercado Pago: ${error.message}`);
+            submitButton.textContent = 'Confirmar Pedido';
             submitButton.disabled = false;
         }
     } else {
-        // Para otros métodos (Efectivo, Transferencia), primero enviamos email, luego WhatsApp.
+        // ======================= LÓGICA CORREGIDA AQUÍ =======================
         const orderData = {
             customer: { nombre: formData.get('nombre'), email: formData.get('email'), telefono: formData.get('telefono'), direccion: formData.get('direccion'), ciudad: formData.get('ciudad'), codigoPostal: formData.get('codigoPostal'), referencias: formData.get('referencias') },
             metodoPago: metodoPago,
@@ -348,36 +331,39 @@ async function handleCheckout(e) {
             total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
         };
         
-        try {
-            // 1. Enviar datos al servidor para que envíe el email
-            const response = await fetch('/api/submit-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData),
-            });
+        // 1. Abrimos WhatsApp INMEDIATAMENTE para evitar bloqueadores de pop-ups.
+        const whatsappMessage = createWhatsAppMessage(orderData);
+        const whatsappUrl = `https://wa.me/5491164372200?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappUrl, '_blank');
 
+        // 2. Enviamos el pedido al servidor para el email en segundo plano.
+        // No necesitamos "await" porque no bloquearemos al usuario esperando la respuesta del email.
+        fetch('/api/submit-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData),
+        })
+        .then(response => {
             if (!response.ok) {
-                throw new Error('El servidor no pudo procesar el pedido. Inténtalo de nuevo.');
+                console.error('El servidor tuvo un problema al enviar la copia por email.');
+            } else {
+                console.log('Copia del pedido enviada por email exitosamente.');
             }
+        })
+        .catch(error => {
+            console.error('Error de red al intentar enviar la copia por email:', error);
+        });
 
-            // 2. Si el servidor respondió OK, creamos y abrimos el enlace de WhatsApp
-            const whatsappMessage = createWhatsAppMessage(orderData);
-            const whatsappUrl = `https://wa.me/5491164372200?text=${encodeURIComponent(whatsappMessage)}`;
-            window.open(whatsappUrl, '_blank');
-
-            // 3. Limpiamos el carrito, cerramos el modal y notificamos al usuario
-            cart = [];
-            updateCartDisplay();
-            closeCheckout();
-            alert('¡Pedido enviado! Se envió una copia a nuestro correo y te redirigimos a WhatsApp para completar.');
-
-        } catch (error) {
-            console.error('Error en el checkout:', error);
-            alert(error.message);
-        } finally {
-            // 4. Se restaura el botón sin importar si hubo éxito o error
-            submitButton.textContent = originalButtonText;
-            submitButton.disabled = false;
-        }
+        // 3. Limpiamos el carrito y notificamos al usuario inmediatamente.
+        alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar. También recibirás una copia por email.');
+        
+        cart = [];
+        updateCartDisplay();
+        closeCheckout();
+        
+        // 4. Restauramos el botón.
+        submitButton.textContent = 'Confirmar Pedido';
+        submitButton.disabled = false;
+        // ======================= FIN DE LA LÓGICA CORREGIDA =======================
     }
 }
