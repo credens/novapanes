@@ -20,10 +20,7 @@ const mp = new MercadoPago('APP_USR-0211d259-056d-496b-b0b4-fe9472a24689', {
 // ------------------
 
 document.addEventListener('DOMContentLoaded', function() {
-    // La ruta 'products.json' es relativa a la carpeta 'public',
-    // por lo que el servidor la encontrará correctamente.
-    // ***** CAMBIO CLAVE AQUÍ *****
-    fetch('products.json') 
+    fetch('/products.json') 
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok. Status: ' + response.statusText);
@@ -264,6 +261,42 @@ function renderOrderSummary() {
     if (orderTotal) orderTotal.textContent = totalPrice.toLocaleString();
 }
 
+function createWhatsAppMessage(orderData) {
+    let message = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n`;
+    message += `👤 *Cliente:* ${orderData.customer.nombre}\n`;
+    message += `📧 *Email:* ${orderData.customer.email}\n`;
+    message += `📱 *Teléfono:* ${orderData.customer.telefono}\n`;
+    message += `📍 *Dirección:* ${orderData.customer.direccion}, ${orderData.customer.ciudad}\n`;
+    if (orderData.customer.codigoPostal) message += `📮 *CP:* ${orderData.customer.codigoPostal}\n`;
+    if (orderData.customer.referencias) message += `📝 *Referencias:* ${orderData.customer.referencias}\n`;
+    message += `\n💳 *Método de pago:* ${orderData.metodoPago}\n\n`;
+    message += `🛒 *PRODUCTOS:*\n`;
+    orderData.items.forEach(item => {
+        message += `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}\n`;
+    });
+    message += `\n💰 *TOTAL: $${orderData.total.toLocaleString()}*`;
+    return message;
+}
+
+function openProductModal(imageSrc, title) {
+    const existingModal = document.getElementById('imageModal');
+    if (existingModal) {
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalNav = document.getElementById('modalNav');
+        if (modalImage) modalImage.src = imageSrc;
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalNav) modalNav.style.display = 'none';
+        existingModal.style.display = 'block';
+    } else {
+        const modal = document.createElement('div');
+        modal.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;" onclick="this.remove()"><div style="max-width:90%;max-height:90%;background:white;border-radius:12px;overflow:hidden;animation:modalAppear .3s;" onclick="event.stopPropagation()"><img src="${imageSrc}" style="width:100%;height:auto;display:block;"><div style="padding:20px;text-align:center;font-family:'Lora',serif;font-size:1.2rem;">${title}</div></div></div>`;
+        document.body.appendChild(modal);
+    }
+}
+
+
+// ===================== FUNCIÓN MODIFICADA =======================
 async function handleCheckout(e) {
     e.preventDefault();
     const form = e.target;
@@ -300,7 +333,6 @@ async function handleCheckout(e) {
             }
             const preference = await response.json();
             window.location.href = preference.init_point;
-            // No reseteamos el botón aquí, ya que la página redirigirá
         } catch (error) {
             console.error('Error al procesar el pago con Mercado Pago:', error);
             alert(`Error: ${error.message}`);
@@ -308,54 +340,44 @@ async function handleCheckout(e) {
             submitButton.disabled = false;
         }
     } else {
+        // Para otros métodos (Efectivo, Transferencia), primero enviamos email, luego WhatsApp.
         const orderData = {
             customer: { nombre: formData.get('nombre'), email: formData.get('email'), telefono: formData.get('telefono'), direccion: formData.get('direccion'), ciudad: formData.get('ciudad'), codigoPostal: formData.get('codigoPostal'), referencias: formData.get('referencias') },
             metodoPago: metodoPago,
             items: cart,
             total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
         };
-        const whatsappMessage = createWhatsAppMessage(orderData);
-        const whatsappUrl = `https://wa.me/5491164372200?text=${encodeURIComponent(whatsappMessage)}`;
-        window.open(whatsappUrl, '_blank');
-        cart = [];
-        updateCartDisplay();
-        closeCheckout();
-        alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para que completes el envío.');
-        submitButton.textContent = originalButtonText;
-        submitButton.disabled = false;
-    }
-}
+        
+        try {
+            // 1. Enviar datos al servidor para que envíe el email
+            const response = await fetch('/api/submit-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData),
+            });
 
-function createWhatsAppMessage(orderData) {
-    let message = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n`;
-    message += `👤 *Cliente:* ${orderData.customer.nombre}\n`;
-    message += `📧 *Email:* ${orderData.customer.email}\n`;
-    message += `📱 *Teléfono:* ${orderData.customer.telefono}\n`;
-    message += `📍 *Dirección:* ${orderData.customer.direccion}, ${orderData.customer.ciudad}\n`;
-    if (orderData.customer.codigoPostal) message += `📮 *CP:* ${orderData.customer.codigoPostal}\n`;
-    if (orderData.customer.referencias) message += `📝 *Referencias:* ${orderData.customer.referencias}\n`;
-    message += `\n💳 *Método de pago:* ${orderData.metodoPago}\n\n`;
-    message += `🛒 *PRODUCTOS:*\n`;
-    orderData.items.forEach(item => {
-        message += `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}\n`;
-    });
-    message += `\n💰 *TOTAL: $${orderData.total.toLocaleString()}*`;
-    return message;
-}
+            if (!response.ok) {
+                throw new Error('El servidor no pudo procesar el pedido. Inténtalo de nuevo.');
+            }
 
-function openProductModal(imageSrc, title) {
-    const existingModal = document.getElementById('imageModal');
-    if (existingModal) {
-        const modalImage = document.getElementById('modalImage');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalNav = document.getElementById('modalNav');
-        if (modalImage) modalImage.src = imageSrc;
-        if (modalTitle) modalTitle.textContent = title;
-        if (modalNav) modalNav.style.display = 'none';
-        existingModal.style.display = 'block';
-    } else {
-        const modal = document.createElement('div');
-        modal.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;" onclick="this.remove()"><div style="max-width:90%;max-height:90%;background:white;border-radius:12px;overflow:hidden;animation:modalAppear .3s;" onclick="event.stopPropagation()"><img src="${imageSrc}" style="width:100%;height:auto;display:block;"><div style="padding:20px;text-align:center;font-family:'Lora',serif;font-size:1.2rem;">${title}</div></div></div>`;
-        document.body.appendChild(modal);
+            // 2. Si el servidor respondió OK, creamos y abrimos el enlace de WhatsApp
+            const whatsappMessage = createWhatsAppMessage(orderData);
+            const whatsappUrl = `https://wa.me/5491164372200?text=${encodeURIComponent(whatsappMessage)}`;
+            window.open(whatsappUrl, '_blank');
+
+            // 3. Limpiamos el carrito, cerramos el modal y notificamos al usuario
+            cart = [];
+            updateCartDisplay();
+            closeCheckout();
+            alert('¡Pedido enviado! Se envió una copia a nuestro correo y te redirigimos a WhatsApp para completar.');
+
+        } catch (error) {
+            console.error('Error en el checkout:', error);
+            alert(error.message);
+        } finally {
+            // 4. Se restaura el botón sin importar si hubo éxito o error
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        }
     }
 }
