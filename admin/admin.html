@@ -4,28 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - NOVA Panes</title>
-    <!-- La ruta es correcta si el servidor sirve /admin como carpeta estática -->
-    <link rel="stylesheet" href="admin-styles.css"> 
+    <link rel="stylesheet" href="admin-styles.css">
 </head>
 <body>
-
     <div class="container">
-        <h1>Panel de Administración</h1>
+        <!-- Panel principal, oculto hasta la autenticación -->
+        <div id="adminPanel" style="display: none;">
+            <h1>Panel de Administración</h1>
 
-        <div class="password-section">
-            <h2>Acceso a API</h2>
-            <input type="password" id="apiPassword" placeholder="Contraseña de Administrador">
-            <button id="savePasswordBtn">Guardar Contraseña</button>
-            <p class="info">La contraseña se guardará solo para esta sesión en tu navegador.</p>
-            <p class="info">Recuerda configurar ADMIN_PASSWORD_HASH en tu archivo .env en el servidor.</p>
+            <!-- Sección para gestionar Categorías -->
+            <div class="section">
+                <h2>Gestionar Categorías</h2>
+                <div id="categoriesList">Cargando categorías...</div>
+                <form id="addCategoryForm" class="category-form">
+                    <input type="text" id="newCategoryName" placeholder="Nombre de nueva categoría" required>
+                    <button type="submit">Añadir Categoría</button>
+                </form>
+            </div>
+
+            <!-- Sección para gestionar Productos -->
+            <div class="section">
+                <h2>Lista de Productos</h2>
+                <button id="showAddProductModalBtn">Añadir Nuevo Producto</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Categoría</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Los productos se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+            <a href="/" class="back-link">Volver al Sitio Principal</a>
         </div>
+    </div>
 
-        <div class="section">
-            <h2>Añadir Nuevo Producto</h2>
-            <form id="addProductForm">
+    <!-- Modal para Añadir/Editar Productos (inicialmente oculto) -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal-btn">&times;</span>
+            <h2 id="modalTitle">Añadir Producto</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId" name="id">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="name">Nombre del Producto:</label>
+                        <label for="name">Nombre:</label>
                         <input type="text" id="name" name="name" required>
                     </div>
                     <div class="form-group">
@@ -39,11 +69,7 @@
                     <div class="form-group">
                         <label for="category">Categoría:</label>
                         <select id="category" name="category" required>
-                            <option value="">Seleccionar...</option>
-                            <option value="hamburguesa">Hamburguesa</option>
-                            <option value="pancho">Pancho</option>
-                            <option value="papa">Papa</option>
-                            <option value="molde">Molde</option>
+                            <!-- Las categorías se cargarán aquí -->
                         </select>
                     </div>
                     <div class="form-group full-width">
@@ -51,37 +77,19 @@
                         <textarea id="description" name="description" rows="3" required></textarea>
                     </div>
                     <div class="form-group full-width">
+                        <label>Imagen Actual:</label>
+                        <img id="currentImage" src="" alt="Imagen del producto" width="100" style="display: none;">
+                    </div>
+                    <div class="form-group full-width">
                         <label for="image">Imagen del Producto:</label>
-                        <input type="file" id="image" name="image" accept="image/*" required>
+                        <input type="file" id="image" name="image" accept="image/*">
                     </div>
                 </div>
-                <button type="submit">Añadir Producto</button>
+                <button type="submit">Guardar</button>
             </form>
         </div>
-
-        <div class="section">
-            <h2>Lista de Productos</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Imagen</th>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="productsTableBody">
-                    <!-- Los productos se cargarán aquí dinámicamente -->
-                    <tr><td colspan="5">Cargando productos o esperando contraseña...</td></tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <a href="/" class="back-link">Volver al Sitio Principal</a>
     </div>
 
-    <!-- La ruta es correcta si el servidor sirve /admin como carpeta estática -->
     <script src="admin.js"></script>
 </body>
 </html>

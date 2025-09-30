@@ -1,0 +1,10 @@
+[
+  { "id": "panificados", "name": "Panificados" },
+  { "id": "hamburguesas", "name": "Hamburguesas" },
+  { "id": "salsas", "name": "Salsas" },
+  { "id": "papas", "name": "Papas" },
+  { "id": "papelera", "name": "Papelera" },
+  { "id": "congelados", "name": "Congelados" },
+  { "id": "salchichas", "name": "Salchichas" },
+  { "id": "helados", "name": "Helados" }
+]

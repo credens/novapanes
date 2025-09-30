@@ -1,160 +1,204 @@
-// --- START OF FILE admin.js ---
 document.addEventListener('DOMContentLoaded', () => {
-    const addProductForm = document.getElementById('addProductForm');
+    // Referencias a elementos del DOM
+    const adminPanel = document.getElementById('adminPanel');
     const productsTableBody = document.getElementById('productsTableBody');
-    const apiPasswordInput = document.getElementById('apiPassword');
-    const savePasswordBtn = document.getElementById('savePasswordBtn');
+    const categoriesList = document.getElementById('categoriesList');
+    const addCategoryForm = document.getElementById('addCategoryForm');
+    const productModal = document.getElementById('productModal');
+    const productForm = document.getElementById('productForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const closeModalBtn = document.querySelector('.close-modal-btn');
+    const showAddProductModalBtn = document.getElementById('showAddProductModalBtn');
 
-    // CAMBIADO: Ruta base para las operaciones de CRUD de admin, según server.js
-    const API_BASE_URL = '/api/admin/products'; 
+    let allProducts = [];
+    let allCategories = [];
+    const API_BASE_URL = '/api/admin';
 
-    // Función para obtener la contraseña guardada en la sesión del navegador
+    // ---- AUTENTICACIÓN ----
     const getPassword = () => sessionStorage.getItem('apiPassword');
+    const setPassword = (pass) => sessionStorage.setItem('apiPassword', pass);
 
-    // Guardar la contraseña en la sesión
-    savePasswordBtn.addEventListener('click', () => {
-        const pass = apiPasswordInput.value;
-        if (pass) {
-            sessionStorage.setItem('apiPassword', pass);
-            alert('Contraseña guardada para esta sesión.');
-            apiPasswordInput.value = ''; // Limpiar el input después de guardar
-            loadProducts(); // Intentar cargar productos inmediatamente
-        } else {
-            alert('Por favor, introduce una contraseña.');
-        }
-    });
-
-    // Función para cargar y mostrar los productos
-    async function loadProducts() {
-        const password = getPassword();
-        if (!password) {
-            productsTableBody.innerHTML = '<tr><td colspan="5">Por favor, introduce la contraseña de la API para ver los productos.</td></tr>';
-            return;
-        }
-
+    async function verifyPassword(password) {
         try {
-            const response = await fetch(API_BASE_URL, {
-                headers: { 'Authorization': password }
+            const response = await fetch(`${API_BASE_URL}/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
             });
-
-            if (response.status === 401 || response.status === 403) {
-                const errorData = await response.json();
-                productsTableBody.innerHTML = `<tr><td colspan="5" class="error">${errorData.message || 'Contraseña de API incorrecta o no autorizada.'}</td></tr>`;
-                // Opcional: limpiar la contraseña guardada para forzar reingreso
-                // sessionStorage.removeItem('apiPassword');
-                throw new Error(errorData.message || 'Autenticación fallida.'); // Lanza para que el catch capture y no siga procesando
+            const result = await response.json();
+            if (result.success) {
+                setPassword(password);
+                loadInitialData();
+            } else {
+                alert('Contraseña incorrecta.');
+                window.location.href = '/';
             }
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Error al cargar los productos del servidor.');
-            }
-            const products = await response.json();
-            
-            productsTableBody.innerHTML = ''; // Limpiar la tabla antes de llenarla
-            if (products.length === 0) {
-                productsTableBody.innerHTML = '<tr><td colspan="5">No hay productos para mostrar. Añade uno usando el formulario de arriba.</td></tr>';
-                return;
-            }
-
-            products.forEach(product => {
-                const row = document.createElement('tr');
-                // Asegúrate de que la ruta de la imagen sea correcta.
-                // Si 'image' ya viene como "productos/nombre.jpg", entonces la base es "/" que es public.
-                row.innerHTML = `
-                    <td><img src="/${product.image}" alt="${product.name}" width="50"></td>
-                    <td>${product.name}</td>
-                    <td>$${product.price.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td>${product.stock}</td>
-                    <td>
-                        <!-- ===================== CAMBIO REALIZADO AQUÍ ===================== -->
-                        <!-- Se reemplazó el botón con una alerta por un enlace funcional -->
-                        <a href="edit.html?id=${product.id}" class="btn-edit">Editar</a>
-                        <!-- ===================== FIN DEL CAMBIO ========================== -->
-                        <button class="btn-delete" data-id="${product.id}">Eliminar</button>
-                    </td>
-                `;
-                productsTableBody.appendChild(row);
-            });
         } catch (error) {
-            console.error('Error en loadProducts:', error);
-            if (!productsTableBody.innerHTML.includes('error')) { // Evita duplicar mensajes de error si ya hay uno
-                productsTableBody.innerHTML = `<tr><td colspan="5" class="error">Error: ${error.message}. Por favor, verifica la consola para más detalles.</td></tr>`;
-            }
+            alert('Error al verificar la contraseña.');
+            window.location.href = '/';
         }
     }
 
-    // Manejar el envío del formulario para añadir un nuevo producto
-    addProductForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const password = getPassword();
-        if (!password) {
-            alert('Por favor, guarda la contraseña de la API antes de añadir un producto.');
-            return;
+    function promptForPassword() {
+        const password = prompt('Por favor, introduce la contraseña de administrador:', '');
+        if (password) {
+            verifyPassword(password);
+        } else {
+            alert('Acceso cancelado.');
+            window.location.href = '/';
         }
+    }
 
-        const submitButton = addProductForm.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.textContent;
-        submitButton.textContent = 'Añadiendo...';
-        submitButton.disabled = true;
-
-        const formData = new FormData(addProductForm);
-        
+    // ---- CARGA DE DATOS ----
+    async function loadInitialData() {
+        adminPanel.style.display = 'block';
         try {
-            const response = await fetch(API_BASE_URL, {
-                method: 'POST',
-                headers: { 'Authorization': password },
-                body: formData
-            });
+            const headers = { 'Authorization': getPassword() };
+            const [productsRes, categoriesRes] = await Promise.all([
+                fetch(`${API_BASE_URL}/products`, { headers }),
+                fetch(`${API_BASE_URL}/categories`, { headers })
+            ]);
+            if (!productsRes.ok || !categoriesRes.ok) throw new Error('No se pudieron cargar los datos.');
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Error al crear el producto. Verifica que la contraseña de API sea correcta y todos los campos estén llenos.');
-            }
+            allProducts = await productsRes.json();
+            allCategories = await categoriesRes.json();
             
-            addProductForm.reset();
-            loadProducts(); // Recargar la lista de productos
-            alert('Producto añadido correctamente.');
+            renderProductsTable();
+            renderCategoriesList();
+            populateCategoryDropdown();
         } catch (error) {
             alert(error.message);
-        } finally {
-            submitButton.textContent = originalButtonText;
-            submitButton.disabled = false;
         }
+    }
+    
+    // ---- RENDERIZADO ----
+    function renderProductsTable() {
+        productsTableBody.innerHTML = '';
+        allProducts.forEach(product => {
+            const categoryName = allCategories.find(c => c.id === product.category)?.name || 'Sin categoría';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><img src="/${product.image}" alt="${product.name}" width="50"></td>
+                <td>${product.name}</td>
+                <td>$${product.price.toLocaleString('es-AR')}</td>
+                <td>${product.stock}</td>
+                <td>${categoryName}</td>
+                <td>
+                    <button class="btn-edit" data-id="${product.id}">Editar</button>
+                    <button class="btn-delete" data-id="${product.id}">Eliminar</button>
+                </td>
+            `;
+            productsTableBody.appendChild(row);
+        });
+    }
+
+    function renderCategoriesList() {
+        categoriesList.innerHTML = '';
+        allCategories.forEach(category => {
+            const div = document.createElement('div');
+            div.className = 'category-item';
+            div.innerHTML = `<span>${category.name}</span><button class="btn-delete-category" data-id="${category.id}">&times;</button>`;
+            categoriesList.appendChild(div);
+        });
+    }
+
+    function populateCategoryDropdown() {
+        const categorySelect = document.getElementById('category');
+        categorySelect.innerHTML = '<option value="">Seleccionar...</option>';
+        allCategories.forEach(cat => {
+            categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+        });
+    }
+    
+    // ---- MODAL DE PRODUCTOS ----
+    function openModal(mode, productId = null) {
+        productForm.reset();
+        document.getElementById('currentImage').style.display = 'none';
+        document.getElementById('image').required = (mode === 'add');
+
+        if (mode === 'edit') {
+            const product = allProducts.find(p => p.id === productId);
+            modalTitle.textContent = 'Editar Producto';
+            productForm.elements['id'].value = product.id;
+            productForm.elements['name'].value = product.name;
+            productForm.elements['price'].value = product.price;
+            productForm.elements['stock'].value = product.stock;
+            productForm.elements['description'].value = product.description;
+            productForm.elements['category'].value = product.category;
+            const currentImage = document.getElementById('currentImage');
+            currentImage.src = `/${product.image}`;
+            currentImage.style.display = 'block';
+        } else {
+            modalTitle.textContent = 'Añadir Nuevo Producto';
+            productForm.elements['id'].value = '';
+        }
+        productModal.style.display = 'block';
+    }
+
+    function closeModal() {
+        productModal.style.display = 'none';
+    }
+
+    // ---- MANEJO DE EVENTOS ----
+    showAddProductModalBtn.addEventListener('click', () => openModal('add'));
+    closeModalBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => (e.target === productModal) && closeModal());
+
+    productsTableBody.addEventListener('click', e => {
+        const id = parseInt(e.target.dataset.id);
+        if (e.target.classList.contains('btn-edit')) openModal('edit', id);
+        if (e.target.classList.contains('btn-delete')) handleDeleteProduct(id);
+    });
+    
+    productForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const id = document.getElementById('productId').value;
+        const url = id ? `${API_BASE_URL}/products/${id}` : `${API_BASE_URL}/products`;
+        const method = id ? 'PUT' : 'POST';
+        try {
+            const response = await fetch(url, { method, headers: { 'Authorization': getPassword() }, body: new FormData(productForm) });
+            if (!response.ok) throw new Error((await response.json()).message);
+            closeModal();
+            loadInitialData();
+        } catch (error) { alert(error.message); }
     });
 
-    // Manejar clics en los botones de eliminar (usando delegación de eventos)
-    productsTableBody.addEventListener('click', async (e) => {
-        if (e.target.classList.contains('btn-delete')) {
-            const productId = e.target.dataset.id;
-            const password = getPassword();
-
-            if (!password) {
-                alert('Por favor, guarda la contraseña de la API para eliminar productos.');
-                return;
-            }
-            
-            if (confirm('¿Estás seguro de que quieres eliminar este producto? Esto también eliminará su imagen asociada.')) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/${productId}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': password }
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.message || 'No se pudo eliminar el producto.');
-                    }
-                    
-                    loadProducts(); // Recargar la lista de productos
-                    alert('Producto eliminado correctamente.');
-                } catch (error) {
-                    alert(error.message);
-                }
-            }
-        }
+    async function handleDeleteProduct(id) {
+        if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
+        try {
+            const response = await fetch(`${API_BASE_URL}/products/${id}`, { method: 'DELETE', headers: { 'Authorization': getPassword() } });
+            if (!response.ok) throw new Error((await response.json()).message);
+            loadInitialData();
+        } catch (error) { alert(error.message); }
+    }
+    
+    addCategoryForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const name = document.getElementById('newCategoryName').value;
+        try {
+            const response = await fetch(`${API_BASE_URL}/categories`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': getPassword() }, body: JSON.stringify({ name }) });
+            if (!response.ok) throw new Error((await response.json()).message);
+            addCategoryForm.reset();
+            loadInitialData();
+        } catch (error) { alert(error.message); }
     });
 
-    // Cargar los productos al iniciar la página
-    loadProducts();
+    categoriesList.addEventListener('click', async e => {
+        if (e.target.classList.contains('btn-delete-category')) {
+            const id = e.target.dataset.id;
+            if (!confirm(`¿Eliminar la categoría "${id}"? No podrás si hay productos usándola.`)) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/categories/${id}`, { method: 'DELETE', headers: { 'Authorization': getPassword() } });
+                if (!response.ok) throw new Error((await response.json()).message);
+                loadInitialData();
+            } catch (error) { alert(error.message); }
+        }
+    });
+    
+    // ---- INICIO ----
+    if (getPassword()) {
+        verifyPassword(getPassword());
+    } else {
+        promptForPassword();
+    }
 });
-// --- END OF FILE admin.js ---
