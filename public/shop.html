@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Online - NOVA Panes</title>
     <meta name="description" content="Comprá online los mejores panes de papa. Elegí tus favoritos, añadilos al carrito y recibilos en tu casa.">
-    <meta property="og:title" content="Tienda Online - NOVA Panes">
-    <meta property="og:description" content="Hacé tu pedido de pan de papa fresco y artesanal. ¡Fácil, rápido y delicioso!">
-    <meta property="og:image" content="https://novapanes.com.ar/hero-images/hero-pan-1.png">
-    <meta property="og:url" content="https://novapanes.com.ar/shop.html">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,10 +34,7 @@
     </div>
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
-            <div class="cart-header">
-                <h2>Tu Carrito</h2>
-                <span class="close-cart">&times;</span>
-            </div>
+            <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart">&times;</span></div>
             <div id="cartItems" class="cart-items"></div>
             <div class="cart-footer">
                 <div class="cart-total"><strong>Total: $<span id="cartTotal">0</span></strong></div>
@@ -54,10 +47,7 @@
     </div>
     <div id="checkoutModal" class="checkout-modal">
         <div class="checkout-modal-content">
-            <div class="checkout-header">
-                <h2>Finalizar Compra</h2>
-                <span class="close-checkout">&times;</span>
-            </div>
+            <div class="checkout-header"><h2>Finalizar Compra</h2><span class="close-checkout">&times;</span></div>
             <form id="checkoutForm" class="checkout-form">
                 <div class="form-section">
                     <h3>Datos de Contacto</h3>
@@ -95,13 +85,12 @@
     </div>
     <main class="shop-main">
         <div class="shop-filters">
-            <div class="filter-container">
+            <!-- ===== CAMBIO REALIZADO AQUÍ ===== -->
+            <!-- Los botones se generarán aquí dinámicamente -->
+            <div class="filter-container" id="filter-container">
                 <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="hamburguesa">Hamburguesa</button>
-                <button class="filter-btn" data-filter="pancho">Pancho</button>
-                <button class="filter-btn" data-filter="papa">Papa</button>
-                <button class="filter-btn" data-filter="molde">Molde</button>
             </div>
+            <!-- =============================== -->
         </div>
         <div class="shop-products" id="shopProducts"></div>
     </main>
