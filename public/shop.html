@@ -13,21 +13,18 @@
 </head>
 <body>
     <header>
-        <nav class="main-nav">
-            <a href="index.html">Inicio</a>
-        </nav>
-        <div class="logo">
-            <img src="logo.png" alt="Logo de NOVA Panes - Tienda">
-        </div>
-        <nav class="main-nav">
-            <a href="shop.html" class="active">Shop</a>
-        </nav>
+        <nav class="main-nav"><a href="index.html">Inicio</a></nav>
+        <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes - Tienda"></div>
+        <nav class="main-nav"><a href="shop.html" class="active">Shop</a></nav>
     </header>
     <div class="shop-hero">
         <div class="shop-hero-content">
             <h1>Tienda Online</h1>
             <p>Comprá nuestros panes frescos y recibilos en tu casa</p>
         </div>
+    </div>
+    <div class="logo-scroller-container">
+        <div class="logo-scroller" id="logo-scroller"></div>
     </div>
     <div id="cartFloating" class="cart-floating" style="display: none;">
         <div class="cart-icon">🛒 <span id="cartCount">0</span></div>
@@ -71,33 +68,21 @@
                         <option value="mercadopago">Mercado Pago</option>
                     </select>
                 </div>
-                <div class="order-summary">
-                    <h3>Resumen del Pedido</h3>
-                    <div id="orderItems"></div>
-                    <div class="order-total"><strong>Total: $<span id="orderTotal">0</span></strong></div>
-                </div>
-                <div class="checkout-actions">
-                    <button type="button" class="btn-secondary close-checkout-btn">Cancelar</button>
-                    <button type="submit" class="btn-primary">Confirmar Pedido</button>
-                </div>
+                <div class="order-summary"><h3>Resumen del Pedido</h3><div id="orderItems"></div><div class="order-total"><strong>Total: $<span id="orderTotal">0</span></strong></div></div>
+                <div class="checkout-actions"><button type="button" class="btn-secondary close-checkout-btn">Cancelar</button><button type="submit" class="btn-primary">Confirmar Pedido</button></div>
             </form>
         </div>
     </div>
     <main class="shop-main">
         <div class="shop-filters">
-            <!-- ===== CAMBIO REALIZADO AQUÍ ===== -->
-            <!-- Los botones se generarán aquí dinámicamente -->
             <div class="filter-container" id="filter-container">
-                <button class="filter-btn active" data-filter="all">Todos</button>
+                <!-- Los botones de filtro se generarán aquí -->
             </div>
-            <!-- =============================== -->
         </div>
         <div class="shop-products" id="shopProducts"></div>
     </main>
     <hr class="section-divider">
-    <footer class="footer">
-        <p>NOVA Panes® es una marca registrada de Grupo FeSa</p>
-    </footer>
+    <footer class="footer"><p>NOVA Panes® es una marca registrada de Grupo FeSa</p></footer>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="shop-script.js"></script>
 </body>
