@@ -46,24 +46,14 @@
       },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday"
-        ],
+        "dayOfWeek": [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ],
         "opens": "09:00",
         "closes": "17:00"
       },
-      "sameAs": [
-        "https://instagram.com/nova.panes",
-        "https://wa.me/5491164372200"
-      ] 
+      "sameAs": [ "https://instagram.com/nova.panes", "https://wa.me/5491164372200" ] 
     }
     </script>
     
-    <!-- Archivo CSS (Asegúrate de tener styles.css en la carpeta public) -->
     <link rel="stylesheet" href="styles.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,32 +64,13 @@
 
     <div class="hero-background">
         <header>
-            <nav class="main-nav">
-                <a href="#">Inicio</a>
-                <a href="#productos">Productos</a>
-            </nav>
-            <div class="logo">
-                <!-- Asegúrate de tener logo.png en la carpeta public -->
-                <img src="logo.png" alt="Logo de NOVA Panes">
-            </div>
-            <nav class="main-nav">
-                <a href="shop.html">Shop</a>
-                <a href="#quienes-somos">Quiénes Somos</a>
-                <a href="#contacto">Contacto</a>
-            </nav>
+            <nav class="main-nav"><a href="#">Inicio</a><a href="#productos">Productos</a></nav>
+            <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes"></div>
+            <nav class="main-nav"><a href="shop.html">Shop</a><a href="#quienes-somos">Quiénes Somos</a><a href="#contacto">Contacto</a></nav>
         </header>
-
         <main class="hero-section">
-            <div class="hero-text">
-                <h1>Juntate con amigos y disfruta de los mejores panes.</h1>
-                <div class="hero-cta">
-                    <a href="shop.html" class="cta-button">🛒 Comprar Online</a>
-                </div>
-            </div>
-            <div class="hero-image" id="heroImageContainer">
-                <!-- Asegúrate de tener tus imágenes en public/hero-images/ -->
-                <img src="hero-images/hero-pan.png" alt="Variedad de panes artesanales de NOVA Panes" id="heroImage">
-            </div>
+            <div class="hero-text"><h1>Juntate con amigos y disfruta de los mejores panes.</h1><div class="hero-cta"><a href="shop.html" class="cta-button">🛒 Comprar Online</a></div></div>
+            <div class="hero-image" id="heroImageContainer"><img src="hero-images/hero-pan.png" alt="Variedad de panes artesanales de NOVA Panes" id="heroImage"></div>
         </main>
     </div>
 
@@ -108,12 +79,9 @@
     <section id="productos" class="products-section">
         <h2>Nuestros Productos</h2>
         <div class="product-gallery" id="product-gallery-index">
-
+            <!-- Los productos se cargarán aquí dinámicamente -->
         </div>
-        
-        <div class="products-cta">
-            <a href="shop.html" class="view-all-products">Ver Todos los Productos en Shop 🛒</a>
-        </div>
+        <div class="products-cta"><a href="shop.html" class="view-all-products">Ver Todos los Productos en Shop 🛒</a></div>
     </section>
 
     <hr class="section-divider">
@@ -123,8 +91,6 @@
             <h2>Quiénes Somos</h2>
             <p>En Nova Panes creemos que un buen pan puede transformar cualquier comida en un gran momento. Nacimos con el objetivo de ofrecer panes de papa de primera calidad, con la suavidad, el sabor y la frescura que nos caracterizan.</p>
             <p>Nuestros productos están pensados tanto para familias como para negocios gastronómicos que buscan un pan distinto: esponjoso, sabroso y versátil. Elaboramos cada variedad con dedicación y materias primas seleccionadas, porque sabemos que detrás de cada mordida hay una experiencia para compartir.</p>
-            <p>En Nova Panes trabajamos día a día para seguir innovando y acercar lo mejor de la panificación a tu mesa, siempre con el compromiso de ofrecer un producto confiable y delicioso.</p>
-            <p>Porque para nosotros, el pan no es solo un acompañamiento: es el inicio de un gran sabor.</p>
         </div>
     </section>
 
@@ -133,39 +99,59 @@
     <section id="contacto" class="bottom-section">
         <div class="contact-form-container">
             <h2>Contacto</h2>
-            <!-- Este formulario requiere el archivo contact.php para funcionar -->
-            <form id="contactForm" action="contact.php" method="POST">
+            <form id="contactForm"> <!-- Eliminado el action y method -->
                 <input type="text" name="nombre" placeholder="Nombre *" required>
                 <input type="email" name="email" placeholder="Correo electrónico">
                 <input type="tel" name="telefono" placeholder="Teléfono *" required>
                 <textarea name="mensaje" placeholder="Mensaje" rows="4"></textarea>
                 <button type="submit">Enviar</button>
             </form>
-            
             <div id="formMessage" class="form-message"></div>
         </div>
-    
         <div class="contact-info-container">
             <h2>Dónde Encontrarnos</h2>
             <div class="map-container">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa%2C%20ex%20Batistta%20e%20Hijos!5e0!3m2!1ses-419!2sar!4v1757366780914!5m2!1ses-419!2sar"
-                    width="100%"
-                    height="300"
-                    style="border:0;"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-                <div class="map-info">
-                    <a href="https://maps.app.goo.gl/oJNFji4nYeB3hSBB6" target="_blank" class="map-link">Ver en Google Maps</a>
-                </div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa%2C%20ex%20Batistta%20e%20Hijos!5e0!3m2!1ses-419!2sar!4v1757366780914!5m2!1ses-419!2sar" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="map-info"><a href="https://maps.app.goo.gl/oJNFji4nYeB3hSBB6" target="_blank" class="map-link">Ver en Google Maps</a></div>
             </div>
         </div>
     </section>
 
     <script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) { e.preventDefault(); const t = new FormData(this), n = document.getElementById("formMessage"), o = this.querySelector('button[type="submit"]'); o.textContent = "Enviando...", o.disabled = !0, n.style.display = "none", fetch("contact.php", { method: "POST", body: t }).then(e => e.json()).then(e => { n.textContent = e.message, n.className = "form-message " + (e.success ? "success" : "error"), n.style.display = "block", e.success && document.getElementById("contactForm").reset() }).catch(e => { console.error("Error:", e), n.textContent = "Error al enviar el mensaje. Inténtalo de nuevo.", n.className = "form-message error", n.style.display = "block" }).finally(() => { o.textContent = "Enviar", o.disabled = !1 }) });
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const formMessage = document.getElementById("formMessage");
+        const submitButton = this.querySelector('button[type="submit"]');
+
+        submitButton.textContent = "Enviando...";
+        submitButton.disabled = true;
+        formMessage.style.display = "none";
+
+        fetch("/api/contact", {
+            method: "POST",
+            body: new URLSearchParams(formData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            formMessage.textContent = data.message;
+            formMessage.className = "form-message " + (data.success ? "success" : "error");
+            formMessage.style.display = "block";
+            if (data.success) {
+                document.getElementById("contactForm").reset();
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            formMessage.textContent = "Error al enviar el mensaje. Inténtalo de nuevo.";
+            formMessage.className = "form-message error";
+            formMessage.style.display = "block";
+        })
+        .finally(() => {
+            submitButton.textContent = "Enviar";
+            submitButton.disabled = false;
+        });
+    });
     </script>
     
     <hr class="section-divider">
@@ -173,15 +159,11 @@
     <footer class="footer">
         <p>NOVA Panes® es una marca registrada de Grupo FeSa</p>
         <div class="footer-links">
-            <a href="https://wa.me/5491164372200" target="_blank" class="footer-btn whatsapp-btn">
-                📱 WhatsApp
-            </a>
+            <a href="https://wa.me/5491164372200" target="_blank" class="footer-btn whatsapp-btn">📱 WhatsApp</a>
             <span class="footer-divider">|</span>
             <span class="phone-text">Tel: +54 9 11 6437 2200</span>
             <span class="footer-divider">|</span>
-            <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">
-                📷 @nova.panes
-            </a>
+            <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">📷 @nova.panes</a>
         </div>
     </footer>
     
@@ -190,61 +172,51 @@
         <div class="modal-content-wrapper">
             <img class="modal-image" id="modalImage" alt="Imagen ampliada del producto de pan">
             <div class="modal-title" id="modalTitle"></div>
-            <div class="modal-nav" id="modalNav">
-                <button class="modal-nav-btn" id="prevBtn">◄</button>
-                <span class="modal-counter" id="modalCounter"></span>
-                <button class="modal-nav-btn" id="nextBtn">►</button>
-            </div>
+            <div class="modal-nav" id="modalNav"><button class="modal-nav-btn" id="prevBtn">◄</button><span class="modal-counter" id="modalCounter"></span><button class="modal-nav-btn" id="nextBtn">►</button></div>
         </div>
     </div>
     
     <script>
-        const heroImages=['hero-images/hero-pan.png','hero-images/hero-pan-1.png','hero-images/hero-pan-2.png'];function setRandomHeroImage(){const e=document.getElementById("heroImage"),t=document.getElementById("heroImageContainer");if(e&&t){const n=Math.floor(Math.random()*heroImages.length),o=heroImages[n];e.src=o,t.style.setProperty("--hero-image-url",`url('${o}')`)}}document.addEventListener("DOMContentLoaded",setRandomHeroImage);const imageModal=document.getElementById("imageModal"),closeModal=document.querySelector(".close-modal"),modalImage=document.getElementById("modalImage"),modalTitle=document.getElementById("modalTitle"),productCards=document.querySelectorAll(".product-card img"),modalNav=document.getElementById("modalNav"),prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn"),modalCounter=document.getElementById("modalCounter");let currentImages=[],currentImageIndex=0,currentTitle="";function openModal(e,t,n=0){currentImages=e,currentTitle=t,currentImageIndex=n,updateModalContent(),imageModal.style.display="block",modalNav.style.display=currentImages.length>1?"flex":"none"}function updateModalContent(){modalImage.src=currentImages[currentImageIndex],modalImage.alt=currentTitle,modalTitle.textContent=currentTitle,currentImages.length>1&&(modalCounter.textContent=`${currentImageIndex+1} / ${currentImages.length}`)}productCards.forEach(e=>{e.addEventListener("click",function(){const e=this.getAttribute("data-images"),t=this.getAttribute("data-title");try{const n=JSON.parse(e);openModal(n,t,0)}catch(n){console.error("Error parsing data-images JSON:",n),openModal([this.src],t,0)}})}),closeModal.addEventListener("click",()=>{imageModal.style.display="none"}),imageModal.addEventListener("click",e=>{e.target===imageModal&&(imageModal.style.display="none")}),document.addEventListener("keydown",e=>{"block"===imageModal.style.display&&("Escape"===e.key?imageModal.style.display="none":"ArrowLeft"===e.key?currentImages.length>1&&(currentImageIndex=(currentImageIndex-1+currentImages.length)%currentImages.length,updateModalContent()):"ArrowRight"===e.key&&currentImages.length>1&&(currentImageIndex=(currentImageIndex+1)%currentImages.length,updateModalContent()))}),prevBtn.addEventListener("click",()=>{currentImages.length>1&&(currentImageIndex=(currentImageIndex-1+currentImages.length)%currentImages.length,updateModalContent())}),nextBtn.addEventListener("click",()=>{currentImages.length>1&&(currentImageIndex=(currentImageIndex+1)%currentImages.length,updateModalContent())});
-    </script>
-
-    <script>
+        // Script para cargar productos dinámicamente
         document.addEventListener('DOMContentLoaded', () => {
             const gallery = document.getElementById('product-gallery-index');
-
-            // Hacemos una petición para obtener los datos de los productos
-            fetch('/products.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('No se pudo conectar con el archivo de productos.');
-                    }
-                    return response.json();
-                })
-                .then(products => {
-                    // Limpiamos el contenedor por si había algo
-                    gallery.innerHTML = '';
-                    
-                    // Tomamos solo los primeros 6 productos del array
-                    const productsToShow = products.slice(0, 6);
-
-                    // Creamos el HTML para cada producto
-                    productsToShow.forEach(product => {
-                        const productCardHTML = `
-                            <div class="product-card">
-                                <img src="${product.image}" alt="${product.name}"
-                                     data-title="${product.name}"
-                                     data-images='["${product.image}"]' 
-                                     loading="lazy" decoding="async">
-                                <h3>${product.name}</h3>
-                                <div class="product-actions-preview">
-                                    <!-- El precio ha sido eliminado -->
-                                    <a href="shop.html" class="shop-link">Ver en Shop</a>
-                                </div>
-                            </div>
-                        `;
-                        // Añadimos la tarjeta del producto a la galería
-                        gallery.innerHTML += productCardHTML;
+            if (gallery) {
+                fetch('/products.json')
+                    .then(response => {
+                        if (!response.ok) throw new Error('No se pudieron cargar los productos.');
+                        return response.json();
+                    })
+                    .then(products => {
+                        gallery.innerHTML = '';
+                        const productsToShow = products.slice(0, 6);
+                        productsToShow.forEach(product => {
+                            gallery.innerHTML += `
+                                <div class="product-card">
+                                    <img src="${product.image}" alt="${product.name}" data-title="${product.name}" data-images='["${product.image}"]' loading="lazy" decoding="async">
+                                    <h3>${product.name}</h3>
+                                    <div class="product-actions-preview">
+                                        <a href="shop.html" class="shop-link">Ver en Shop</a>
+                                    </div>
+                                </div>`;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar productos en el index:', error);
+                        gallery.innerHTML = '<p>No se pudieron cargar los productos en este momento.</p>';
                     });
-                })
-                .catch(error => {
-                    console.error('Error al cargar los productos en la página de inicio:', error);
-                    gallery.innerHTML = '<p style="text-align: center; color: #888;">No se pudieron cargar los productos en este momento.</p>';
-                });
+            }
         });
+        
+        // Script para cambiar imagen del hero
+        const heroImages=['hero-images/hero-pan.png','hero-images/hero-pan-1.png','hero-images/hero-pan-2.png'];
+        function setRandomHeroImage(){
+            const e=document.getElementById("heroImage");
+            if(e){
+                const t=heroImages[Math.floor(Math.random()*heroImages.length)];
+                e.src=t;
+            }
+        }
+        document.addEventListener("DOMContentLoaded", setRandomHeroImage);
     </script>
 </body>
 </html>
