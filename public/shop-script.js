@@ -1,28 +1,33 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON FILTROS DINÁMICOS)
+//      ARCHIVO shop-script.js (CON BANNER DE LOGOS)
 // ===================================================
 
 let products = [];
 let categories = [];
+let logos = []; // <-- Variable para guardar los logos
 let cart = [];
 
 const shopProducts = document.getElementById('shopProducts');
 const filterContainer = document.getElementById('filter-container');
+const logoScroller = document.getElementById('logo-scroller'); // <-- Referencia al banner
 const cartFloating = document.getElementById('cartFloating');
 const cartModal = document.getElementById('cartModal');
-// ... (resto de las constantes del DOM sin cambios)
+// ... (resto de las constantes del DOM)
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar productos y categorías al mismo tiempo
+    // Ahora cargamos los 3 archivos de datos al mismo tiempo
     Promise.all([
         fetch('/products.json').then(res => res.json()),
-        fetch('/data/categories.json').then(res => res.json())
+        fetch('/data/categories.json').then(res => res.json()),
+        fetch('/data/logos.json').then(res => res.json()) // <-- NUEVO FETCH
     ])
-    .then(([productsData, categoriesData]) => {
+    .then(([productsData, categoriesData, logosData]) => {
         products = productsData;
         categories = categoriesData;
+        logos = logosData; // <-- Guardamos los datos de logos
 
-        renderCategoryFilters(); // <--- NUEVO: Dibuja los botones de filtro
+        renderLogoScroller();    // <--- NUEVO: Dibuja el banner de logos
+        renderCategoryFilters();
         renderProducts();
         setupEventListeners();
         updateCartDisplayFromStorage();
@@ -32,6 +37,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if(shopProducts) shopProducts.innerHTML = '<p style="text-align: center; color: red;">Error: No se pudieron cargar los productos.</p>';
     });
 });
+
+function renderLogoScroller() {
+    if (!logoScroller) return;
+
+    // --- El truco para el scroll infinito: duplicamos la lista de logos ---
+    const logosToRender = [...logos, ...logos];
+
+    logoScroller.innerHTML = logosToRender.map(logoFilename => `
+        <img src="/logos/${logoFilename}" alt="Logo de marca">
+    `).join('');
+}
 
 function renderCategoryFilters() {
     if (!filterContainer) return;
@@ -71,39 +87,21 @@ function setupEventListeners() {
 }
 
 // =================================================================
-// El resto de las funciones (renderProducts, addToCart, handleCheckout, etc.)
+// El resto de las funciones (renderProducts, addToCart, etc.)
 // no necesitan cambios y permanecen exactamente igual que antes.
 // =================================================================
-
-function renderProducts(filter = 'all') {
-    if (!shopProducts) return;
-    shopProducts.innerHTML = '';
-    const filteredProducts = filter === 'all' 
-        ? products 
-        : products.filter(product => product.category === filter);
-    
-    if (filteredProducts.length === 0) {
-        shopProducts.innerHTML = '<p style="text-align: center; padding: 40px 0;">No hay productos en esta categoría.</p>';
-        return;
-    }
-
-    filteredProducts.forEach(product => {
-        const productHTML = `<div class="product-item" data-category="${product.category}"><img src="${product.image}" alt="${product.name}" class="product-image" onclick="openProductModal('${product.image}', '${product.name}')" loading="lazy" decoding="async"><div class="product-info"><h3 class="product-title">${product.name}</h3><p class="product-description">${product.description}</p><div class="product-price">$${product.price.toLocaleString()}</div><div class="product-actions"><div class="quantity-controls"><button class="qty-btn" onclick="changeQuantity(${product.id}, -1)">-</button><input type="number" class="qty-input" id="qty-${product.id}" value="1" min="1" max="${product.stock}"><button class="qty-btn" onclick="changeQuantity(${product.id}, 1)">+</button></div><button class="add-to-cart-btn" onclick="addToCart(event, ${product.id})">Agregar al Carrito</button></div></div></div>`;
-        shopProducts.innerHTML += productHTML;
-    });
-}
-
+function renderProducts(filter = 'all') { if (!shopProducts) return; shopProducts.innerHTML = ''; const filteredProducts = filter === 'all' ? products : products.filter(product => product.category === filter); if (filteredProducts.length === 0) { shopProducts.innerHTML = '<p style="text-align: center; padding: 40px 0;">No hay productos en esta categoría.</p>'; return; } filteredProducts.forEach(product => { const productHTML = `<div class="product-item" data-category="${product.category}"><img src="${product.image}" alt="${product.name}" class="product-image" onclick="openProductModal('${product.image}', '${product.name}')" loading="lazy" decoding="async"><div class="product-info"><h3 class="product-title">${product.name}</h3><p class="product-description">${product.description}</p><div class="product-price">$${product.price.toLocaleString()}</div><div class="product-actions"><div class="quantity-controls"><button class="qty-btn" onclick="changeQuantity(${product.id}, -1)">-</button><input type="number" class="qty-input" id="qty-${product.id}" value="1" min="1" max="${product.stock}"><button class="qty-btn" onclick="changeQuantity(${product.id}, 1)">+</button></div><button class="add-to-cart-btn" onclick="addToCart(event, ${product.id})">Agregar al Carrito</button></div></div></div>`; shopProducts.innerHTML += productHTML; }); }
 function saveCartToStorage() { localStorage.setItem('novaPanesCart', JSON.stringify(cart)); }
 function updateCartDisplayFromStorage() { const savedCart = localStorage.getItem('novaPanesCart'); if (savedCart) { cart = JSON.parse(savedCart); } updateCartDisplay(); }
 function changeQuantity(productId, change) { const qtyInput = document.getElementById(`qty-${productId}`); if (!qtyInput) return; let newValue = parseInt(qtyInput.value) + change; const product = products.find(p => p.id === productId); if (!product) return; if (newValue < 1) newValue = 1; if (newValue > product.stock) newValue = product.stock; qtyInput.value = newValue; }
 function addToCart(event, productId) { const product = products.find(p => p.id === productId); if (!product) return; const quantityInput = document.getElementById(`qty-${productId}`); if (!quantityInput) return; const quantity = parseInt(quantityInput.value); const existingItem = cart.find(item => item.id === productId); if (existingItem) { if (existingItem.quantity + quantity <= product.stock) { existingItem.quantity += quantity; } else { alert(`Solo quedan ${product.stock} unidades disponibles`); return; } } else { if (quantity > product.stock) { alert(`Solo quedan ${product.stock} unidades disponibles`); return; } cart.push({ ...product, quantity: quantity }); } updateCartDisplay(); const btn = event.target; btn.textContent = '¡Agregado!'; btn.style.background = '#4CAF50'; setTimeout(() => { btn.textContent = 'Agregar al Carrito'; btn.style.background = '#B5651D'; }, 1000); }
-function updateCartDisplay() { const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); const cartCount = document.getElementById('cartCount'); if (cartCount) cartCount.textContent = totalItems; const cartTotal = document.getElementById('cartTotal'); if (cartTotal) cartTotal.textContent = totalPrice.toLocaleString(); if (cartFloating) { cartFloating.style.display = totalItems > 0 ? 'block' : 'none'; } saveCartToStorage(); renderCartItems(); }
+function updateCartDisplay() { const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); const cartCount = document.getElementById('cartCount'); if (cartCount) cartCount.textContent = totalItems; const cartTotal = document.getElementById('cartTotal'); if (cartTotal) cartTotal.textContent = totalPrice.toLocaleString(); const cartFloating = document.getElementById('cartFloating'); if (cartFloating) { cartFloating.style.display = totalItems > 0 ? 'block' : 'none'; } saveCartToStorage(); renderCartItems(); }
 function renderCartItems() { const cartItems = document.getElementById('cartItems'); if (!cartItems) return; if (cart.length === 0) { cartItems.innerHTML = '<div class="empty-cart-message">Tu carrito está vacío</div>'; return; } cartItems.innerHTML = cart.map(item => `<div class="cart-item"><img src="${item.image}" alt="${item.name}" class="cart-item-image"><div class="cart-item-info"><div class="cart-item-title">${item.name}</div><div class="cart-item-price">$${item.price.toLocaleString()}</div></div><div class="cart-item-quantity"><button class="cart-qty-btn" onclick="updateCartItemQuantity(${item.id}, ${item.quantity - 1})">-</button><span class="cart-qty-display">${item.quantity}</span><button class="cart-qty-btn" onclick="updateCartItemQuantity(${item.id}, ${item.quantity + 1})">+</button></div><button class="remove-item" onclick="removeFromCart(${item.id})">×</button></div>`).join(''); }
 function updateCartItemQuantity(productId, newQuantity) { const product = products.find(p => p.id === productId); const cartItem = cart.find(item => item.id === productId); if (!product || !cartItem) return; if (newQuantity <= 0) { removeFromCart(productId); return; } if (newQuantity > product.stock) { alert(`Solo quedan ${product.stock} unidades disponibles`); return; } cartItem.quantity = newQuantity; updateCartDisplay(); }
 function removeFromCart(productId) { cart = cart.filter(item => item.id !== productId); updateCartDisplay(); }
 function clearCart() { if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) { cart = []; updateCartDisplay(); } }
-function openCartModal() { if (cartModal) { cartModal.style.display = 'block'; renderCartItems(); } }
-function closeCartModal() { if (cartModal) cartModal.style.display = 'none'; }
+function openCartModal() { const cartModal = document.getElementById('cartModal'); if (cartModal) { cartModal.style.display = 'block'; renderCartItems(); } }
+function closeCartModal() { const cartModal = document.getElementById('cartModal'); if (cartModal) cartModal.style.display = 'none'; }
 function openCheckout() { if (cart.length === 0) { alert('Tu carrito está vacío'); return; } closeCartModal(); const checkoutModal = document.getElementById('checkoutModal'); if (checkoutModal) { checkoutModal.style.display = 'block'; renderOrderSummary(); } }
 function closeCheckout() { const checkoutModal = document.getElementById('checkoutModal'); if (checkoutModal) checkoutModal.style.display = 'none'; }
 function renderOrderSummary() { const orderItems = document.getElementById('orderItems'); const orderTotal = document.getElementById('orderTotal'); const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); if (orderItems) { orderItems.innerHTML = cart.map(item => `<div class="order-item"><span>${item.name} x ${item.quantity}</span><span>$${(item.price * item.quantity).toLocaleString()}</span></div>`).join(''); } if (orderTotal) orderTotal.textContent = totalPrice.toLocaleString(); }

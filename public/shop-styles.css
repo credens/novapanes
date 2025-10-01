@@ -592,3 +592,58 @@
         flex-direction: column;
     }
 }
+
+/* =================================
+   ESTILOS PARA EL BANNER DE LOGOS
+   ================================= */
+
+.logo-scroller-container {
+    max-width: 1200px;
+    margin: 50px auto; /* Espacio arriba y abajo del banner */
+    overflow: hidden;
+    /* Efecto de desvanecimiento en los bordes para un look más pro */
+    -webkit-mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+    mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+}
+
+.logo-scroller {
+    display: flex;
+    align-items: center; /* Centra los logos verticalmente */
+    gap: 60px; /* Espacio entre logos */
+    /* La animación se define aquí */
+    animation: scroll 30s linear infinite;
+}
+
+.logo-scroller img {
+    /* Normalización del tamaño: todos tendrán la misma altura */
+    max-height: 50px;
+    width: auto; /* Mantiene la proporción */
+    /* Efecto visual para unificar las marcas */
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.logo-scroller:hover {
+    /* Pausa la animación cuando el ratón está encima */
+    animation-play-state: paused;
+}
+
+.logo-scroller img:hover {
+    /* Resalta el logo al pasar el ratón por encima */
+    filter: grayscale(0);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Definición de la animación de scroll */
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        /* Se mueve un 50% a la izquierda. 
+           Esto funciona porque duplicaremos la lista de logos. */
+        transform: translateX(-50%);
+    }
+}
