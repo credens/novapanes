@@ -119,13 +119,38 @@
             <form id="productForm">
                 <input type="hidden" id="productId" name="id">
                 <div class="form-grid">
-                    <div class="form-group"><label for="name">Nombre:</label><input type="text" id="name" name="name" required></div>
-                    <div class="form-group"><label for="price">Precio:</label><input type="number" id="price" name="price" step="0.01" required min="0"></div>
-                    <div class="form-group"><label for="stock">Stock:</label><input type="number" id="stock" name="stock" required min="0"></div>
-                    <div class="form-group"><label for="category">Categoría:</label><select id="category" name="category" required></select></div>
-                    <div class="form-group full-width"><label for="description">Descripción:</label><textarea id="description" name="description" rows="3" required></textarea></div>
-                    <div class="form-group full-width"><label>Imagen Actual:</label><img id="currentImage" src="" alt="Imagen del producto" width="100" style="display: none;"></div>
-                    <div class="form-group full-width"><label for="image">Imagen del Producto:</label><input type="file" id="image" name="image" accept="image/*"></div>
+                    <div class="form-group">
+                        <label for="name">Nombre:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Precio Regular:</label>
+                        <input type="number" id="price" name="price" step="0.01" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="promo_price">Precio de Promoción (opcional):</label>
+                        <input type="number" id="promo_price" name="promo_price" step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">Stock:</label>
+                        <input type="number" id="stock" name="stock" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Categoría:</label>
+                        <select id="category" name="category" required></select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="description">Descripción:</label>
+                        <textarea id="description" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Imagen Actual:</label>
+                        <img id="currentImage" src="" alt="Imagen del producto" width="100" style="display: none;">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="image">Imagen del Producto:</label>
+                        <input type="file" id="image" name="image" accept="image/*">
+                    </div>
                 </div>
                 <button type="submit">Guardar</button>
             </form>

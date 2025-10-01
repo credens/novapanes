@@ -4,6 +4,7 @@
         "name": "Pan de papa con parmesano",
         "description": "Suave pan de papa con un toque de parmesano que le da un sabor único. Diametro 10cm, peso unitario 90g",
         "price": 1500,
+        "promo_price": 1250,
         "image": "productos/pan-de-papa-1.png",
         "category": "panificados",
         "stock": 20

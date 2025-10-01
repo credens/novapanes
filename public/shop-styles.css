@@ -647,3 +647,36 @@
         transform: translateX(-50%);
     }
 }
+
+/* --- ESTILOS PARA OFERTAS --- */
+.product-item.on-sale {
+    position: relative;
+    border: 2px solid #e74c3c; /* Borde rojo para destacar */
+}
+
+.sale-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.product-price.sale {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.3rem; /* Hacer el precio de oferta más grande */
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-weight: normal;
+    margin-left: 10px;
+    font-size: 0.9rem;
+}
