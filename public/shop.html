@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Online - NOVA Panes</title>
-    <meta name="description" content="Comprá online los mejores panes de papa. Elegí tus favoritos, añadilos al carrito y recibilos en tu casa.">
+    <meta name="description" content="Comprá online pan de papa, snacks, papas congeladas y productos en oferta. Elegí tus favoritos, añadilos al carrito y recibilos en tu casa.">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,24 +17,17 @@
         <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes - Tienda"></div>
         <nav class="main-nav"><a href="shop.html" class="active">Shop</a></nav>
     </header>
-    <div class="shop-hero">
-        <div class="shop-hero-content">
-            <h1>Tienda Online</h1>
-            <p>Comprá nuestros panes frescos y recibilos en tu casa</p>
-        </div>
-    </div>
-    <div class="logo-scroller-container">
-        <div class="logo-scroller" id="logo-scroller"></div>
-    </div>
-    <div id="cartFloating" class="cart-floating" style="display: none;">
-        <div class="cart-icon">🛒 <span id="cartCount">0</span></div>
-    </div>
+    <div class="shop-hero"><div class="shop-hero-content"><h1>Tienda Online</h1><p>Comprá nuestros productos frescos y recibilos en tu casa</p></div></div>
+    <div class="logo-scroller-container"><div class="logo-scroller" id="logo-scroller"></div></div>
+    <div id="cartFloating" class="cart-floating" style="display: none;"><div class="cart-icon">🛒 <span id="cartCount">0</span></div></div>
+    
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
             <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart">&times;</span></div>
             <div id="cartItems" class="cart-items"></div>
             <div class="cart-footer">
                 <div class="cart-total"><strong>Total: $<span id="cartTotal">0</span></strong></div>
+                <div id="minPurchaseMessage" class="min-purchase-message" style="display: none;"></div>
                 <div class="cart-actions">
                     <button id="clearCart" class="btn-secondary">Vaciar Carrito</button>
                     <button id="checkout" class="btn-primary">Finalizar Compra</button>
@@ -42,9 +35,13 @@
             </div>
         </div>
     </div>
+
     <div id="checkoutModal" class="checkout-modal">
         <div class="checkout-modal-content">
-            <div class="checkout-header"><h2>Finalizar Compra</h2><span class="close-checkout">&times;</span></div>
+            <div class="checkout-header">
+                <h2>Finalizar Compra</h2>
+                <span class="close-checkout">&times;</span>
+            </div>
             <form id="checkoutForm" class="checkout-form">
                 <div class="form-section">
                     <h3>Datos de Contacto</h3>
@@ -68,17 +65,21 @@
                         <option value="mercadopago">Mercado Pago</option>
                     </select>
                 </div>
-                <div class="order-summary"><h3>Resumen del Pedido</h3><div id="orderItems"></div><div class="order-total"><strong>Total: $<span id="orderTotal">0</span></strong></div></div>
-                <div class="checkout-actions"><button type="button" class="btn-secondary close-checkout-btn">Cancelar</button><button type="submit" class="btn-primary">Confirmar Pedido</button></div>
+                <div class="order-summary">
+                    <h3>Resumen del Pedido</h3>
+                    <div id="orderItems"></div>
+                    <div class="order-total"><strong>Total: $<span id="orderTotal">0</span></strong></div>
+                </div>
+                <div class="checkout-actions">
+                    <button type="button" class="btn-secondary close-checkout-btn">Cancelar</button>
+                    <button type="submit" class="btn-primary">Confirmar Pedido</button>
+                </div>
             </form>
         </div>
     </div>
+    
     <main class="shop-main">
-        <div class="shop-filters">
-            <div class="filter-container" id="filter-container">
-                <!-- Los botones de filtro se generarán aquí -->
-            </div>
-        </div>
+        <div class="shop-filters"><div class="filter-container" id="filter-container"></div></div>
         <div class="shop-products" id="shopProducts"></div>
     </main>
     <hr class="section-divider">

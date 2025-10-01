@@ -680,3 +680,22 @@
     margin-left: 10px;
     font-size: 0.9rem;
 }
+
+/* --- ESTILOS PARA MENSAJE DE COMPRA MÍNIMA --- */
+.min-purchase-message {
+    text-align: center;
+    padding: 10px;
+    margin: 15px 0 5px 0;
+    background-color: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: 4px;
+    color: #b45309;
+    font-size: 0.9rem;
+}
+
+/* Estilo para el botón de checkout cuando está deshabilitado */
+#checkout:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
