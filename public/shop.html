@@ -13,9 +13,6 @@
 </head>
 <body>
 
-    <!-- ============================================= -->
-    <!-- === MODAL DE PROMOCIÓN DE BIENVENIDA AÑADIDO === -->
-    <!-- ============================================= -->
     <div id="promoModal" class="promo-modal" style="display: none;">
         <div class="promo-modal-overlay"></div>
         <div class="promo-modal-content">
@@ -65,13 +62,42 @@
                     <input type="email" name="email" placeholder="Email *" required>
                     <input type="tel" name="telefono" placeholder="Teléfono *" required>
                 </div>
+
+                <!-- SECCIÓN DE ENTREGA MODIFICADA -->
                 <div class="form-section">
-                    <h3>Dirección de Entrega</h3>
-                    <input type="text" name="direccion" placeholder="Dirección *" required>
-                    <input type="text" name="ciudad" placeholder="Ciudad *" required>
-                    <input type="text" name="codigoPostal" placeholder="Código Postal">
-                    <textarea name="referencias" placeholder="Referencias adicionales" rows="2"></textarea>
+                    <h3>Método de Entrega</h3>
+                    <div class="delivery-options">
+                        <label>
+                            <input type="radio" name="metodoEntrega" value="Envío a Domicilio" checked required>
+                            Envío a Domicilio
+                        </label>
+                        <label>
+                            <input type="radio" name="metodoEntrega" value="Retiro en Fábrica">
+                            Retiro en Fábrica
+                        </label>
+                    </div>
                 </div>
+
+                <div id="deliveryAddressContainer">
+                    <div class="form-section">
+                        <h3>Dirección de Entrega</h3>
+                        <input type="text" name="direccion" placeholder="Dirección *" required>
+                        <input type="text" name="ciudad" placeholder="Ciudad *" required>
+                        <input type="text" name="codigoPostal" placeholder="Código Postal">
+                        <textarea name="referencias" placeholder="Referencias adicionales" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-section delivery-time-container">
+                        <h3>Horario de Entrega</h3>
+                        <select name="horarioEntrega" id="deliveryTimeSelect" required>
+                            <option value="">Seleccionar horario *</option>
+                            <option value="10 a 14 hs">10 a 14 hs</option>
+                            <option value="14 a 18 hs">14 a 18 hs</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- FIN SECCIÓN MODIFICADA -->
+                
                 <div class="form-section">
                     <h3>Método de Pago</h3>
                     <select name="metodoPago" required>
@@ -81,6 +107,7 @@
                         <option value="mercadopago">Mercado Pago</option>
                     </select>
                 </div>
+
                 <div class="order-summary">
                     <h3>Resumen del Pedido</h3>
                     <div id="orderItems"></div>

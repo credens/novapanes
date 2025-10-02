@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (CON LÓGICA DE OFERTAS)
+//      ARCHIVO server.js (CON LÓGICA DE OFERTAS Y ENTREGA)
 // ===================================================
 
 const express = require('express');
@@ -24,9 +24,10 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, path.join(__dirname, 'public', 'productos')),
     filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
+
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB en bytes
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
 });
 
 const {
@@ -38,7 +39,6 @@ const client = new MercadoPagoConfig({
 });
 
 const limitSize = '10mb';
-
 app.use(express.json({ limit: limitSize }));
 app.use(cors());
 app.use(express.urlencoded({
@@ -138,7 +138,6 @@ adminRouter.get('/products', (req, res) => {
     }
 });
 
-// --- MODIFICADO para incluir promo_price ---
 adminRouter.post('/products', upload.single('image'), (req, res) => {
     try {
         if (!req.file || !req.body.name) return res.status(400).json({
@@ -150,7 +149,7 @@ adminRouter.post('/products', upload.single('image'), (req, res) => {
             name: req.body.name,
             description: req.body.description,
             price: parseFloat(req.body.price),
-            promo_price: req.body.promo_price ? parseFloat(req.body.promo_price) : null, // <-- AÑADIDO
+            promo_price: req.body.promo_price ? parseFloat(req.body.promo_price) : null,
             stock: parseInt(req.body.stock),
             category: req.body.category,
             image: `productos/${req.file.filename}`
@@ -165,7 +164,6 @@ adminRouter.post('/products', upload.single('image'), (req, res) => {
     }
 });
 
-// --- MODIFICADO para incluir promo_price ---
 adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
@@ -179,7 +177,7 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
             name: req.body.name,
             description: req.body.description,
             price: parseFloat(req.body.price),
-            promo_price: req.body.promo_price ? parseFloat(req.body.promo_price) : null, // <-- AÑADIDO
+            promo_price: req.body.promo_price ? parseFloat(req.body.promo_price) : null,
             stock: parseInt(req.body.stock),
             category: req.body.category
         };
@@ -343,6 +341,7 @@ app.post('/api/contact', async (req, res) => {
         });
     }
 });
+
 app.post('/api/submit-order', async (req, res) => {
     const orderData = req.body;
     try {
@@ -368,7 +367,32 @@ app.post('/api/submit-order', async (req, res) => {
             pass: process.env.EMAIL_APP_PASSWORD
         }
     });
-    const emailBody = `<h1>🍞 Pedido Recibido</h1><h2>Cliente: ${orderData.customer.nombre}</h2><ul><li>Email: ${orderData.customer.email}</li><li>Teléfono: ${orderData.customer.telefono}</li><li>Dirección: ${orderData.customer.direccion}, ${orderData.customer.ciudad}</li></ul><h2>Pedido:</h2><table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;"><thead><tr style="background-color:#f2f2f2;"><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead><tbody>${orderData.items.map(i => `<tr><td>${i.name}</td><td style="text-align:center;">${i.quantity}</td><td style="text-align:right;">$${(i.price * i.quantity).toLocaleString('es-AR')}</td></tr>`).join('')}</tbody></table><h3 style="text-align:right;">Total: $${orderData.total.toLocaleString('es-AR')}</h3><p><strong>Pago:</strong> ${orderData.metodoPago}</p>`;
+
+    let deliveryDetails = `<li><strong>Método de Entrega:</strong> ${orderData.customer.metodoEntrega}</li>`;
+    if (orderData.customer.metodoEntrega === 'Envío a Domicilio') {
+        deliveryDetails += `
+            <li><strong>Dirección:</strong> ${orderData.customer.direccion}, ${orderData.customer.ciudad}</li>
+            <li><strong>Horario Preferido:</strong> ${orderData.customer.horarioEntrega}</li>
+        `;
+    }
+
+    const emailBody = `
+        <h1>🍞 Pedido Recibido</h1>
+        <h2>Cliente: ${orderData.customer.nombre}</h2>
+        <ul>
+            <li><strong>Email:</strong> ${orderData.customer.email}</li>
+            <li><strong>Teléfono:</strong> ${orderData.customer.telefono}</li>
+            ${deliveryDetails}
+        </ul>
+        <h2>Pedido:</h2>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background-color:#f2f2f2;"><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
+            <tbody>${orderData.items.map(i => `<tr><td>${i.name}</td><td style="text-align:center;">${i.quantity}</td><td style="text-align:right;">$${(i.price * i.quantity).toLocaleString('es-AR')}</td></tr>`).join('')}</tbody>
+        </table>
+        <h3 style="text-align:right;">Total: $${orderData.total.toLocaleString('es-AR')}</h3>
+        <p><strong>Pago:</strong> ${orderData.metodoPago}</p>
+    `;
+
     const mailOptions = {
         from: `"NOVA Panes Web" <${process.env.EMAIL_USER}>`,
         to: 'panes.nova@gmail.com',
@@ -387,6 +411,7 @@ app.post('/api/submit-order', async (req, res) => {
         });
     }
 });
+
 app.post('/create-preference', async (req, res) => {
     try {
         const {
