@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON COMPRA MÍNIMA Y BUSCADOR)
+//      ARCHIVO shop-script.js (CON PROMO MODAL ALEATORIA)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -16,7 +16,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartFloating = document.getElementById('cartFloating');
     const cartModal = document.getElementById('cartModal');
     const checkoutModal = document.getElementById('checkoutModal');
-    const searchInput = document.getElementById('searchInput'); // Elemento del buscador
+    const searchInput = document.getElementById('searchInput'); 
+    
+    // Elementos del modal de promoción
+    const promoModal = document.getElementById('promoModal');
+    const promoModalOverlay = document.querySelector('.promo-modal-overlay');
+    const closePromoModalBtn = document.getElementById('closePromoModal');
+    const promoLink = document.getElementById('promoLink');
+    const promoImage = document.getElementById('promoImage');
+
 
     Promise.all([
         fetch('/products.json').then(res => res.json()),
@@ -27,13 +35,49 @@ document.addEventListener('DOMContentLoaded', function() {
         categories = categoriesData;
         renderLogoScroller(logosData);
         renderCategoryFilters();
-        renderProducts(); // Render inicial sin filtros
+        renderProducts(); 
         setupEventListeners();
         updateCartDisplayFromStorage();
+        handlePromoModal(); 
     }).catch(error => {
         console.error('Error fatal al cargar los datos iniciales:', error);
         if(shopProducts) shopProducts.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda.</p>';
     });
+
+    // --- FUNCIÓN MODIFICADA PARA ELEGIR PROMO ALEATORIA DE "COMBOS" ---
+    function handlePromoModal() {
+        // Solo mostrar si no se ha mostrado antes en esta sesión
+        if (sessionStorage.getItem('promoShown')) {
+            return;
+        }
+        
+        // IMPORTANTE: Asegúrate de que el ID de tu categoría "Combos" sea 'combos'.
+        // Puedes verificarlo en el archivo /public/data/categories.json
+        const comboCategoryID = 'combos'; 
+
+        // 1. Filtrar todos los productos de la categoría "combos"
+        const comboProducts = products.filter(p => p.category === comboCategoryID);
+
+        // 2. Si hay productos en la categoría, elegir uno aleatorio
+        if (comboProducts.length > 0 && promoModal) {
+            const randomIndex = Math.floor(Math.random() * comboProducts.length);
+            const promoProduct = comboProducts[randomIndex];
+
+            // 3. Configurar y mostrar el modal
+            promoImage.src = promoProduct.image;
+            promoImage.alt = `Oferta: ${promoProduct.name}`;
+            promoLink.href = `#product-${promoProduct.id}`;
+
+            promoModal.style.display = 'flex';
+            sessionStorage.setItem('promoShown', 'true');
+        }
+    }
+
+    function closePromoModal() {
+        if (promoModal) {
+            promoModal.style.display = 'none';
+        }
+    }
 
     function renderLogoScroller(logos) { if (!logoScroller) return; const logosToRender = [...logos, ...logos]; logoScroller.innerHTML = logosToRender.map(logoFilename => `<img src="/logos/${logoFilename}" alt="Logo de marca">`).join(''); }
     
@@ -49,22 +93,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }); 
     }
 
-    // --- FUNCIÓN RENDERPRODUCTS MODIFICADA PARA INCLUIR BÚSQUEDA ---
     function renderProducts(categoryFilter = 'all', searchTerm = '') {
         if (!shopProducts) return;
 
-        // 1. Filtrar por categoría
         const filteredByCategory = categoryFilter === 'all' 
             ? products 
             : products.filter(p => p.category === categoryFilter);
 
-        // 2. Filtrar por término de búsqueda (sobre el resultado anterior)
         const searchTermLower = searchTerm.toLowerCase().trim();
         const finalProducts = searchTermLower
             ? filteredByCategory.filter(p => p.name.toLowerCase().includes(searchTermLower))
             : filteredByCategory;
         
-        shopProducts.innerHTML = ''; // Limpiar la vista
+        shopProducts.innerHTML = '';
         if (finalProducts.length === 0) {
             shopProducts.innerHTML = '<p style="text-align: center; padding: 40px 0;">No se encontraron productos con esos criterios.</p>';
             return;
@@ -78,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
             
             shopProducts.innerHTML += `
-                <div class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}">
+                <div id="product-${product.id}" class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}">
                     <script type="application/ld+json">{ "@context": "https://schema.org/", "@type": "Product", "name": "${product.name.replace(/"/g, '\\"')}", "image": "https://novapanes.com.ar/${product.image}", "description": "${product.description.replace(/"/g, '\\"')}", "offers": { "@type": "Offer", "priceCurrency": "ARS", "price": "${currentPrice}", "availability": "${product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'}" } }</script>
                     ${isOnSale ? '<div class="sale-badge">OFERTA</div>' : ''}
                     <img src="${product.image}" alt="${product.name}" class="product-image" onclick="openProductModal('${product.image}', '${product.name}')" loading="lazy">
@@ -99,9 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }); 
     }
 
-    // --- FUNCIÓN SETUP MODIFICADA PARA INCLUIR BÚSQUEDA ---
     function setupEventListeners() {
-        // Evento para los botones de categoría
         document.querySelector('.shop-filters').addEventListener('click', function(e) { 
             if (e.target.classList.contains('filter-btn')) { 
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
@@ -111,14 +150,32 @@ document.addEventListener('DOMContentLoaded', function() {
             } 
         });
         
-        // Evento para el campo de búsqueda (se activa al escribir)
         searchInput.addEventListener('input', function(e) {
             const activeCategory = document.querySelector('.filter-btn.active').dataset.filter;
             const searchTerm = e.target.value;
             renderProducts(activeCategory, searchTerm);
         });
 
-        // Eventos de carrito y checkout (sin cambios)
+        if (promoModal) {
+            closePromoModalBtn.addEventListener('click', closePromoModal);
+            promoModalOverlay.addEventListener('click', closePromoModal);
+            promoLink.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                closePromoModal();
+                
+                const targetId = promoLink.getAttribute('href'); 
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetElement.classList.add('highlight');
+                    setTimeout(() => {
+                        targetElement.classList.remove('highlight');
+                    }, 3000);
+                }
+            });
+        }
+
         cartFloating?.addEventListener('click', openCartModal);
         document.querySelector('.close-cart')?.addEventListener('click', closeCartModal);
         document.querySelector('.close-checkout')?.addEventListener('click', closeCheckout);
