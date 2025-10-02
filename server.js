@@ -25,7 +25,8 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({
-    storage: storage
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB en bytes
 });
 
 const {
@@ -36,10 +37,13 @@ const client = new MercadoPagoConfig({
     accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN
 });
 
-app.use(express.json());
+const limitSize = '10mb';
+
+app.use(express.json({ limit: limitSize }));
 app.use(cors());
 app.use(express.urlencoded({
-    extended: true
+    extended: true,
+    limit: limitSize
 }));
 app.use(session({
     secret: process.env.SESSION_SECRET || 'supersecretkey',
