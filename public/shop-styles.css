@@ -29,6 +29,34 @@
     padding: 0 50px;
 }
 
+/* =================================
+   ESTILOS PARA EL BUSCADOR (AÑADIDO)
+   ================================= */
+.shop-search-container {
+    margin-bottom: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border-radius: 25px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-sizing: border-box; /* Importante para que el padding no afecte el ancho */
+    transition: all 0.3s ease;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #B5651D;
+    box-shadow: 0 0 0 3px rgba(181, 101, 29, 0.15);
+}
+
+
 /* Filtros */
 .shop-filters {
     margin-bottom: 40px;
@@ -63,11 +91,16 @@
     color: #fff;
 }
 
+/* =====================================
+   GRID Y TARJETAS DE PRODUCTO (MODIFICADO)
+   ===================================== */
+
 /* Grid de productos */
 .shop-products {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
+    /* Ancho mínimo reducido para que quepan más tarjetas */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+    gap: 25px; /* Gap ligeramente reducido */
     margin-bottom: 80px;
 }
 
@@ -80,6 +113,8 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
     position: relative;
+    display: flex; /* Añadido para mejor control del contenido */
+    flex-direction: column; /* Añadido */
 }
 
 .product-item:hover {
@@ -93,32 +128,35 @@
 
 .product-image {
     width: 100%;
-    height: 200px;
+    height: 150px; /* Altura de imagen reducida */
     object-fit: cover;
     cursor: pointer;
 }
 
 .product-info {
-    padding: 20px;
+    padding: 15px; /* Padding reducido */
+    flex-grow: 1; /* Permite que esta sección crezca para alinear botones */
+    display: flex; /* Añadido */
+    flex-direction: column; /* Añadido */
 }
 
 .product-title {
     font-family: 'Lora', serif;
-    font-size: 1.3rem;
-    margin: 0 0 10px 0;
+    font-size: 1.1rem; /* Tamaño de fuente reducido */
+    margin: 0 0 8px 0;
     color: #000;
 }
 
 .product-description {
     color: #666;
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* Tamaño de fuente reducido */
     line-height: 1.4;
     margin: 0 0 15px 0;
-    min-height: 50px; /* Ayuda a alinear las tarjetas */
+    flex-grow: 1; /* Empuja el precio y botones hacia abajo */
 }
 
 .product-price {
-    font-size: 1.4rem;
+    font-size: 1.2rem; /* Tamaño de fuente reducido */
     font-weight: 600;
     color: #B5651D;
     margin: 0 0 15px 0;
@@ -128,6 +166,7 @@
     display: flex;
     gap: 10px;
     align-items: center;
+    margin-top: auto; /* Alinea los botones al final */
 }
 
 .quantity-controls {
@@ -153,8 +192,8 @@
 
 .qty-input {
     border: none;
-    padding: 8px 12px;
-    width: 50px;
+    padding: 8px;
+    width: 40px; /* Ancho reducido */
     text-align: center;
     font-size: 0.9rem;
     -moz-appearance: textfield; /* Firefox */
@@ -170,10 +209,10 @@
     background: #B5651D;
     color: #fff;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 15px; /* Padding ajustado */
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* Tamaño de fuente reducido */
     transition: all 0.3s ease;
     flex: 1;
 }
@@ -556,7 +595,7 @@
     }
     
     .shop-products {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 20px;
     }
     
@@ -592,6 +631,20 @@
         flex-direction: column;
     }
 }
+
+@media (max-width: 480px) {
+    .shop-products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .product-title {
+        font-size: 1rem;
+    }
+    .product-price {
+        font-size: 1.1rem;
+    }
+}
+
 
 /* =================================
    ESTILOS PARA EL BANNER DE LOGOS
@@ -670,7 +723,6 @@
 .product-price.sale {
     color: #e74c3c;
     font-weight: bold;
-    font-size: 1.3rem; /* Hacer el precio de oferta más grande */
 }
 
 .original-price {
@@ -678,7 +730,7 @@
     color: #999;
     font-weight: normal;
     margin-left: 10px;
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* Tamaño reducido */
 }
 
 /* --- ESTILOS PARA MENSAJE DE COMPRA MÍNIMA --- */
