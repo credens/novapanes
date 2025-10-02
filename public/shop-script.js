@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON PROMO MODAL ALEATORIA)
+//      ARCHIVO shop-script.js (CON PROMO MODAL)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const checkoutModal = document.getElementById('checkoutModal');
     const searchInput = document.getElementById('searchInput'); 
     
-    // Elementos del modal de promoción
+    // --- ELEMENTOS DEL MODAL DE PROMOCIÓN (AÑADIDO) ---
     const promoModal = document.getElementById('promoModal');
     const promoModalOverlay = document.querySelector('.promo-modal-overlay');
     const closePromoModalBtn = document.getElementById('closePromoModal');
@@ -38,36 +38,29 @@ document.addEventListener('DOMContentLoaded', function() {
         renderProducts(); 
         setupEventListeners();
         updateCartDisplayFromStorage();
-        handlePromoModal(); 
+        handlePromoModal(); // --- LLAMADA A LA NUEVA FUNCIÓN ---
     }).catch(error => {
         console.error('Error fatal al cargar los datos iniciales:', error);
         if(shopProducts) shopProducts.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda.</p>';
     });
 
-    // --- FUNCIÓN MODIFICADA PARA ELEGIR PROMO ALEATORIA DE "COMBOS" ---
+    // --- FUNCIÓN PARA MANEJAR EL MODAL DE PROMOCIÓN (AÑADIDO) ---
     function handlePromoModal() {
         // Solo mostrar si no se ha mostrado antes en esta sesión
         if (sessionStorage.getItem('promoShown')) {
             return;
         }
-        
-        // IMPORTANTE: Asegúrate de que el ID de tu categoría "Combos" sea 'combos'.
-        // Puedes verificarlo en el archivo /public/data/categories.json
-        const comboCategoryID = 'combos'; 
 
-        // 1. Filtrar todos los productos de la categoría "combos"
-        const comboProducts = products.filter(p => p.category === comboCategoryID);
+        // Buscar el primer producto con precio de promoción
+        const promoProduct = products.find(p => p.promo_price && p.promo_price < p.price);
 
-        // 2. Si hay productos en la categoría, elegir uno aleatorio
-        if (comboProducts.length > 0 && promoModal) {
-            const randomIndex = Math.floor(Math.random() * comboProducts.length);
-            const promoProduct = comboProducts[randomIndex];
-
-            // 3. Configurar y mostrar el modal
+        if (promoProduct && promoModal) {
+            // Configurar el contenido del modal
             promoImage.src = promoProduct.image;
             promoImage.alt = `Oferta: ${promoProduct.name}`;
             promoLink.href = `#product-${promoProduct.id}`;
 
+            // Mostrar el modal
             promoModal.style.display = 'flex';
             sessionStorage.setItem('promoShown', 'true');
         }
@@ -93,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }); 
     }
 
+    // --- FUNCIÓN RENDERPRODUCTS MODIFICADA PARA AÑADIR ID A LAS TARJETAS ---
     function renderProducts(categoryFilter = 'all', searchTerm = '') {
         if (!shopProducts) return;
 
@@ -118,6 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` 
                 : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
             
+            // --- ID AÑADIDO AL DIV PRINCIPAL ---
             shopProducts.innerHTML += `
                 <div id="product-${product.id}" class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}">
                     <script type="application/ld+json">{ "@context": "https://schema.org/", "@type": "Product", "name": "${product.name.replace(/"/g, '\\"')}", "image": "https://novapanes.com.ar/${product.image}", "description": "${product.description.replace(/"/g, '\\"')}", "offers": { "@type": "Offer", "priceCurrency": "ARS", "price": "${currentPrice}", "availability": "${product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'}" } }</script>
@@ -156,19 +151,25 @@ document.addEventListener('DOMContentLoaded', function() {
             renderProducts(activeCategory, searchTerm);
         });
 
+        // --- EVENT LISTENERS PARA EL MODAL DE PROMOCIÓN (AÑADIDO) ---
         if (promoModal) {
             closePromoModalBtn.addEventListener('click', closePromoModal);
             promoModalOverlay.addEventListener('click', closePromoModal);
             promoLink.addEventListener('click', (e) => {
-                e.preventDefault(); 
+                e.preventDefault(); // Prevenir el salto brusco del ancla
                 closePromoModal();
                 
-                const targetId = promoLink.getAttribute('href'); 
+                const targetId = promoLink.getAttribute('href'); // Obtiene '#product-X'
                 const targetElement = document.querySelector(targetId);
                 
                 if (targetElement) {
+                    // Scroll suave hacia el elemento
                     targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                    // Resaltar el producto
                     targetElement.classList.add('highlight');
+                    
+                    // Quitar el resaltado después de 3 segundos
                     setTimeout(() => {
                         targetElement.classList.remove('highlight');
                     }, 3000);

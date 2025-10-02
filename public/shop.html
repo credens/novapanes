@@ -12,6 +12,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <!-- ============================================= -->
+    <!-- === MODAL DE PROMOCIÓN DE BIENVENIDA AÑADIDO === -->
+    <!-- ============================================= -->
+    <div id="promoModal" class="promo-modal" style="display: none;">
+        <div class="promo-modal-overlay"></div>
+        <div class="promo-modal-content">
+            <span id="closePromoModal" class="close-promo-modal">&times;</span>
+            <a id="promoLink" href="#">
+                <img id="promoImage" src="" alt="Promoción de la semana">
+                <div class="promo-modal-title">¡Oferta de la semana!</div>
+            </a>
+        </div>
+    </div>
+
+
     <header>
         <nav class="main-nav"><a href="index.html">Inicio</a></nav>
         <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes - Tienda"></div>
@@ -79,7 +95,6 @@
     </div>
     
     <main class="shop-main">
-        <!-- BUSCADOR DE PRODUCTOS AÑADIDO AQUÍ -->
         <div class="shop-search-container">
             <input type="search" id="searchInput" placeholder="Buscar productos por nombre...">
         </div>

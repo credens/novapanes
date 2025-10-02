@@ -115,6 +115,7 @@
     position: relative;
     display: flex; /* Añadido para mejor control del contenido */
     flex-direction: column; /* Añadido */
+    scroll-margin-top: 20px; /* Espacio para que no quede pegado al header al scrollear */
 }
 
 .product-item:hover {
@@ -750,4 +751,86 @@
     background-color: #ccc;
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+/* ============================================= */
+/* === ESTILOS PARA MODAL DE PROMOCIÓN (AÑADIDO) === */
+/* ============================================= */
+.promo-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3000; /* Por encima de todo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.promo-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.promo-modal-content {
+    position: relative;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 500px;
+    animation: modalAppear 0.4s ease-out;
+    overflow: hidden; /* Para que la imagen respete el borde redondeado */
+}
+
+.promo-modal-content a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.promo-modal-content img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.promo-modal-title {
+    padding: 15px;
+    font-family: 'Lora', serif;
+    font-size: 1.3rem;
+    text-align: center;
+    background-color: #e74c3c;
+    color: white;
+    font-weight: bold;
+}
+
+.close-promo-modal {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 35px;
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease;
+}
+
+.close-promo-modal:hover {
+    transform: scale(1.1);
+}
+
+/* ==================================================== */
+/* === ESTILO PARA RESALTAR PRODUCTO EN PROMO (AÑADIDO) === */
+/* ==================================================== */
+.product-item.highlight {
+    box-shadow: 0 0 0 4px #B5651D, 0 8px 20px rgba(181, 101, 29, 0.4);
+    transform: scale(1.03);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
