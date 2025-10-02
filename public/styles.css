@@ -7,43 +7,52 @@ body {
     overflow-x: hidden; /* Prevents horizontal scrollbar */
 }
 
-/* Header and Navigation */
+/* =====================================
+   HEADER Y NAVEGACIÓN (MODIFICADO)
+   ===================================== */
 header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 50px 50px; /* Increased from 30px to 50px */
-    flex-wrap: wrap; /* Allows nav to wrap on smaller screens */
+    padding: 20px 50px; /* Padding vertical reducido para un look más compacto */
+    flex-wrap: wrap; 
+    /* Colores aplicados como en el footer */
+    background-color: #B5651D; 
+    color: #fff;
 }
 
 .main-nav {
     display: flex;
-    gap: 50px; /* Increased from 40px to 50px */
+    gap: 50px;
 }
 
 .main-nav a {
     text-decoration: none;
-    color: #000;
-    font-size: 18px; /* Increased from 16px to 18px */
-    font-weight: 500; /* Added some weight to make nav items more prominent */
+    /* Color de fuente cambiado a blanco */
+    color: #fff; 
+    font-size: 18px; 
+    /* Grosor de la fuente aumentado */
+    font-weight: 600; 
     transition: color 0.3s ease;
 }
 
 .main-nav a:hover {
-    color: #B5651D; /* A subtle hover effect */
+    /* Color de hover ajustado para que se note sobre el fondo oscuro */
+    color: #F9DAB9; 
 }
 
 .logo {
-    margin: 0 70px; /* Increased from 50px to 70px */
+    margin: 0 70px;
 }
 
 .logo img {
-    width: 200px; /* Increased from 150px to 200px */
+    width: 200px;
 }
 
 /* Hero Section */
 .hero-background {
-    background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
+    /* El degradado ahora parte desde un color más claro ya que el header tiene su propio fondo */
+    background: linear-gradient(to bottom, #FEFBF5, #FEFBF5);
     padding-bottom: 100px;
 }
 
@@ -51,17 +60,18 @@ header {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center content when not enough space for justified */
+    justify-content: center; 
     max-width: 1200px;
-    margin: 40px auto 0;
+    /* Margen superior aumentado para separar del nuevo header */
+    margin: 80px auto 0; 
     padding: 0 50px;
-    gap: 80px; /* Aumentado el espacio entre texto e imagen */
+    gap: 80px; 
 }
 
 .hero-text {
     flex: 1;
     z-index: 10;
-    min-width: 300px; /* Evita que el texto se comprima demasiado */
+    min-width: 300px; 
 }
 
 .hero-text h1 {
@@ -75,37 +85,36 @@ header {
 
 .hero-image {
     flex-shrink: 0;
-    position: relative; /* Necesario para el pseudoelemento blur */
-    width: 550px; /* Ancho fijo para el contenedor */
-    height: 380px; /* Altura fija para el contenedor */
-    border-radius: 20px; /* Bordes redondeados */
-    overflow: hidden; /* Oculta el desbordamiento de la imagen al aplicar object-fit */
-    /* Valor inicial para la variable CSS que usará el ::before */
+    position: relative;
+    width: 550px; 
+    height: 380px; 
+    border-radius: 20px; 
+    overflow: hidden; 
     --hero-image-url: url('hero-images/hero-pan.png');
 }
 
 .hero-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cropa la imagen para que llene el contenedor */
+    object-fit: cover; 
     display: block;
-    border-radius: 20px; /* Asegura que la imagen también tenga los bordes redondeados */
+    border-radius: 20px; 
 }
 
 .hero-image::before {
     content: '';
     position: absolute;
-    top: -10px; /* Extiende el blur un poco fuera del borde para que se vea completo */
+    top: -10px; 
     left: -10px;
     right: -10px;
     bottom: -10px;
-    background-image: var(--hero-image-url); /* Usa la variable CSS */
+    background-image: var(--hero-image-url); 
     background-size: cover;
     background-position: center;
-    filter: blur(15px); /* Intensidad del blur */
-    z-index: -1; /* Manda el blur detrás de la imagen */
-    border-radius: 25px; /* Ligeramente más grande que la imagen para que el blur sea visible */
-    transition: background-image 0.5s ease; /* Suaviza el cambio de blur al cambiar la imagen */
+    filter: blur(15px); 
+    z-index: -1; 
+    border-radius: 25px; 
+    transition: background-image 0.5s ease;
 }
 
 /* Hero CTA Button */
@@ -156,9 +165,9 @@ header {
 /* Section Divider */
 .section-divider {
     border: none;
-    border-top: 1px solid #E0E0E0; /* Light gray line */
-    width: 80%; /* Adjust width as needed */
-    margin: 80px auto; /* Center the line and add vertical space */
+    border-top: 1px solid #E0E0E0;
+    width: 80%;
+    margin: 80px auto;
 }
 
 /* Bottom Section: Form and Map */
@@ -174,7 +183,7 @@ header {
 .contact-form-container,
 .contact-info-container {
     flex: 1;
-    min-width: 280px; /* Prevents them from getting too squished */
+    min-width: 280px; 
 }
 
 h2 {
@@ -247,7 +256,7 @@ h2 {
 
 /* Contact Info & Map */
 .contact-info-container h2 {
-    text-align: center; /* Center the "Dónde Encontrarnos" title */
+    text-align: center;
 }
 
 .map-container {
@@ -309,15 +318,15 @@ h2 {
 
 .product-gallery {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
-    gap: 30px; /* Space between the cards */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
     margin-top: 40px;
 }
 
 .product-card {
     border: 1px solid #E0E0E0;
     border-radius: 8px;
-    overflow: hidden; /* Ensures the image corners are rounded */
+    overflow: hidden;
     text-align: center;
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -325,21 +334,21 @@ h2 {
 }
 
 .product-card:hover {
-    transform: translateY(-5px); /* Lifts the card up slightly on hover */
+    transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .product-card img {
     width: 100%;
-    height: 250px; /* Gives all images a uniform height */
-    object-fit: cover; /* Ensures images cover the area without distortion */
+    height: 250px;
+    object-fit: cover;
     display: block;
-    transition: transform 0.3s ease; /* Smooth transition for image hover */
-    cursor: pointer; /* Indicates the image is clickable */
+    transition: transform 0.3s ease;
+    cursor: pointer;
 }
 
 .product-card img:hover {
-    transform: scale(1.05); /* Slightly zoom in image on hover */
+    transform: scale(1.05);
 }
 
 .product-card h3 {
@@ -424,24 +433,23 @@ h2 {
 /* --- ABOUT US SECTION STYLES --- */
 .about-us-section {
     margin: 80px auto;
-    padding: 0 50px; /* Default padding for desktop */
-    text-align: center; /* Ensures content inside is centered horizontally if it doesn't fill the width */
+    padding: 0 50px; 
+    text-align: center;
 }
 
-/* To make it full width while keeping content max-width and centered */
 .about-us-section.full-width {
-    max-width: 100%; /* Make the section itself full width */
+    max-width: 100%; 
 }
 
 .about-us-content {
-    max-width: 900px; /* Constrain content width */
-    margin: 0 auto; /* Center the content box */
+    max-width: 900px; 
+    margin: 0 auto; 
     background-color: #fff;
     border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 40px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    text-align: left; /* Align text left within the box */
+    text-align: left; 
 }
 
 .about-us-content h2 {
@@ -581,7 +589,7 @@ h2 {
     background-color: #B5651D;
     color: #fff;
     text-align: center;
-    padding: 30px 20px;
+    padding: 20px 20px 15px 20px; 
     margin-top: 40px;
     display: flex;
     flex-direction: column;
@@ -590,7 +598,7 @@ h2 {
 }
 
 .footer p {
-    margin: 0 0 15px 0;
+    margin: 0 0 10px 0; 
     font-size: 1rem;
     line-height: 1.4;
     text-align: center;
@@ -603,7 +611,7 @@ h2 {
     justify-content: center;
     flex-wrap: wrap;
     gap: 15px;
-    margin-top: 10px;
+    margin-top: 0; 
     width: 100%;
 }
 
@@ -646,27 +654,26 @@ h2 {
     margin: 0 5px;
 }
 
-/* === ESTILOS PARA DATOS FISCALES EN FOOTER (AÑADIDO) === */
 .footer-fiscal {
-    margin-top: 25px;
-    padding-top: 15px;
+    margin-top: 15px;
+    padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
     max-width: 400px;
 }
 
 .footer-fiscal p {
-    font-size: 0.4rem;
+    font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.8);
-    margin: 5px 0;
+    margin: 4px 0;
 }
+
 
 /* --- RESPONSIVE STYLES --- */
 
-/* For Tablets and Smaller Desktops (less than 1024px) */
 @media (max-width: 1024px) {
     header {
-        padding: 40px 30px;
+        padding: 20px 30px;
     }
 
     .main-nav {
@@ -685,7 +692,8 @@ h2 {
         flex-direction: column;
         text-align: center;
         padding: 0 30px;
-        gap: 40px; /* Reduced gap for smaller screens */
+        gap: 40px; 
+        margin-top: 60px;
     }
 
     .hero-text h1 {
@@ -694,17 +702,17 @@ h2 {
     }
 
     .hero-image {
-        margin: 0; /* Reset margin for vertical stacking */
-        width: 450px; /* Adjust size for tablet */
+        margin: 0;
+        width: 450px;
         height: 300px;
     }
     
     .hero-image::before {
-        top: -8px; /* Adjust blur extension for tablet */
+        top: -8px; 
         left: -8px;
         right: -8px;
         bottom: -8px;
-        filter: blur(12px); /* Slightly less blur for tablet */
+        filter: blur(12px);
         border-radius: 23px;
     }
 
@@ -719,7 +727,6 @@ h2 {
     }
 }
 
-/* For Mobile Phones (less than 768px) */
 @media (max-width: 768px) {
     .hero-cta {
         margin-top: 30px;
@@ -749,7 +756,6 @@ h2 {
     }
 }
 
-/* For Mobile Phones (less than 600px) */
 @media (max-width: 600px) {
     body {
         -webkit-text-size-adjust: 100%;
@@ -757,13 +763,13 @@ h2 {
     
     header {
         flex-direction: column;
-        gap: 25px;
-        padding: 30px 20px;
+        gap: 20px;
+        padding: 20px 20px;
     }
 
     .logo {
         order: -1;
-        margin: 0;
+        margin: 0 0 10px 0;
     }
     
     .logo img {
@@ -771,7 +777,11 @@ h2 {
     }
     
     .main-nav a {
-        font-size: 18px;
+        font-size: 16px;
+    }
+    
+    .main-nav {
+        gap: 25px;
     }
 
     .hero-text h1 {
@@ -779,19 +789,19 @@ h2 {
     }
 
     .hero-image {
-        width: 100%; /* Make image take full width */
-        min-width: 280px; /* Smaller minimum for mobile */
-        max-width: 350px; /* Max width to prevent it from being too big */
-        height: 220px; /* Adjusted height for mobile */
-        border-radius: 15px; /* Smaller radius for mobile */
+        width: 100%; 
+        min-width: 280px; 
+        max-width: 350px; 
+        height: 220px; 
+        border-radius: 15px; 
     }
     
     .hero-image::before {
-        top: -5px; /* Adjust blur extension for mobile */
+        top: -5px; 
         left: -5px;
         right: -5px;
         bottom: -5px;
-        filter: blur(8px); /* Even less blur on mobile */
+        filter: blur(8px); 
         border-radius: 20px;
     }
 
@@ -817,12 +827,12 @@ h2 {
     }
 
     .footer {
-        padding: 25px 15px;
+        padding: 20px 15px 15px 15px;
     }
     
     .footer p {
         font-size: 0.9rem;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
     
     .footer-links {
