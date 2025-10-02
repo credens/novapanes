@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO admin.js (CON ORDENAMIENTO)
+//      ARCHIVO admin.js (CON ORDENAMIENTO Y MÚLTIPLES IMÁGENES)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return response.json();
     }
-
 
     async function verifyPassword(password) {
         try {
@@ -86,22 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
             allCategories = await categoriesRes.json();
             allOrders = await ordersRes.json();
             
-            // --- LÓGICA DE ORDENAMIENTO AÑADIDA AQUÍ ---
             allProducts.sort((a, b) => {
-                // Busca el nombre de la categoría para cada producto
-                const categoryNameA = allCategories.find(c => c.id === a.category)?.name || 'ZZZ'; // 'ZZZ' para poner los sin categoría al final
+                const categoryNameA = allCategories.find(c => c.id === a.category)?.name || 'ZZZ';
                 const categoryNameB = allCategories.find(c => c.id === b.category)?.name || 'ZZZ';
-
-                // 1. Compara por nombre de categoría
                 const categoryComparison = categoryNameA.localeCompare(categoryNameB);
-                if (categoryComparison !== 0) {
-                    return categoryComparison;
-                }
-
-                // 2. Si las categorías son iguales, compara por nombre de producto
+                if (categoryComparison !== 0) return categoryComparison;
                 return a.name.localeCompare(b.name);
             });
-            // --- FIN DE LA LÓGICA DE ORDENAMIENTO ---
 
             updateDashboardStats();
             renderProductsTable();
@@ -124,7 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
         allProducts.forEach(product => {
             const categoryName = allCategories.find(c => c.id === product.category)?.name || 'Sin Categoría';
             const row = document.createElement('tr');
-            row.innerHTML = `<td><img src="/${product.image}" alt="${product.name}"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`;
+            const imageUrl = Array.isArray(product.image) && product.image.length > 0 ? product.image[0] : '';
+            row.innerHTML = `<td><img src="/${imageUrl}" alt="${product.name}"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`;
             productsTableBody.appendChild(row);
         });
     }
@@ -155,11 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         allOrders.forEach(order => {
             const row = document.createElement('tr');
-            const orderDate = new Date(order.date).toLocaleDateString('es-AR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
+            const orderDate = new Date(order.date).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const statusClass = order.status === 'pending' ? 'status-pending' : 'status-delivered';
             row.innerHTML = `<td>${order.customer.nombre}</td><td>${orderDate}</td><td>$${order.total.toLocaleString('es-AR')}</td><td><span class="status ${statusClass}">${order.status === 'pending' ? 'Pendiente' : 'Entregado'}</span></td><td><button class="btn-toggle-status" data-id="${order.id}" data-current-status="${order.status}">${order.status === 'pending' ? 'Marcar Entregado' : 'Marcar Pendiente'}</button></td>`;
             ordersTableBody.appendChild(row);
@@ -168,8 +155,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openModal(mode, productId = null) {
         productForm.reset();
-        document.getElementById('currentImage').style.display = 'none';
-        document.getElementById('image').required = (mode === 'add');
+        for (let i = 1; i <= 3; i++) {
+            document.getElementById(`currentImage${i}`).style.display = 'none';
+            document.getElementById(`currentImage${i}`).src = '';
+            document.getElementById(`image${i}`).value = '';
+        }
+
+        const imageInputs = document.querySelectorAll('input[name="images"]');
+
         if (mode === 'edit') {
             const product = allProducts.find(p => p.id === productId);
             modalTitle.textContent = 'Editar Producto';
@@ -180,12 +173,22 @@ document.addEventListener('DOMContentLoaded', () => {
             productForm.elements['stock'].value = product.stock;
             productForm.elements['description'].value = product.description;
             productForm.elements['category'].value = product.category;
-            const img = document.getElementById('currentImage');
-            img.src = `/${product.image}`;
-            img.style.display = 'block';
+
+            if (Array.isArray(product.image)) {
+                product.image.forEach((imgSrc, index) => {
+                    if (index < 3) {
+                        const imgEl = document.getElementById(`currentImage${index + 1}`);
+                        imgEl.src = `/${imgSrc}`;
+                        imgEl.style.display = 'block';
+                    }
+                });
+            }
+            imageInputs.forEach(input => input.required = false);
         } else {
             modalTitle.textContent = 'Añadir Nuevo Producto';
             productForm.elements['id'].value = '';
+            imageInputs.forEach(input => input.required = false);
+            imageInputs[0].required = true;
         }
         productModal.style.display = 'block';
     }
