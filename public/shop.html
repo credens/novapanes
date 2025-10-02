@@ -63,7 +63,6 @@
                     <input type="tel" name="telefono" placeholder="Teléfono *" required>
                 </div>
 
-                <!-- SECCIÓN DE ENTREGA MODIFICADA -->
                 <div class="form-section">
                     <h3>Método de Entrega</h3>
                     <div class="delivery-options">
@@ -86,7 +85,6 @@
                         <input type="text" name="codigoPostal" placeholder="Código Postal">
                         <textarea name="referencias" placeholder="Referencias adicionales" rows="2"></textarea>
                     </div>
-
                     <div class="form-section delivery-time-container">
                         <h3>Horario de Entrega</h3>
                         <select name="horarioEntrega" id="deliveryTimeSelect" required>
@@ -96,16 +94,22 @@
                         </select>
                     </div>
                 </div>
-                <!-- FIN SECCIÓN MODIFICADA -->
                 
                 <div class="form-section">
                     <h3>Método de Pago</h3>
-                    <select name="metodoPago" required>
+                    <select name="metodoPago" id="paymentMethodSelect" required>
                         <option value="">Seleccionar método *</option>
                         <option value="efectivo">Efectivo</option>
                         <option value="transferencia">Transferencia Bancaria</option>
                         <option value="mercadopago">Mercado Pago</option>
                     </select>
+                    <div id="transferInfo" class="payment-info" style="display: none;">
+                        <p>Por favor, realiza la transferencia a los siguientes datos:</p>
+                        <ul>
+                            <li><strong>Alias:</strong> novapanes.mp</li>
+                            <li><strong>CUIT:</strong> 30-71821628-8</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="order-summary">
@@ -130,7 +134,19 @@
         <div class="shop-products" id="shopProducts"></div>
     </main>
     <hr class="section-divider">
-    <footer class="footer"><p>NOVA Panes® es una marca registrada de Grupo FeSa</p></footer>
+    <footer class="footer">
+        <p>NOVA Panes® es una marca registrada de Grupo FeSa</p>
+        <div class="footer-links">
+            <a href="https://wa.me/5491164372200" target="_blank" class="footer-btn whatsapp-btn">📱 WhatsApp</a>
+            <span class="footer-divider">|</span>
+            <span class="phone-text">Tel: +54 9 11 6437 2200</span>
+            <span class="footer-divider">|</span>
+            <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">📷 @nova.panes</a>
+        </div>
+        <div class="footer-fiscal">
+            <p>Razón Social: GRUPO FESA S. CAP I SECC IV - CUIT: 30-71821628-8</p>
+        </div>
+    </footer>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="shop-script.js"></script>
 </body>

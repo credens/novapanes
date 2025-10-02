@@ -646,6 +646,21 @@ h2 {
     margin: 0 5px;
 }
 
+/* === ESTILOS PARA DATOS FISCALES EN FOOTER (AÑADIDO) === */
+.footer-fiscal {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.footer-fiscal p {
+    font-size: 0.4rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 5px 0;
+}
+
 /* --- RESPONSIVE STYLES --- */
 
 /* For Tablets and Smaller Desktops (less than 1024px) */

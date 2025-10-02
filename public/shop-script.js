@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON OPCIONES DE ENTREGA)
+//      ARCHIVO shop-script.js (VERSIÓN FINAL COMPLETA)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -17,16 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartModal = document.getElementById('cartModal');
     const checkoutModal = document.getElementById('checkoutModal');
     const searchInput = document.getElementById('searchInput'); 
+    
     const promoModal = document.getElementById('promoModal');
     const promoModalOverlay = document.querySelector('.promo-modal-overlay');
     const closePromoModalBtn = document.getElementById('closePromoModal');
     const promoLink = document.getElementById('promoLink');
     const promoImage = document.getElementById('promoImage');
 
-    // --- ELEMENTOS DE ENTREGA (AÑADIDO) ---
     const deliveryAddressContainer = document.getElementById('deliveryAddressContainer');
     const deliveryTimeSelect = document.getElementById('deliveryTimeSelect');
     const deliveryMethodRadios = document.querySelectorAll('input[name="metodoEntrega"]');
+    
+    const paymentMethodSelect = document.getElementById('paymentMethodSelect');
+    const transferInfo = document.getElementById('transferInfo');
 
     Promise.all([
         fetch('/products.json').then(res => res.json()),
@@ -107,6 +110,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     deliveryTimeSelect.value = ''; // Limpiar selección
                 }
             });
+        });
+
+        paymentMethodSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'transferencia') {
+                transferInfo.style.display = 'block';
+            } else {
+                transferInfo.style.display = 'none';
+            }
         });
 
         if (promoModal) {
