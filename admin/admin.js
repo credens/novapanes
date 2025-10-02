@@ -179,19 +179,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = id ? `${API_BASE_URL}/products/${id}` : `${API_BASE_URL}/products`;
         const method = id ? 'PUT' : 'POST';
         try {
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    'Authorization': getPassword()
-                },
-                body: new FormData(productForm)
-            });
-            if (!response.ok) throw new Error((await response.json()).message);
-            closeModal();
-            loadInitialData();
-        } catch (error) {
-            alert(error.message);
+    const response = await fetch(url, {
+        method,
+        headers: {
+            'Authorization': getPassword()
+        },
+        body: new FormData(productForm)
+    });
+
+    if (!response.ok) {
+        // Si la respuesta de error NO es JSON, muestra el texto.
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Ocurrió un error en el servidor.');
+        } else {
+            const errorText = await response.text();
+            throw new Error(`Error del servidor: ${response.status} ${response.statusText}. \nDetalle: La respuesta no es un JSON válido. Revisa la consola del servidor para más detalles.`);
         }
+    }
+
+    // Si todo fue bien (response.ok es true), procesamos la respuesta JSON.
+    const result = await response.json(); 
+    closeModal();
+    loadInitialData();
+} catch (error) {
+    console.error('Error al guardar el producto:', error);
+    alert('Error al guardar: ' + error.message);
+}
     });
     async function handleDeleteProduct(id) {
         if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
