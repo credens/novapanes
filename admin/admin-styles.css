@@ -383,3 +383,25 @@ select {
     background-color: #d1fadf;
     color: #027a48;
 }
+
+/* Estilo para el botón de Guardar */
+#productForm button[type="submit"] {
+    background-color: #28a745; /* Un verde claro y moderno */
+    border: 1px solid #28a745;
+    transition: background-color 0.3s ease;
+}
+
+#productForm button[type="submit"]:hover {
+    background-color: #218838; /* Un verde más oscuro al pasar el ratón */
+    border-color: #1e7e34;
+}
+
+/* Estilo para el botón de cerrar (la 'X') */
+.modal .close-modal-btn {
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.modal .close-modal-btn:hover {
+    color: #dc3545; /* Rojo para indicar la acción de cerrar */
+    transform: scale(1.1);
+}
