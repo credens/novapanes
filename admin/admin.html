@@ -57,6 +57,7 @@
                 </a>
             </div>
             
+            <!-- SECCIONES REORDENADAS -->
             <section id="orders-section" class="card">
                 <div class="card-header">
                     <h2>Historial de Pedidos</h2>
@@ -75,6 +76,17 @@
                         <tbody id="ordersTableBody"></tbody>
                     </table>
                 </div>
+            </section>
+
+            <section id="categories-section" class="card">
+                <div class="card-header">
+                    <h2>Gestionar Categorías</h2>
+                </div>
+                <div id="categoriesList"></div>
+                <form id="addCategoryForm" class="category-form">
+                    <input type="text" id="newCategoryName" placeholder="Nombre de nueva categoría" required>
+                    <button type="submit">Añadir Categoría</button>
+                </form>
             </section>
 
             <section id="products-section" class="card">
@@ -99,16 +111,6 @@
                 </div>
             </section>
 
-            <section id="categories-section" class="card">
-                <div class="card-header">
-                    <h2>Gestionar Categorías</h2>
-                </div>
-                <div id="categoriesList"></div>
-                <form id="addCategoryForm" class="category-form">
-                    <input type="text" id="newCategoryName" placeholder="Nombre de nueva categoría" required>
-                    <button type="submit">Añadir Categoría</button>
-                </form>
-            </section>
         </main>
     </div>
 

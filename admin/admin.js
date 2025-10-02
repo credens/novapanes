@@ -1,3 +1,7 @@
+// ===================================================
+//      ARCHIVO admin.js (CON ORDENAMIENTO)
+// ===================================================
+
 document.addEventListener('DOMContentLoaded', () => {
     const adminPanel = document.getElementById('adminPanel');
     const productsTableBody = document.getElementById('productsTableBody');
@@ -20,17 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getPassword = () => sessionStorage.getItem('apiPassword');
     const setPassword = (pass) => sessionStorage.setItem('apiPassword', pass);
+    
+    async function handleFetchError(response) {
+        if (!response.ok) {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ocurrió un error en el servidor.');
+            } else {
+                throw new Error(`Error del servidor: ${response.status} ${response.statusText}. La respuesta no es un JSON válido.`);
+            }
+        }
+        return response.json();
+    }
+
 
     async function verifyPassword(password) {
         try {
             const response = await fetch(`${API_BASE_URL}/verify`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    password
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
             });
             const result = await response.json();
             if (result.success) {
@@ -59,20 +73,36 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadInitialData() {
         adminPanel.style.display = 'flex';
         try {
-            const headers = {
-                'Authorization': getPassword()
-            };
-            const [productsRes, categoriesRes, ordersRes] = await Promise.all([fetch(`${API_BASE_URL}/products`, {
-                headers
-            }), fetch(`${API_BASE_URL}/categories`, {
-                headers
-            }), fetch(`${API_BASE_URL}/orders`, {
-                headers
-            })]);
-            if (!productsRes.ok || !categoriesRes.ok || !ordersRes.ok) throw new Error('No se pudieron cargar todos los datos.');
+            const headers = { 'Authorization': getPassword() };
+            const [productsRes, categoriesRes, ordersRes] = await Promise.all([
+                fetch(`${API_BASE_URL}/products`, { headers }),
+                fetch(`${API_BASE_URL}/categories`, { headers }),
+                fetch(`${API_BASE_URL}/orders`, { headers })
+            ]);
+
+            if (!productsRes.ok || !categoriesRes.ok || !ordersRes.ok) throw new Error('No se pudieron cargar todos los datos iniciales.');
+
             allProducts = await productsRes.json();
             allCategories = await categoriesRes.json();
             allOrders = await ordersRes.json();
+            
+            // --- LÓGICA DE ORDENAMIENTO AÑADIDA AQUÍ ---
+            allProducts.sort((a, b) => {
+                // Busca el nombre de la categoría para cada producto
+                const categoryNameA = allCategories.find(c => c.id === a.category)?.name || 'ZZZ'; // 'ZZZ' para poner los sin categoría al final
+                const categoryNameB = allCategories.find(c => c.id === b.category)?.name || 'ZZZ';
+
+                // 1. Compara por nombre de categoría
+                const categoryComparison = categoryNameA.localeCompare(categoryNameB);
+                if (categoryComparison !== 0) {
+                    return categoryComparison;
+                }
+
+                // 2. Si las categorías son iguales, compara por nombre de producto
+                return a.name.localeCompare(b.name);
+            });
+            // --- FIN DE LA LÓGICA DE ORDENAMIENTO ---
+
             updateDashboardStats();
             renderProductsTable();
             renderCategoriesList();
@@ -92,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderProductsTable() {
         productsTableBody.innerHTML = '';
         allProducts.forEach(product => {
-            const categoryName = allCategories.find(c => c.id === product.category)?.name || 'N/A';
+            const categoryName = allCategories.find(c => c.id === product.category)?.name || 'Sin Categoría';
             const row = document.createElement('tr');
             row.innerHTML = `<td><img src="/${product.image}" alt="${product.name}"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`;
             productsTableBody.appendChild(row);
@@ -136,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFICADO para incluir promo_price ---
     function openModal(mode, productId = null) {
         productForm.reset();
         document.getElementById('currentImage').style.display = 'none';
@@ -147,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productForm.elements['id'].value = product.id;
             productForm.elements['name'].value = product.name;
             productForm.elements['price'].value = product.price;
-            productForm.elements['promo_price'].value = product.promo_price || ''; // <-- AÑADIDO
+            productForm.elements['promo_price'].value = product.promo_price || '';
             productForm.elements['stock'].value = product.stock;
             productForm.elements['description'].value = product.description;
             productForm.elements['category'].value = product.category;
@@ -168,61 +197,49 @@ document.addEventListener('DOMContentLoaded', () => {
     showAddProductModalBtn.addEventListener('click', () => openModal('add'));
     closeModalBtn.addEventListener('click', closeModal);
     window.addEventListener('click', (e) => (e.target === productModal) && closeModal());
+    
     productsTableBody.addEventListener('click', e => {
-        const id = parseInt(e.target.dataset.id);
-        if (e.target.classList.contains('btn-edit')) openModal('edit', id);
-        if (e.target.classList.contains('btn-delete')) handleDeleteProduct(id);
+        if (e.target.dataset.id) {
+            const id = parseInt(e.target.dataset.id);
+            if (e.target.classList.contains('btn-edit')) openModal('edit', id);
+            if (e.target.classList.contains('btn-delete')) handleDeleteProduct(id);
+        }
     });
+    
     productForm.addEventListener('submit', async e => {
         e.preventDefault();
         const id = document.getElementById('productId').value;
         const url = id ? `${API_BASE_URL}/products/${id}` : `${API_BASE_URL}/products`;
         const method = id ? 'PUT' : 'POST';
         try {
-    const response = await fetch(url, {
-        method,
-        headers: {
-            'Authorization': getPassword()
-        },
-        body: new FormData(productForm)
-    });
-
-    if (!response.ok) {
-        // Si la respuesta de error NO es JSON, muestra el texto.
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Ocurrió un error en el servidor.');
-        } else {
-            const errorText = await response.text();
-            throw new Error(`Error del servidor: ${response.status} ${response.statusText}. \nDetalle: La respuesta no es un JSON válido. Revisa la consola del servidor para más detalles.`);
+            const response = await fetch(url, {
+                method,
+                headers: { 'Authorization': getPassword() },
+                body: new FormData(productForm)
+            });
+            await handleFetchError(response);
+            closeModal();
+            loadInitialData();
+        } catch (error) {
+            console.error('Error al guardar producto:', error);
+            alert('Error al guardar: ' + error.message);
         }
-    }
-
-    // Si todo fue bien (response.ok es true), procesamos la respuesta JSON.
-    const result = await response.json(); 
-    closeModal();
-    loadInitialData();
-} catch (error) {
-    console.error('Error al guardar el producto:', error);
-    alert('Error al guardar: ' + error.message);
-}
     });
+    
     async function handleDeleteProduct(id) {
         if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
         try {
             const response = await fetch(`${API_BASE_URL}/products/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': getPassword()
-                }
+                headers: { 'Authorization': getPassword() }
             });
-            if (!response.ok) throw new Error((await response.json()).message);
+            await handleFetchError(response);
             loadInitialData();
         } catch (error) {
-            alert(error.message);
+            alert('Error al eliminar: ' + error.message);
         }
     }
+
     addCategoryForm.addEventListener('submit', async e => {
         e.preventDefault();
         const name = document.getElementById('newCategoryName').value;
@@ -233,35 +250,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'Authorization': getPassword()
                 },
-                body: JSON.stringify({
-                    name
-                })
+                body: JSON.stringify({ name })
             });
-            if (!response.ok) throw new Error((await response.json()).message);
+            await handleFetchError(response);
             addCategoryForm.reset();
             loadInitialData();
         } catch (error) {
             alert(error.message);
         }
     });
+    
     categoriesList.addEventListener('click', async e => {
         if (e.target.classList.contains('btn-delete-category')) {
             const id = e.target.dataset.id;
-            if (!confirm(`¿Eliminar la categoría "${id}"?`)) return;
+            const categoryName = allCategories.find(c => c.id === id)?.name || id;
+            if (!confirm(`¿Eliminar la categoría "${categoryName}"?`)) return;
             try {
                 const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Authorization': getPassword()
-                    }
+                    headers: { 'Authorization': getPassword() }
                 });
-                if (!response.ok) throw new Error((await response.json()).message);
+                await handleFetchError(response);
                 loadInitialData();
             } catch (error) {
                 alert(error.message);
             }
         }
     });
+
     ordersTableBody.addEventListener('click', async e => {
         if (e.target.classList.contains('btn-toggle-status')) {
             const orderId = e.target.dataset.id;
@@ -273,14 +289,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': getPassword()
                     },
-                    body: JSON.stringify({
-                        status: newStatus
-                    })
+                    body: JSON.stringify({ status: newStatus })
                 });
-                if (!response.ok) throw new Error('No se pudo actualizar el estado.');
+                await handleFetchError(response);
                 loadInitialData();
             } catch (error) {
-                alert(error.message);
+                alert('No se pudo actualizar el estado: ' + error.message);
             }
         }
     });
