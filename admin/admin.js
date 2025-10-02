@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO admin.js (CON ORDENAMIENTO Y MÚLTIPLES IMÁGENES)
+//      ARCHIVO admin.js (REVERTIDO A 1 IMAGEN)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -114,8 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allProducts.forEach(product => {
             const categoryName = allCategories.find(c => c.id === product.category)?.name || 'Sin Categoría';
             const row = document.createElement('tr');
-            const imageUrl = Array.isArray(product.image) && product.image.length > 0 ? product.image[0] : '';
-            row.innerHTML = `<td><img src="/${imageUrl}" alt="${product.name}"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`;
+            row.innerHTML = `<td><img src="/${product.image}" alt="${product.name}"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`;
             productsTableBody.appendChild(row);
         });
     }
@@ -155,13 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openModal(mode, productId = null) {
         productForm.reset();
-        for (let i = 1; i <= 3; i++) {
-            document.getElementById(`currentImage${i}`).style.display = 'none';
-            document.getElementById(`currentImage${i}`).src = '';
-            document.getElementById(`image${i}`).value = '';
-        }
-
-        const imageInputs = document.querySelectorAll('input[name="images"]');
+        document.getElementById('currentImage').style.display = 'none';
+        document.getElementById('image').required = (mode === 'add');
 
         if (mode === 'edit') {
             const product = allProducts.find(p => p.id === productId);
@@ -173,22 +167,13 @@ document.addEventListener('DOMContentLoaded', () => {
             productForm.elements['stock'].value = product.stock;
             productForm.elements['description'].value = product.description;
             productForm.elements['category'].value = product.category;
-
-            if (Array.isArray(product.image)) {
-                product.image.forEach((imgSrc, index) => {
-                    if (index < 3) {
-                        const imgEl = document.getElementById(`currentImage${index + 1}`);
-                        imgEl.src = `/${imgSrc}`;
-                        imgEl.style.display = 'block';
-                    }
-                });
-            }
-            imageInputs.forEach(input => input.required = false);
+            
+            const img = document.getElementById('currentImage');
+            img.src = `/${product.image}`;
+            img.style.display = 'block';
         } else {
             modalTitle.textContent = 'Añadir Nuevo Producto';
             productForm.elements['id'].value = '';
-            imageInputs.forEach(input => input.required = false);
-            imageInputs[0].required = true;
         }
         productModal.style.display = 'block';
     }
@@ -199,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showAddProductModalBtn.addEventListener('click', () => openModal('add'));
     closeModalBtn.addEventListener('click', closeModal);
-    window.addEventListener('click', (e) => (e.target === productModal) && closeModal());
+    window.addEventListener('click', (e) => (e.target.classList.contains('modal')) && closeModal());
     
     productsTableBody.addEventListener('click', e => {
         if (e.target.dataset.id) {

@@ -147,24 +147,13 @@
                             <label for="description">Descripción:</label>
                             <textarea id="description" name="description" rows="3" required></textarea>
                         </div>
-                        
-                        <!-- SECCIÓN DE IMÁGENES MODIFICADA -->
                         <div class="form-group full-width">
-                            <label>Imágenes del Producto (hasta 3)</label>
-                            <div class="image-upload-container">
-                                <div class="image-upload-slot">
-                                    <img id="currentImage1" src="" class="current-image-preview" style="display: none;">
-                                    <input type="file" id="image1" name="images" accept="image/*">
-                                </div>
-                                <div class="image-upload-slot">
-                                    <img id="currentImage2" src="" class="current-image-preview" style="display: none;">
-                                    <input type="file" id="image2" name="images" accept="image/*">
-                                </div>
-                                <div class="image-upload-slot">
-                                    <img id="currentImage3" src="" class="current-image-preview" style="display: none;">
-                                    <input type="file" id="image3" name="images" accept="image/*">
-                                </div>
-                            </div>
+                            <label>Imagen Actual:</label>
+                            <img id="currentImage" src="" alt="Imagen del producto" width="100" style="display: none;">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="image">Imagen del Producto:</label>
+                            <input type="file" id="image" name="image" accept="image/*">
                         </div>
                     </div>
                 </form>

@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (CON MÚLTIPLES IMÁGENES)
+//      ARCHIVO server.js (REVERTIDO A 1 IMAGEN)
 // ===================================================
 
 const express = require('express');
@@ -138,10 +138,10 @@ adminRouter.get('/products', (req, res) => {
     }
 });
 
-adminRouter.post('/products', upload.array('images', 3), (req, res) => {
+adminRouter.post('/products', upload.single('image'), (req, res) => {
     try {
-        if (!req.files || req.files.length === 0 || !req.body.name) return res.status(400).json({
-            message: 'Faltan campos o al menos una imagen.'
+        if (!req.file || !req.body.name) return res.status(400).json({
+            message: 'Faltan campos o imagen.'
         });
         const products = readJsonFile(PRODUCTS_FILE_PATH);
         const newProduct = {
@@ -152,7 +152,7 @@ adminRouter.post('/products', upload.array('images', 3), (req, res) => {
             promo_price: req.body.promo_price ? parseFloat(req.body.promo_price) : null,
             stock: parseInt(req.body.stock),
             category: req.body.category,
-            image: req.files.map(file => `productos/${file.filename}`)
+            image: `productos/${req.file.filename}`
         };
         products.push(newProduct);
         writeJsonFile(PRODUCTS_FILE_PATH, products);
@@ -164,7 +164,7 @@ adminRouter.post('/products', upload.array('images', 3), (req, res) => {
     }
 });
 
-adminRouter.put('/products/:id', upload.array('images', 3), (req, res) => {
+adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
         const index = products.findIndex(p => p.id === parseInt(req.params.id));
@@ -183,14 +183,12 @@ adminRouter.put('/products/:id', upload.array('images', 3), (req, res) => {
             category: req.body.category
         };
         
-        if (req.files && req.files.length > 0) {
-            if (Array.isArray(oldProduct.image)) {
-                oldProduct.image.forEach(imgPath => {
-                    const oldPath = path.join(__dirname, 'public', imgPath);
-                    if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-                });
+        if (req.file) {
+            if (oldProduct.image) {
+                const oldPath = path.join(__dirname, 'public', oldProduct.image);
+                if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
-            updatedProduct.image = req.files.map(file => `productos/${file.filename}`);
+            updatedProduct.image = `productos/${req.file.filename}`;
         }
 
         products[index] = updatedProduct;
@@ -211,11 +209,9 @@ adminRouter.delete('/products/:id', (req, res) => {
             message: 'Producto no encontrado.'
         });
 
-        if (Array.isArray(product.image)) {
-            product.image.forEach(imgPath => {
-                const fullPath = path.join(__dirname, 'public', imgPath);
-                if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
-            });
+        if (product.image) {
+            const imgPath = path.join(__dirname, 'public', product.image);
+            if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
         }
         
         products = products.filter(p => p.id !== parseInt(req.params.id));
