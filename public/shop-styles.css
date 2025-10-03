@@ -30,7 +30,7 @@
 }
 
 /* =================================
-   ESTILOS PARA EL BUSCADOR (AÑADIDO)
+   ESTILOS PARA EL BUSCADOR
    ================================= */
 .shop-search-container {
     margin-bottom: 40px;
@@ -46,7 +46,7 @@
     border-radius: 25px;
     border: 1px solid #E0E0E0;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    box-sizing: border-box; /* Importante para que el padding no afecte el ancho */
+    box-sizing: border-box;
     transition: all 0.3s ease;
 }
 
@@ -55,6 +55,32 @@
     border-color: #B5651D;
     box-shadow: 0 0 0 3px rgba(181, 101, 29, 0.15);
 }
+
+/* === ESTILOS PARA CAMBIO DE VISTA (AÑADIDO) === */
+.view-switcher-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.view-btn {
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    margin: 0 5px;
+}
+
+.view-btn.active {
+    background: #B5651D;
+    color: #fff;
+    border-color: #B5651D;
+}
+/* === FIN DE ESTILOS === */
 
 
 /* Filtros */
@@ -91,18 +117,30 @@
     color: #fff;
 }
 
-/* =====================================
-   GRID Y TARJETAS DE PRODUCTO (MODIFICADO)
-   ===================================== */
-
-/* Grid de productos */
-.shop-products {
-    display: grid;
-    /* Ancho mínimo reducido para que quepan más tarjetas */
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-    gap: 25px; /* Gap ligeramente reducido */
-    margin-bottom: 80px;
+/* --- ESTILOS PARA VISTA POR CATEGORÍA (AÑADIDO) --- */
+.category-group {
+    margin-bottom: 50px;
 }
+
+.category-group-title {
+    font-family: 'Lora', serif;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+/* --- FIN DE ESTILOS --- */
+
+
+/* --- SE MODIFICÓ .shop-products PARA QUE FUNCIONE DENTRO DE .category-group --- */
+.shop-products, .category-group .shop-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+    gap: 25px;
+    margin-bottom: 0;
+}
+
 
 /* Tarjetas de producto */
 .product-item {
@@ -113,9 +151,9 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
     position: relative;
-    display: flex; /* Añadido para mejor control del contenido */
-    flex-direction: column; /* Añadido */
-    scroll-margin-top: 20px; /* Espacio para que no quede pegado al header al scrollear */
+    display: flex;
+    flex-direction: column;
+    scroll-margin-top: 20px;
 }
 
 .product-item:hover {
@@ -129,35 +167,35 @@
 
 .product-image {
     width: 100%;
-    height: 150px; /* Altura de imagen reducida */
+    height: 150px;
     object-fit: cover;
     cursor: pointer;
 }
 
 .product-info {
-    padding: 15px; /* Padding reducido */
-    flex-grow: 1; /* Permite que esta sección crezca para alinear botones */
-    display: flex; /* Añadido */
-    flex-direction: column; /* Añadido */
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-title {
     font-family: 'Lora', serif;
-    font-size: 1.1rem; /* Tamaño de fuente reducido */
+    font-size: 1.1rem;
     margin: 0 0 8px 0;
     color: #000;
 }
 
 .product-description {
     color: #666;
-    font-size: 0.8rem; /* Tamaño de fuente reducido */
+    font-size: 0.8rem;
     line-height: 1.4;
     margin: 0 0 15px 0;
-    flex-grow: 1; /* Empuja el precio y botones hacia abajo */
+    flex-grow: 1;
 }
 
 .product-price {
-    font-size: 1.2rem; /* Tamaño de fuente reducido */
+    font-size: 1.2rem;
     font-weight: 600;
     color: #B5651D;
     margin: 0 0 15px 0;
@@ -167,7 +205,7 @@
     display: flex;
     gap: 10px;
     align-items: center;
-    margin-top: auto; /* Alinea los botones al final */
+    margin-top: auto;
 }
 
 .quantity-controls {
@@ -194,10 +232,10 @@
 .qty-input {
     border: none;
     padding: 8px;
-    width: 40px; /* Ancho reducido */
+    width: 40px;
     text-align: center;
     font-size: 0.9rem;
-    -moz-appearance: textfield; /* Firefox */
+    -moz-appearance: textfield;
 }
 .qty-input::-webkit-outer-spin-button,
 .qty-input::-webkit-inner-spin-button {
@@ -205,15 +243,14 @@
     margin: 0;
 }
 
-
 .add-to-cart-btn {
     background: #B5651D;
     color: #fff;
     border: none;
-    padding: 10px 15px; /* Padding ajustado */
+    padding: 10px 15px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.8rem; /* Tamaño de fuente reducido */
+    font-size: 0.8rem;
     transition: all 0.3s ease;
     flex: 1;
 }
@@ -666,7 +703,7 @@
         padding: 0 20px;
     }
     
-    .shop-products {
+    .shop-products, .category-group .shop-products {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 20px;
     }
@@ -705,7 +742,7 @@
 }
 
 @media (max-width: 480px) {
-    .shop-products {
+    .shop-products, .category-group .shop-products {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
@@ -815,7 +852,7 @@
 }
 
 /* ============================================= */
-/* === ESTILOS PARA MODAL DE PROMOCIÓN (AÑADIDO) === */
+/* === ESTILOS PARA MODAL DE PROMOCIÓN === */
 /* ============================================= */
 .promo-modal {
     position: fixed;
@@ -888,7 +925,7 @@
 }
 
 /* ==================================================== */
-/* === ESTILO PARA RESALTAR PRODUCTO EN PROMO (AÑADIDO) === */
+/* === ESTILO PARA RESALTAR PRODUCTO EN PROMO === */
 /* ==================================================== */
 .product-item.highlight {
     box-shadow: 0 0 0 4px #B5651D, 0 8px 20px rgba(181, 101, 29, 0.4);

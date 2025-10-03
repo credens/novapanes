@@ -24,7 +24,6 @@
         </div>
     </div>
 
-
     <header>
         <nav class="main-nav"><a href="index.html">Inicio</a></nav>
         <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes - Tienda"></div>
@@ -62,7 +61,6 @@
                     <input type="email" name="email" placeholder="Email *" required>
                     <input type="tel" name="telefono" placeholder="Teléfono *" required>
                 </div>
-
                 <div class="form-section">
                     <h3>Método de Entrega</h3>
                     <div class="delivery-options">
@@ -76,7 +74,6 @@
                         </label>
                     </div>
                 </div>
-
                 <div id="deliveryAddressContainer">
                     <div class="form-section">
                         <h3>Dirección de Entrega</h3>
@@ -94,7 +91,6 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="form-section">
                     <h3>Método de Pago</h3>
                     <select name="metodoPago" id="paymentMethodSelect" required>
@@ -111,7 +107,6 @@
                         </ul>
                     </div>
                 </div>
-
                 <div class="order-summary">
                     <h3>Resumen del Pedido</h3>
                     <div id="orderItems"></div>
@@ -130,8 +125,16 @@
             <input type="search" id="searchInput" placeholder="Buscar productos por nombre...">
         </div>
         
+        <!-- BOTONES PARA CAMBIAR VISTA -->
+        <div class="view-switcher-container">
+            <button class="view-btn active" id="view-grouped">Ver por Categoría</button>
+            <button class="view-btn" id="view-list">Ver Todos</button>
+        </div>
+
         <div class="shop-filters"><div class="filter-container" id="filter-container"></div></div>
-        <div class="shop-products" id="shopProducts"></div>
+        
+        <!-- El contenido de los productos se renderizará aquí -->
+        <div id="shopProducts"></div>
     </main>
     <hr class="section-divider">
     <footer class="footer">
@@ -144,7 +147,8 @@
             <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">📷 @nova.panes</a>
         </div>
         <div class="footer-fiscal">
-            <p>Razón Social: GRUPO FESA S. CAP I SECC IV - CUIT: 30-71821628-8</p>
+            <p>Razón Social: GRUPO FESA S. CAP I SECC IV</p>
+            <p>CUIT: 30-71821628-8</p>
         </div>
     </footer>
     <script src="https://sdk.mercadopago.com/js/v2"></script>

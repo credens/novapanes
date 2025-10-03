@@ -1,33 +1,37 @@
 // ===================================================
-//      ARCHIVO shop-script.js (VERSIÓN FINAL COMPLETA)
+//      ARCHIVO shop-script.js (CON CAMBIO DE VISTAS)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
-    let categories = [];
+    let allCategories = []; // Renombrada para evitar conflictos de alcance
     let cart = [];
+    let currentView = 'grouped'; // 'grouped' o 'list'
 
     const MINIMUM_PURCHASE = 15000;
 
     // Elementos del DOM
-    const shopProducts = document.getElementById('shopProducts');
+    const shopProductsContainer = document.getElementById('shopProducts');
     const filterContainer = document.getElementById('filter-container');
+    const searchInput = document.getElementById('searchInput'); 
+    
+    // Botones de cambio de vista
+    const viewGroupedBtn = document.getElementById('view-grouped');
+    const viewListBtn = document.getElementById('view-list');
+
+    // Otros elementos del DOM
     const logoScroller = document.getElementById('logo-scroller');
     const cartFloating = document.getElementById('cartFloating');
     const cartModal = document.getElementById('cartModal');
     const checkoutModal = document.getElementById('checkoutModal');
-    const searchInput = document.getElementById('searchInput'); 
-    
     const promoModal = document.getElementById('promoModal');
     const promoModalOverlay = document.querySelector('.promo-modal-overlay');
     const closePromoModalBtn = document.getElementById('closePromoModal');
     const promoLink = document.getElementById('promoLink');
     const promoImage = document.getElementById('promoImage');
-
     const deliveryAddressContainer = document.getElementById('deliveryAddressContainer');
     const deliveryTimeSelect = document.getElementById('deliveryTimeSelect');
     const deliveryMethodRadios = document.querySelectorAll('input[name="metodoEntrega"]');
-    
     const paymentMethodSelect = document.getElementById('paymentMethodSelect');
     const transferInfo = document.getElementById('transferInfo');
 
@@ -37,16 +41,16 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
         products = productsData;
-        categories = categoriesData;
+        allCategories = categoriesData;
         renderLogoScroller(logosData);
         renderCategoryFilters();
         renderProducts(); 
         setupEventListeners();
         updateCartDisplayFromStorage();
-        handlePromoModal(); 
+        handlePromoModal();
     }).catch(error => {
         console.error('Error fatal al cargar los datos iniciales:', error);
-        if(shopProducts) shopProducts.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda.</p>';
+        if(shopProductsContainer) shopProductsContainer.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda.</p>';
     });
 
     function handlePromoModal() {
@@ -71,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCategoryFilters() { 
         if (!filterContainer) return; 
         filterContainer.innerHTML = '<button class="filter-btn active" data-filter="all">Todos</button>'; 
-        categories.forEach(category => { 
+        allCategories.forEach(category => { 
             const button = document.createElement('button'); 
             button.className = 'filter-btn'; 
             button.dataset.filter = category.id; 
@@ -80,34 +84,148 @@ document.addEventListener('DOMContentLoaded', function() {
         }); 
     }
 
-    function renderProducts(categoryFilter = 'all', searchTerm = '') {
-        if (!shopProducts) return;
-        const filteredByCategory = categoryFilter === 'all' ? products : products.filter(p => p.category === categoryFilter);
+    function renderProducts() {
+        const categoryFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+        const searchTerm = searchInput.value;
+
+        const filteredByCategory = categoryFilter === 'all' 
+            ? products 
+            : products.filter(p => p.category === categoryFilter);
+
         const searchTermLower = searchTerm.toLowerCase().trim();
-        const finalProducts = searchTermLower ? filteredByCategory.filter(p => p.name.toLowerCase().includes(searchTermLower)) : filteredByCategory;
-        shopProducts.innerHTML = '';
-        if (finalProducts.length === 0) { shopProducts.innerHTML = '<p style="text-align: center; padding: 40px 0;">No se encontraron productos con esos criterios.</p>'; return; }
-        finalProducts.forEach(product => { 
-            const isOnSale = product.promo_price && product.promo_price < product.price; 
-            const currentPrice = isOnSale ? product.promo_price : product.price; 
-            const priceHTML = isOnSale ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
-            shopProducts.innerHTML += `<div id="product-${product.id}" class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}"><script type="application/ld+json">{ "@context": "https://schema.org/", "@type": "Product", "name": "${product.name.replace(/"/g, '\\"')}", "image": "https://novapanes.com.ar/${product.image}", "description": "${product.description.replace(/"/g, '\\"')}", "offers": { "@type": "Offer", "priceCurrency": "ARS", "price": "${currentPrice}", "availability": "${product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'}" } }</script>${isOnSale ? '<div class="sale-badge">OFERTA</div>' : ''}<img src="${product.image}" alt="${product.name}" class="product-image" onclick="openProductModal('${product.image}', '${product.name}')" loading="lazy"><div class="product-info"><h3 class="product-title">${product.name}</h3><p class="product-description">${product.description}</p>${priceHTML}<div class="product-actions"><div class="quantity-controls"><button class="qty-btn" onclick="changeQuantity(${product.id}, -1)">-</button><input type="number" class="qty-input" id="qty-${product.id}" value="1" min="1" max="${product.stock}"><button class="qty-btn" onclick="changeQuantity(${product.id}, 1)">+</button></div><button class="add-to-cart-btn" onclick="addToCart(event, ${product.id})">Agregar</button></div></div></div>`; 
-        }); 
+        const finalProducts = searchTermLower
+            ? filteredByCategory.filter(p => p.name.toLowerCase().includes(searchTermLower))
+            : filteredByCategory;
+        
+        shopProductsContainer.innerHTML = '';
+
+        if (finalProducts.length === 0) {
+            shopProductsContainer.innerHTML = '<p style="text-align: center; padding: 40px 0;">No se encontraron productos con esos criterios.</p>';
+            return;
+        }
+
+        if (currentView === 'grouped') {
+            renderGroupedView(finalProducts);
+        } else {
+            renderListView(finalProducts);
+        }
+    }
+
+    function renderGroupedView(productsToRender) {
+        const productsByCategory = productsToRender.reduce((acc, product) => {
+            (acc[product.category] = acc[product.category] || []).push(product);
+            return acc;
+        }, {});
+
+        const sortedCategoryIds = allCategories.map(cat => cat.id);
+
+        sortedCategoryIds.forEach(categoryId => {
+            if (productsByCategory[categoryId]) {
+                const category = allCategories.find(c => c.id === categoryId);
+                const categoryProducts = productsByCategory[categoryId];
+
+                let productsHTML = '';
+                categoryProducts.forEach(product => {
+                    productsHTML += generateProductCardHTML(product);
+                });
+
+                shopProductsContainer.innerHTML += `
+                    <div class="category-group">
+                        <h2 class="category-group-title">${category.name}</h2>
+                        <div class="shop-products">
+                            ${productsHTML}
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    function renderListView(productsToRender) {
+        productsToRender.sort((a, b) => {
+            const categoryNameA = allCategories.find(c => c.id === a.category)?.name || 'ZZZ';
+            const categoryNameB = allCategories.find(c => c.id === b.category)?.name || 'ZZZ';
+            const categoryComparison = categoryNameA.localeCompare(categoryNameB);
+            if (categoryComparison !== 0) return categoryComparison;
+            return a.name.localeCompare(b.name);
+        });
+
+        let productsHTML = '';
+        productsToRender.forEach(product => {
+            productsHTML += generateProductCardHTML(product);
+        });
+        
+        shopProductsContainer.innerHTML = `<div class="shop-products">${productsHTML}</div>`;
+    }
+
+    function generateProductCardHTML(product) {
+        const isOnSale = product.promo_price && product.promo_price < product.price; 
+        const currentPrice = isOnSale ? product.promo_price : product.price; 
+        const priceHTML = isOnSale ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
+        const imageUrl = Array.isArray(product.image) && product.image.length > 0 ? product.image[0] : product.image;
+
+        return `
+            <div id="product-${product.id}" class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}">
+                ${isOnSale ? '<div class="sale-badge">OFERTA</div>' : ''}
+                <img src="/${imageUrl}" alt="${product.name}" class="product-image" onclick="openProductModal('/${imageUrl}', '${product.name}')" loading="lazy">
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    ${priceHTML}
+                    <div class="product-actions">
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="changeQuantity(${product.id}, -1)">-</button>
+                            <input type="number" class="qty-input" id="qty-${product.id}" value="1" min="1" max="${product.stock}">
+                            <button class="qty-btn" onclick="changeQuantity(${product.id}, 1)">+</button>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart(event, ${product.id})">Agregar</button>
+                    </div>
+                </div>
+            </div>`;
     }
 
     function setupEventListeners() {
-        document.querySelector('.shop-filters').addEventListener('click', function(e) { if (e.target.classList.contains('filter-btn')) { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); e.target.classList.add('active'); renderProducts(e.target.dataset.filter, searchInput.value); } });
-        searchInput.addEventListener('input', e => { const activeCategory = document.querySelector('.filter-btn.active').dataset.filter; renderProducts(activeCategory, e.target.value); });
+        viewGroupedBtn.addEventListener('click', () => {
+            if (currentView !== 'grouped') {
+                currentView = 'grouped';
+                viewGroupedBtn.classList.add('active');
+                viewListBtn.classList.remove('active');
+                filterContainer.style.display = 'none'; // Ocultar filtros de categoría en esta vista
+                renderProducts();
+            }
+        });
+
+        viewListBtn.addEventListener('click', () => {
+            if (currentView !== 'list') {
+                currentView = 'list';
+                viewListBtn.classList.add('active');
+                viewGroupedBtn.classList.remove('active');
+                filterContainer.style.display = 'block'; // Mostrar filtros de categoría
+                renderProducts();
+            }
+        });
+
+        document.querySelector('.shop-filters').addEventListener('click', function(e) { 
+            if (e.target.classList.contains('filter-btn')) { 
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
+                e.target.classList.add('active');
+                renderProducts(); 
+            } 
+        });
         
+        searchInput.addEventListener('input', () => {
+            renderProducts();
+        });
+
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 if (e.target.value === 'Envío a Domicilio') {
                     deliveryAddressContainer.style.display = 'block';
                     deliveryTimeSelect.required = true;
-                } else { // Retiro en Fábrica
+                } else {
                     deliveryAddressContainer.style.display = 'none';
                     deliveryTimeSelect.required = false;
-                    deliveryTimeSelect.value = ''; // Limpiar selección
+                    deliveryTimeSelect.value = '';
                 }
             });
         });
@@ -159,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('novaPanesCart', JSON.stringify(cart));
         renderCartItems();
     }
+
     function openCheckout() {
         const totalPrice = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
         if (cart.length === 0) return alert('Tu carrito está vacío.');
