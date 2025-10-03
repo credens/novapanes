@@ -1,39 +1,25 @@
 /* Shop-specific styles */
 
-/* Shop Hero Section */
+/* Shop Hero Section (ALTURA REDUCIDA) */
 .shop-hero {
     background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
-    padding: 40px 50px 30px; 
+    padding: 30px 50px 20px; /* Padding vertical muy reducido */
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 40px; /* Margen inferior reducido */
 }
 
 .shop-hero-content h1 {
     font-family: 'Lora', serif;
-    font-size: 3.5rem;
+    font-size: 3rem; /* Tamaño del título reducido */
     font-weight: 700;
-    margin: 0 0 15px 0;
+    margin: 0 0 10px 0;
     color: #000;
 }
 
 .shop-hero-content p {
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Tamaño del subtítulo reducido */
     color: #666;
     margin: 0;
-}
-
-.shipping-info {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 8px;
-    border: 1px solid rgba(181, 101, 29, 0.2);
-    color: #5c4033;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* Main shop container */
@@ -47,10 +33,7 @@
    ESTILOS PARA EL BUSCADOR
    ================================= */
 .shop-search-container {
-    margin-bottom: 40px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-bottom: 30px; /* Margen reducido */
 }
 
 #searchInput {
@@ -94,8 +77,6 @@
     color: #fff;
     border-color: #B5651D;
 }
-/* === FIN DE ESTILOS === */
-
 
 /* Filtros */
 .shop-filters {
@@ -144,10 +125,7 @@
     padding-bottom: 10px;
     border-bottom: 2px solid #e0e0e0;
 }
-/* --- FIN DE ESTILOS --- */
 
-
-/* --- MODIFICACIÓN PARA GRID DE PRODUCTOS --- */
 .shop-products, .category-group .shop-products {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
@@ -274,7 +252,7 @@
     transform: scale(1.02);
 }
 
-/* Estilo del carrito en el header (usa .main-nav a) */
+/* Estilo del carrito en el header */
 .header-cart-icon {
     display: flex;
     align-items: center;
@@ -433,6 +411,23 @@
     text-align: right;
     margin-bottom: 20px;
     font-size: 1.2rem;
+}
+
+/* === ESTILOS PARA LEYENDA DE ENVÍO EN CARRITO Y CHECKOUT === */
+.cart-shipping-info {
+    font-size: 0.8rem;
+    text-align: center;
+    color: #666;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+.order-summary .cart-shipping-info {
+    margin-top: 15px;
+    text-align: right;
+    background: none;
+    padding: 0;
 }
 
 .cart-actions {
@@ -658,7 +653,7 @@
 .order-total {
     border-top: 1px solid #E0E0E0;
     padding-top: 10px;
-    margin-top: 15px;
+    margin-top: 10px;
     text-align: right;
     font-size: 1.2rem;
 }
@@ -678,7 +673,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .shop-hero {
-        padding: 40px 20px 30px;
+        padding: 30px 20px 20px;
     }
     
     .shop-hero-content h1 {
@@ -739,10 +734,9 @@
 /* =================================
    ESTILOS PARA EL BANNER DE LOGOS
    ================================= */
-
 .logo-scroller-container {
     max-width: 1200px;
-    margin: 50px auto;
+    margin: 40px auto; /* Margen reducido */
     overflow: hidden;
     -webkit-mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
     mask: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
