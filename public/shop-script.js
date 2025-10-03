@@ -1,12 +1,12 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON ORDENAMIENTO DE COMBOS PRIMERO)
+//      ARCHIVO shop-script.js (CON CARRITO EN HEADER)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
     let allCategories = [];
     let cart = [];
-    let currentView = 'grouped'; // 'grouped' o 'list'
+    let currentView = 'grouped';
 
     const MINIMUM_PURCHASE = 15000;
 
@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const viewGroupedBtn = document.getElementById('view-grouped');
     const viewListBtn = document.getElementById('view-list');
     const logoScroller = document.getElementById('logo-scroller');
-    const cartFloating = document.getElementById('cartFloating');
     const cartModal = document.getElementById('cartModal');
     const checkoutModal = document.getElementById('checkoutModal');
     const promoModal = document.getElementById('promoModal');
@@ -30,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const deliveryMethodRadios = document.querySelectorAll('input[name="metodoEntrega"]');
     const paymentMethodSelect = document.getElementById('paymentMethodSelect');
     const transferInfo = document.getElementById('transferInfo');
+    const headerCartIcon = document.getElementById('headerCartIcon'); // Carrito del header
 
     Promise.all([
         fetch('/products.json').then(res => res.json()),
@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- FUNCIÓN MODIFICADA PARA ORDENAR COMBOS PRIMERO ---
     function renderGroupedView(productsToRender) {
         const productsByCategory = productsToRender.reduce((acc, product) => {
             (acc[product.category] = acc[product.category] || []).push(product);
@@ -109,14 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, {});
 
         const comboCategoryID = 'combos';
-        
-        // Separa la categoría de combos del resto
         const comboCategory = allCategories.find(c => c.id === comboCategoryID);
-        const otherCategories = allCategories
-            .filter(c => c.id !== comboCategoryID)
-            .sort((a, b) => a.name.localeCompare(b.name)); // Ordena el resto alfabéticamente
-
-        // Une las listas, poniendo combos al principio (si existe)
+        const otherCategories = allCategories.filter(c => c.id !== comboCategoryID).sort((a, b) => a.name.localeCompare(b.name));
         const sortedCategories = comboCategory ? [comboCategory, ...otherCategories] : otherCategories;
 
         sortedCategories.forEach(category => {
@@ -161,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isOnSale = product.promo_price && product.promo_price < product.price; 
         const currentPrice = isOnSale ? product.promo_price : product.price; 
         const priceHTML = isOnSale ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
-        const imageUrl = product.image; // Ya es un string, no un array
+        const imageUrl = product.image;
 
         return `
             <div id="product-${product.id}" class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}">
@@ -184,69 +177,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupEventListeners() {
-        viewGroupedBtn.addEventListener('click', () => {
-            if (currentView !== 'grouped') {
-                currentView = 'grouped';
-                viewGroupedBtn.classList.add('active');
-                viewListBtn.classList.remove('active');
-                filterContainer.style.display = 'block'; // Asegurarse que los filtros sean visibles
-                renderProducts();
-            }
-        });
-
-        viewListBtn.addEventListener('click', () => {
-            if (currentView !== 'list') {
-                currentView = 'list';
-                viewListBtn.classList.add('active');
-                viewGroupedBtn.classList.remove('active');
-                filterContainer.style.display = 'block'; // Asegurarse que los filtros sean visibles
-                renderProducts();
-            }
-        });
-
-        document.querySelector('.shop-filters').addEventListener('click', function(e) { 
-            if (e.target.classList.contains('filter-btn')) { 
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
-                e.target.classList.add('active');
-                renderProducts(); 
-            } 
-        });
+        viewGroupedBtn.addEventListener('click', () => { if (currentView !== 'grouped') { currentView = 'grouped'; viewGroupedBtn.classList.add('active'); viewListBtn.classList.remove('active'); renderProducts(); } });
+        viewListBtn.addEventListener('click', () => { if (currentView !== 'list') { currentView = 'list'; viewListBtn.classList.add('active'); viewGroupedBtn.classList.remove('active'); renderProducts(); } });
+        document.querySelector('.shop-filters').addEventListener('click', function(e) { if (e.target.classList.contains('filter-btn')) { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); e.target.classList.add('active'); renderProducts(); } });
+        searchInput.addEventListener('input', () => { renderProducts(); });
+        deliveryMethodRadios.forEach(radio => { radio.addEventListener('change', (e) => { if (e.target.value === 'Envío a Domicilio') { deliveryAddressContainer.style.display = 'block'; deliveryTimeSelect.required = true; } else { deliveryAddressContainer.style.display = 'none'; deliveryTimeSelect.required = false; deliveryTimeSelect.value = ''; } }); });
+        paymentMethodSelect.addEventListener('change', (e) => { if (e.target.value === 'transferencia') { transferInfo.style.display = 'block'; } else { transferInfo.style.display = 'none'; } });
+        if (promoModal) { closePromoModalBtn.addEventListener('click', closePromoModal); promoModalOverlay.addEventListener('click', closePromoModal); promoLink.addEventListener('click', (e) => { e.preventDefault(); closePromoModal(); const targetId = promoLink.getAttribute('href'); const targetElement = document.querySelector(targetId); if (targetElement) { targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); targetElement.classList.add('highlight'); setTimeout(() => { targetElement.classList.remove('highlight'); }, 3000); } }); }
         
-        searchInput.addEventListener('input', () => {
-            renderProducts();
-        });
-
-        deliveryMethodRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (e.target.value === 'Envío a Domicilio') {
-                    deliveryAddressContainer.style.display = 'block';
-                    deliveryTimeSelect.required = true;
-                } else {
-                    deliveryAddressContainer.style.display = 'none';
-                    deliveryTimeSelect.required = false;
-                    deliveryTimeSelect.value = '';
-                }
-            });
-        });
-
-        paymentMethodSelect.addEventListener('change', (e) => {
-            if (e.target.value === 'transferencia') {
-                transferInfo.style.display = 'block';
-            } else {
-                transferInfo.style.display = 'none';
-            }
-        });
-
-        if (promoModal) {
-            closePromoModalBtn.addEventListener('click', closePromoModal);
-            promoModalOverlay.addEventListener('click', closePromoModal);
-            promoLink.addEventListener('click', (e) => {
-                e.preventDefault(); closePromoModal();
-                const targetId = promoLink.getAttribute('href'); const targetElement = document.querySelector(targetId);
-                if (targetElement) { targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); targetElement.classList.add('highlight'); setTimeout(() => { targetElement.classList.remove('highlight'); }, 3000); }
-            });
-        }
-        cartFloating?.addEventListener('click', openCartModal);
+        // El carrito del header ahora abre el modal
+        headerCartIcon?.addEventListener('click', openCartModal);
+        
         document.querySelector('.close-cart')?.addEventListener('click', closeCartModal);
         document.querySelector('.close-checkout')?.addEventListener('click', closeCheckout);
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
@@ -261,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalPrice = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
         const cartCount = document.getElementById('cartCount'); if (cartCount) cartCount.textContent = totalItems;
         const cartTotal = document.getElementById('cartTotal'); if (cartTotal) cartTotal.textContent = totalPrice.toLocaleString();
-        if (cartFloating) cartFloating.style.display = totalItems > 0 ? 'block' : 'none';
+        
         const checkoutBtn = document.getElementById('checkout');
         const minPurchaseMessage = document.getElementById('minPurchaseMessage');
         if (totalPrice < MINIMUM_PURCHASE && cart.length > 0) {

@@ -1,11 +1,8 @@
 /* Shop-specific styles */
 
-/* =====================================
-   SHOP HERO SECTION (ALTURA REDUCIDA)
-   ===================================== */
+/* Shop Hero Section */
 .shop-hero {
     background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
-    /* Padding vertical reducido */
     padding: 40px 50px 30px; 
     text-align: center;
     margin-bottom: 60px;
@@ -15,7 +12,6 @@
     font-family: 'Lora', serif;
     font-size: 3.5rem;
     font-weight: 700;
-    /* Margen inferior reducido */
     margin: 0 0 15px 0;
     color: #000;
 }
@@ -27,7 +23,7 @@
 }
 
 .shipping-info {
-    margin-top: 20px; /* Espacio reducido */
+    margin-top: 20px;
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
@@ -39,7 +35,6 @@
     margin-left: auto;
     margin-right: auto;
 }
-
 
 /* Main shop container */
 .shop-main {
@@ -279,43 +274,15 @@
     transform: scale(1.02);
 }
 
-/* Carrito flotante */
-.cart-floating {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 1000;
-}
-
-.cart-icon {
-    background: #B5651D;
-    color: #fff;
-    padding: 15px 20px;
-    border-radius: 50px;
-    box-shadow: 0 4px 20px rgba(181, 101, 29, 0.3);
+/* Estilo del carrito en el header (usa .main-nav a) */
+.header-cart-icon {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
     cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-    position: relative;
+    position: relative; 
 }
 
-.cart-icon:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(181, 101, 29, 0.4);
-}
-
-#cartCount {
-    background: #fff;
-    color: #B5651D;
-    border-radius: 50%;
-    padding: 2px 8px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-left: 8px;
-    min-width: 20px;
-    display: inline-block;
-    text-align: center;
-}
 
 /* Modal del carrito */
 .cart-modal {
@@ -736,11 +703,6 @@
     .filter-btn {
         padding: 8px 16px;
         font-size: 0.8rem;
-    }
-    
-    .cart-floating {
-        bottom: 20px;
-        right: 20px;
     }
     
     .cart-modal-content,

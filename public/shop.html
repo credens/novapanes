@@ -27,14 +27,18 @@
     <header>
         <nav class="main-nav"><a href="index.html">Inicio</a></nav>
         <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes - Tienda"></div>
-        <nav class="main-nav"><a href="shop.html" class="active">Shop</a></nav>
+        <nav class="main-nav">
+            <a href="shop.html" class="active">Shop</a>
+            <a href="#" id="headerCartIcon" class="header-cart-icon">
+                🛒 Carrito (<span id="cartCount">0</span>)
+            </a>
+        </nav>
     </header>
 
     <div class="shop-hero">
         <div class="shop-hero-content">
             <h1>Tienda Online</h1>
             <p>Comprá nuestros productos frescos y recibilos en tu casa</p>
-            <!-- LEYENDA DE ENVÍO AÑADIDA AQUÍ -->
             <div class="shipping-info">
                 Costo de envío $8.000,-. Compras mayores a $75.000, envío sin cargo en CABA y GBA.<br>
                 Entregas de Lunes a Viernes.
@@ -43,7 +47,6 @@
     </div>
 
     <div class="logo-scroller-container"><div class="logo-scroller" id="logo-scroller"></div></div>
-    <div id="cartFloating" class="cart-floating" style="display: none;"><div class="cart-icon">🛒 <span id="cartCount">0</span></div></div>
     
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
