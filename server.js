@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (REVERTIDO A 1 IMAGEN)
+//      ARCHIVO server.js (CORREGIDO PARA 1 IMAGEN)
 // ===================================================
 
 const express = require('express');
@@ -164,6 +164,7 @@ adminRouter.post('/products', upload.single('image'), (req, res) => {
     }
 });
 
+// --- RUTA CORREGIDA ---
 adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
@@ -184,7 +185,8 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
         };
         
         if (req.file) {
-            if (oldProduct.image) {
+            // El campo `oldProduct.image` ahora es un STRING.
+            if (oldProduct.image && typeof oldProduct.image === 'string') {
                 const oldPath = path.join(__dirname, 'public', oldProduct.image);
                 if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
@@ -201,6 +203,7 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
     }
 });
 
+// --- RUTA CORREGIDA ---
 adminRouter.delete('/products/:id', (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
@@ -209,7 +212,8 @@ adminRouter.delete('/products/:id', (req, res) => {
             message: 'Producto no encontrado.'
         });
 
-        if (product.image) {
+        // El campo `product.image` ahora es un STRING.
+        if (product.image && typeof product.image === 'string') {
             const imgPath = path.join(__dirname, 'public', product.image);
             if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
         }
@@ -225,6 +229,7 @@ adminRouter.delete('/products/:id', (req, res) => {
         });
     }
 });
+
 adminRouter.get('/categories', (req, res) => {
     try {
         res.json(readJsonFile(CATEGORIES_FILE_PATH));
