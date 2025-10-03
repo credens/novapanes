@@ -22,6 +22,23 @@
     margin: 0;
 }
 
+/* === ESTILOS PARA LA LEYENDA DE ENVÍO (AÑADIDO) === */
+.shipping-info {
+    margin-top: 25px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(181, 101, 29, 0.2);
+    color: #5c4033; /* Un marrón oscuro para buena legibilidad */
+    font-size: 0.9rem;
+    line-height: 1.5;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* === FIN DE ESTILOS === */
+
+
 /* Main shop container */
 .shop-main {
     max-width: 1200px;
@@ -56,7 +73,7 @@
     box-shadow: 0 0 0 3px rgba(181, 101, 29, 0.15);
 }
 
-/* === ESTILOS PARA CAMBIO DE VISTA (AÑADIDO) === */
+/* === ESTILOS PARA CAMBIO DE VISTA === */
 .view-switcher-container {
     text-align: center;
     margin-bottom: 20px;
@@ -117,7 +134,7 @@
     color: #fff;
 }
 
-/* --- ESTILOS PARA VISTA POR CATEGORÍA (AÑADIDO) --- */
+/* --- ESTILOS PARA VISTA POR CATEGORÍA --- */
 .category-group {
     margin-bottom: 50px;
 }
@@ -133,7 +150,7 @@
 /* --- FIN DE ESTILOS --- */
 
 
-/* --- SE MODIFICÓ .shop-products PARA QUE FUNCIONE DENTRO DE .category-group --- */
+/* --- MODIFICACIÓN PARA GRID DE PRODUCTOS --- */
 .shop-products, .category-group .shop-products {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 

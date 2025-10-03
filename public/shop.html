@@ -29,7 +29,19 @@
         <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes - Tienda"></div>
         <nav class="main-nav"><a href="shop.html" class="active">Shop</a></nav>
     </header>
-    <div class="shop-hero"><div class="shop-hero-content"><h1>Tienda Online</h1><p>Comprá nuestros productos frescos y recibilos en tu casa</p></div></div>
+
+    <div class="shop-hero">
+        <div class="shop-hero-content">
+            <h1>Tienda Online</h1>
+            <p>Comprá nuestros productos frescos y recibilos en tu casa</p>
+            <!-- LEYENDA DE ENVÍO AÑADIDA AQUÍ -->
+            <div class="shipping-info">
+                Costo de envío $8.000,-. Compras mayores a $75.000, envío sin cargo en CABA y GBA.<br>
+                Entregas de Lunes a Viernes.
+            </div>
+        </div>
+    </div>
+
     <div class="logo-scroller-container"><div class="logo-scroller" id="logo-scroller"></div></div>
     <div id="cartFloating" class="cart-floating" style="display: none;"><div class="cart-icon">🛒 <span id="cartCount">0</span></div></div>
     
@@ -125,7 +137,6 @@
             <input type="search" id="searchInput" placeholder="Buscar productos por nombre...">
         </div>
         
-        <!-- BOTONES PARA CAMBIAR VISTA -->
         <div class="view-switcher-container">
             <button class="view-btn active" id="view-grouped">Ver por Categoría</button>
             <button class="view-btn" id="view-list">Ver Todos</button>
@@ -133,7 +144,6 @@
 
         <div class="shop-filters"><div class="filter-container" id="filter-container"></div></div>
         
-        <!-- El contenido de los productos se renderizará aquí -->
         <div id="shopProducts"></div>
     </main>
     <hr class="section-divider">
