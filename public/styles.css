@@ -8,15 +8,16 @@ body {
 }
 
 /* =====================================
-   HEADER FIJO Y CENTRADO (MODIFICADO)
+   HEADER FIJO Y CENTRADO (VERSIÓN CORRECTA)
    ===================================== */
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Mantiene el espacio entre elementos */
     align-items: center;
     padding: 10px 50px;
     background-color: #B5651D; 
     color: #fff;
+    /* --- Propiedades para header fijo (sticky) --- */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -24,20 +25,23 @@ header {
     box-sizing: border-box;
 }
 
+/* Contenedores de navegación */
 .main-nav {
     display: flex;
     align-items: center;
     gap: 30px;
-    flex: 1;
+    flex: 1; /* ¡CLAVE! Hace que ambos nav ocupen el mismo espacio */
 }
 
-.main-nav.nav-left {
-    justify-content: flex-start;
+/* Alineación específica para cada nav */
+.main-nav:first-of-type {
+    justify-content: flex-start; /* Alinea el primer nav a la izquierda */
 }
 
-.main-nav.nav-right {
-    justify-content: flex-end;
+.main-nav:last-of-type {
+    justify-content: flex-end; /* Alinea el último nav a la derecha */
 }
+
 
 .main-nav a {
     text-decoration: none;
@@ -51,7 +55,9 @@ header {
     color: #F9DAB9; 
 }
 
+/* Logo */
 .logo {
+    margin: 0 20px; /* Margen reducido para dar más espacio a la navegación */
     flex-shrink: 0;
 }
 
@@ -60,8 +66,10 @@ header {
     display: block;
 }
 
+/* Hero Section */
 .hero-background {
-    background: linear-gradient(to bottom, #FEFBF5, #FEFBF5);
+    background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
+    padding-bottom: 100px;
 }
 
 .hero-section {
@@ -722,27 +730,26 @@ h2 {
 
 @media (max-width: 850px) {
     header {
-        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
         padding: 15px 20px;
+        gap: 15px;
     }
 
     .main-nav {
-        width: 100%;
+        flex-basis: 100%; /* Ocupa todo el ancho */
         justify-content: center;
-        gap: 15px;
-        margin-top: 15px;
+        gap: 20px;
+        order: 3; /* Se mueve al final */
     }
-    
+
     .main-nav.nav-left, .main-nav.nav-right {
-        justify-content: center;
+        flex-basis: auto; /* Ancho automático para los elementos */
     }
 
     .logo {
-        margin: 0 0 10px 0;
-    }
-    
-    .logo img {
-        width: 150px;
+        order: 1; /* El logo va primero */
+        margin: 0;
     }
 }
 
@@ -751,14 +758,9 @@ h2 {
         -webkit-text-size-adjust: 100%;
     }
     
-    header {
-        gap: 10px;
-    }
-
     .main-nav {
+        gap: 15px;
         flex-wrap: wrap;
-        gap: 10px 15px;
-        font-size: 14px;
     }
     
     .main-nav a {
@@ -866,4 +868,9 @@ h2 {
     }
     
     .view-all-products {
-        padding: 1
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        width: 90%;
+        max-width: 300px;
+    }
+}
