@@ -4,26 +4,39 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: #FEFBF5;
     color: #000;
-    overflow-x: hidden; /* Prevents horizontal scrollbar */
+    overflow-x: hidden;
 }
 
 /* =====================================
-   HEADER Y NAVEGACIÓN (ALTURA REDUCIDA)
+   HEADER FIJO Y CENTRADO (MODIFICADO)
    ===================================== */
 header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    /* Padding vertical reducido a 15px */
-    padding: 15px 50px; 
-    flex-wrap: wrap; 
+    padding: 10px 50px;
     background-color: #B5651D; 
     color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .main-nav {
     display: flex;
-    gap: 50px;
+    align-items: center;
+    gap: 30px;
+    flex: 1;
+}
+
+.main-nav.nav-left {
+    justify-content: flex-start;
+}
+
+.main-nav.nav-right {
+    justify-content: flex-end;
 }
 
 .main-nav a {
@@ -34,24 +47,21 @@ header {
     transition: color 0.3s ease;
 }
 
-.main-nav a:hover {
+.main-nav a:hover, .main-nav a.active {
     color: #F9DAB9; 
 }
 
 .logo {
-    margin: 0 70px;
+    flex-shrink: 0;
 }
 
 .logo img {
-    /* Tamaño del logo ligeramente reducido para que encaje mejor */
-    width: 180px; 
+    width: 150px;
+    display: block;
 }
 
-/* Hero Section */
 .hero-background {
-    /* El degradado ahora parte desde un color más claro ya que el header tiene su propio fondo */
     background: linear-gradient(to bottom, #FEFBF5, #FEFBF5);
-    padding-bottom: 100px;
 }
 
 .hero-section {
@@ -60,7 +70,6 @@ header {
     align-items: center;
     justify-content: center; 
     max-width: 1200px;
-    /* Margen superior aumentado para separar del nuevo header */
     margin: 80px auto 0; 
     padding: 0 50px;
     gap: 80px; 
@@ -115,7 +124,6 @@ header {
     transition: background-image 0.5s ease;
 }
 
-/* Hero CTA Button */
 .hero-cta {
     margin-top: 40px;
 }
@@ -160,7 +168,6 @@ header {
     transform: translateY(-1px);
 }
 
-/* Section Divider */
 .section-divider {
     border: none;
     border-top: 1px solid #E0E0E0;
@@ -168,7 +175,6 @@ header {
     margin: 80px auto;
 }
 
-/* Bottom Section: Form and Map */
 .bottom-section {
     display: flex;
     justify-content: space-between;
@@ -191,7 +197,6 @@ h2 {
     margin-bottom: 30px;
 }
 
-/* Contact Form */
 .contact-form-container form {
     display: flex;
     flex-direction: column;
@@ -229,7 +234,6 @@ h2 {
     background-color: #333;
 }
 
-/* Form Messages */
 .form-message {
     margin-top: 15px;
     padding: 15px;
@@ -252,7 +256,6 @@ h2 {
     border: 1px solid #f5c6cb;
 }
 
-/* Contact Info & Map */
 .contact-info-container h2 {
     text-align: center;
 }
@@ -305,8 +308,6 @@ h2 {
     border-color: #B5651D;
 }
 
-/* --- PRODUCTS SECTION STYLES --- */
-
 .products-section {
     max-width: 1200px;
     margin: 80px auto;
@@ -355,7 +356,6 @@ h2 {
     margin: 20px;
 }
 
-/* Product Actions Preview */
 .product-actions-preview {
     padding: 15px 20px;
     border-top: 1px solid #f0f0f0;
@@ -386,7 +386,6 @@ h2 {
     transform: translateY(-1px);
 }
 
-/* Products CTA */
 .products-cta {
     text-align: center;
     margin-top: 50px;
@@ -428,7 +427,6 @@ h2 {
     background: linear-gradient(135deg, #B5651D, #D17A2A);
 }
 
-/* --- ABOUT US SECTION STYLES --- */
 .about-us-section {
     margin: 80px auto;
     padding: 0 50px; 
@@ -461,7 +459,6 @@ h2 {
     margin-bottom: 15px;
 }
 
-/* --- FLOATING MODAL STYLES --- */
 .image-modal {
     display: none;
     position: fixed;
@@ -528,7 +525,6 @@ h2 {
     transform: scale(1.1);
 }
 
-/* Modal Navigation Styles */
 .modal-nav {
     display: flex;
     align-items: center;
@@ -582,7 +578,6 @@ h2 {
     }
 }
 
-/* --- FOOTER STYLES --- */
 .footer {
     background-color: #B5651D;
     color: #fff;
@@ -671,19 +666,19 @@ h2 {
 
 @media (max-width: 1024px) {
     header {
-        padding: 20px 30px;
+        padding: 10px 30px;
     }
 
     .main-nav {
-        gap: 35px;
+        gap: 20px;
     }
 
-    .logo {
-        margin: 0 50px;
+    .main-nav a {
+        font-size: 16px;
     }
-    
+
     .logo img {
-        width: 180px;
+        width: 130px;
     }
 
     .hero-section {
@@ -725,32 +720,29 @@ h2 {
     }
 }
 
-@media (max-width: 768px) {
-    .hero-cta {
-        margin-top: 30px;
-        text-align: center;
-    }
-    
-    .cta-button {
-        padding: 14px 28px;
-        font-size: 1rem;
-    }
-    
-    .product-actions-preview {
-        padding: 12px 15px;
+@media (max-width: 850px) {
+    header {
         flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+        padding: 15px 20px;
+    }
+
+    .main-nav {
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 15px;
     }
     
-    .shop-link {
-        text-align: center;
-        padding: 10px 16px;
+    .main-nav.nav-left, .main-nav.nav-right {
+        justify-content: center;
+    }
+
+    .logo {
+        margin: 0 0 10px 0;
     }
     
-    .view-all-products {
-        padding: 14px 28px;
-        font-size: 1rem;
+    .logo img {
+        width: 150px;
     }
 }
 
@@ -760,26 +752,17 @@ h2 {
     }
     
     header {
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px 20px;
+        gap: 10px;
     }
 
-    .logo {
-        order: -1;
-        margin: 0 0 10px 0;
-    }
-    
-    .logo img {
-        width: 160px;
+    .main-nav {
+        flex-wrap: wrap;
+        gap: 10px 15px;
+        font-size: 14px;
     }
     
     .main-nav a {
-        font-size: 16px;
-    }
-    
-    .main-nav {
-        gap: 25px;
+        font-size: 14px;
     }
 
     .hero-text h1 {
@@ -883,9 +866,4 @@ h2 {
     }
     
     .view-all-products {
-        padding: 12px 24px;
-        font-size: 0.95rem;
-        width: 90%;
-        max-width: 300px;
-    }
-}
+        padding: 1

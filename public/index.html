@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- SEO: Título optimizado -->
     <title>NOVA Panes - Pan de Papa Premium para Hamburguesas y Más</title>
     
-    <!-- SEO: Meta Descripción -->
     <meta name="description" content="Descubrí la suavidad y el sabor de NOVA Panes. Pan de papa de calidad premium, ideal para hamburguesas, lomitos y panchos. ¡Hacé tu pedido online!">
     <meta name="keywords" content="pan de papa, pan para hamburguesa, pan de pancho, panadería, panes artesanales, Buenos Aires">
     <meta name="author" content="NOVA Panes">
 
-    <!-- SEO: Open Graph Tags para Redes Sociales -->
     <meta property="og:title" content="NOVA Panes - El Mejor Pan de Papa">
     <meta property="og:description" content="Transformá tus comidas con nuestros panes de papa premium. Suaves, esponjosos y deliciosos. ¡Comprá online!">
     <meta property="og:image" content="https://novapanes.com.ar/productos/pan-de-papa-1.png">
@@ -20,7 +17,6 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="es_AR">
 
-    <!-- SEO: Schema Markup para Negocio Local (JSON-LD) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -58,16 +54,27 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <!-- HEADER CON ESTRUCTURA MODIFICADA -->
+    <header>
+        <nav class="main-nav nav-left">
+            <a href="#">Inicio</a>
+            <a href="#productos">Productos</a>
+        </nav>
+        <div class="logo">
+            <a href="/"><img src="logo.png" alt="Logo de NOVA Panes"></a>
+        </div>
+        <nav class="main-nav nav-right">
+            <a href="shop.html">Shop</a>
+            <a href="#quienes-somos">Quiénes Somos</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
     <div class="hero-background">
-        <header>
-            <nav class="main-nav"><a href="#">Inicio</a><a href="#productos">Productos</a></nav>
-            <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes"></div>
-            <nav class="main-nav"><a href="shop.html">Shop</a><a href="#quienes-somos">Quiénes Somos</a><a href="#contacto">Contacto</a></nav>
-        </header>
         <main class="hero-section">
             <div class="hero-text"><h1>Juntate con amigos y disfruta de los mejores panes.</h1><div class="hero-cta"><a href="shop.html" class="cta-button">🛒 Comprar Online</a></div></div>
             <div class="hero-image" id="heroImageContainer"><img src="hero-images/hero-pan.png" alt="Variedad de panes artesanales de NOVA Panes" id="heroImage"></div>
@@ -181,7 +188,6 @@
     </div>
     
     <script>
-        // Script para cargar productos dinámicamente
         document.addEventListener('DOMContentLoaded', () => {
             const gallery = document.getElementById('product-gallery-index');
             if (gallery) {
@@ -194,9 +200,10 @@
                         gallery.innerHTML = '';
                         const productsToShow = products.slice(0, 6);
                         productsToShow.forEach(product => {
+                            const imageUrl = product.image;
                             gallery.innerHTML += `
                                 <div class="product-card">
-                                    <img src="${product.image}" alt="${product.name}" data-title="${product.name}" data-images='["${product.image}"]' loading="lazy" decoding="async">
+                                    <img src="${imageUrl}" alt="${product.name}" data-title="${product.name}" data-images='["${imageUrl}"]' loading="lazy" decoding="async">
                                     <h3>${product.name}</h3>
                                     <div class="product-actions-preview">
                                         <a href="shop.html" class="shop-link">Ver en Shop</a>
@@ -211,7 +218,6 @@
             }
         });
         
-        // Script para cambiar imagen del hero
         const heroImages=['hero-images/hero-pan.png','hero-images/hero-pan-1.png','hero-images/hero-pan-2.png'];
         function setRandomHeroImage(){
             const e=document.getElementById("heroImage");
