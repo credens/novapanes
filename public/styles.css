@@ -8,15 +8,15 @@ body {
 }
 
 /* =====================================
-   HEADER Y NAVEGACIÓN (MODIFICADO)
+   HEADER Y NAVEGACIÓN (ALTURA REDUCIDA)
    ===================================== */
 header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 50px; /* Padding vertical reducido para un look más compacto */
+    /* Padding vertical reducido a 15px */
+    padding: 15px 50px; 
     flex-wrap: wrap; 
-    /* Colores aplicados como en el footer */
     background-color: #B5651D; 
     color: #fff;
 }
@@ -28,16 +28,13 @@ header {
 
 .main-nav a {
     text-decoration: none;
-    /* Color de fuente cambiado a blanco */
     color: #fff; 
     font-size: 18px; 
-    /* Grosor de la fuente aumentado */
     font-weight: 600; 
     transition: color 0.3s ease;
 }
 
 .main-nav a:hover {
-    /* Color de hover ajustado para que se note sobre el fondo oscuro */
     color: #F9DAB9; 
 }
 
@@ -46,7 +43,8 @@ header {
 }
 
 .logo img {
-    width: 200px;
+    /* Tamaño del logo ligeramente reducido para que encaje mejor */
+    width: 180px; 
 }
 
 /* Hero Section */

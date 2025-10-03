@@ -1,9 +1,12 @@
 /* Shop-specific styles */
 
-/* Shop Hero Section */
+/* =====================================
+   SHOP HERO SECTION (ALTURA REDUCIDA)
+   ===================================== */
 .shop-hero {
     background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
-    padding: 80px 50px 60px;
+    /* Padding vertical reducido */
+    padding: 40px 50px 30px; 
     text-align: center;
     margin-bottom: 60px;
 }
@@ -12,7 +15,8 @@
     font-family: 'Lora', serif;
     font-size: 3.5rem;
     font-weight: 700;
-    margin: 0 0 20px 0;
+    /* Margen inferior reducido */
+    margin: 0 0 15px 0;
     color: #000;
 }
 
@@ -22,21 +26,19 @@
     margin: 0;
 }
 
-/* === ESTILOS PARA LA LEYENDA DE ENVÍO (AÑADIDO) === */
 .shipping-info {
-    margin-top: 25px;
+    margin-top: 20px; /* Espacio reducido */
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
     border: 1px solid rgba(181, 101, 29, 0.2);
-    color: #5c4033; /* Un marrón oscuro para buena legibilidad */
+    color: #5c4033;
     font-size: 0.9rem;
     line-height: 1.5;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
 }
-/* === FIN DE ESTILOS === */
 
 
 /* Main shop container */
@@ -709,7 +711,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .shop-hero {
-        padding: 60px 20px 40px;
+        padding: 40px 20px 30px;
     }
     
     .shop-hero-content h1 {
