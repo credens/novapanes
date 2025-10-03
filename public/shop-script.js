@@ -1,10 +1,10 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON CAMBIO DE VISTAS)
+//      ARCHIVO shop-script.js (CON ORDENAMIENTO DE COMBOS PRIMERO)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
-    let allCategories = []; // Renombrada para evitar conflictos de alcance
+    let allCategories = [];
     let cart = [];
     let currentView = 'grouped'; // 'grouped' o 'list'
 
@@ -14,12 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const shopProductsContainer = document.getElementById('shopProducts');
     const filterContainer = document.getElementById('filter-container');
     const searchInput = document.getElementById('searchInput'); 
-    
-    // Botones de cambio de vista
     const viewGroupedBtn = document.getElementById('view-grouped');
     const viewListBtn = document.getElementById('view-list');
-
-    // Otros elementos del DOM
     const logoScroller = document.getElementById('logo-scroller');
     const cartFloating = document.getElementById('cartFloating');
     const cartModal = document.getElementById('cartModal');
@@ -87,15 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderProducts() {
         const categoryFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
         const searchTerm = searchInput.value;
-
-        const filteredByCategory = categoryFilter === 'all' 
-            ? products 
-            : products.filter(p => p.category === categoryFilter);
-
+        const filteredByCategory = categoryFilter === 'all' ? products : products.filter(p => p.category === categoryFilter);
         const searchTermLower = searchTerm.toLowerCase().trim();
-        const finalProducts = searchTermLower
-            ? filteredByCategory.filter(p => p.name.toLowerCase().includes(searchTermLower))
-            : filteredByCategory;
+        const finalProducts = searchTermLower ? filteredByCategory.filter(p => p.name.toLowerCase().includes(searchTermLower)) : filteredByCategory;
         
         shopProductsContainer.innerHTML = '';
 
@@ -111,19 +101,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // --- FUNCIÓN MODIFICADA PARA ORDENAR COMBOS PRIMERO ---
     function renderGroupedView(productsToRender) {
         const productsByCategory = productsToRender.reduce((acc, product) => {
             (acc[product.category] = acc[product.category] || []).push(product);
             return acc;
         }, {});
 
-        const sortedCategoryIds = allCategories.map(cat => cat.id);
+        const comboCategoryID = 'combos';
+        
+        // Separa la categoría de combos del resto
+        const comboCategory = allCategories.find(c => c.id === comboCategoryID);
+        const otherCategories = allCategories
+            .filter(c => c.id !== comboCategoryID)
+            .sort((a, b) => a.name.localeCompare(b.name)); // Ordena el resto alfabéticamente
 
-        sortedCategoryIds.forEach(categoryId => {
+        // Une las listas, poniendo combos al principio (si existe)
+        const sortedCategories = comboCategory ? [comboCategory, ...otherCategories] : otherCategories;
+
+        sortedCategories.forEach(category => {
+            const categoryId = category.id;
             if (productsByCategory[categoryId]) {
-                const category = allCategories.find(c => c.id === categoryId);
                 const categoryProducts = productsByCategory[categoryId];
-
                 let productsHTML = '';
                 categoryProducts.forEach(product => {
                     productsHTML += generateProductCardHTML(product);
@@ -162,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isOnSale = product.promo_price && product.promo_price < product.price; 
         const currentPrice = isOnSale ? product.promo_price : product.price; 
         const priceHTML = isOnSale ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
-        const imageUrl = Array.isArray(product.image) && product.image.length > 0 ? product.image[0] : product.image;
+        const imageUrl = product.image; // Ya es un string, no un array
 
         return `
             <div id="product-${product.id}" class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}">
@@ -190,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentView = 'grouped';
                 viewGroupedBtn.classList.add('active');
                 viewListBtn.classList.remove('active');
-                filterContainer.style.display = 'none'; // Ocultar filtros de categoría en esta vista
+                filterContainer.style.display = 'block'; // Asegurarse que los filtros sean visibles
                 renderProducts();
             }
         });
@@ -200,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentView = 'list';
                 viewListBtn.classList.add('active');
                 viewGroupedBtn.classList.remove('active');
-                filterContainer.style.display = 'block'; // Mostrar filtros de categoría
+                filterContainer.style.display = 'block'; // Asegurarse que los filtros sean visibles
                 renderProducts();
             }
         });
