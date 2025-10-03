@@ -176,6 +176,7 @@
         </div>
     </div>
     
+    <!-- SCRIPT DE PRODUCTOS MODIFICADO -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const gallery = document.getElementById('product-gallery-index');
@@ -185,14 +186,38 @@
                         if (!response.ok) throw new Error('No se pudieron cargar los productos.');
                         return response.json();
                     })
-                    .then(products => {
+                    .then(allProducts => {
+                        let productsToShow = [];
+                        
+                        // 1. Buscar y añadir productos garantizados
+                        const guaranteedNames = ["Pan de Papa", "Pan de Lomito"];
+                        const guaranteedProducts = [];
+                        let remainingProducts = [...allProducts];
+
+                        guaranteedNames.forEach(name => {
+                            const product = remainingProducts.find(p => p.name.toLowerCase() === name.toLowerCase());
+                            if (product) {
+                                guaranteedProducts.push(product);
+                                // Quitarlo de la lista de restantes para no repetirlo
+                                remainingProducts = remainingProducts.filter(p => p.id !== product.id);
+                            }
+                        });
+
+                        // 2. Mezclar el resto de productos y tomar los necesarios para completar 9
+                        remainingProducts.sort(() => 0.5 - Math.random());
+                        const randomCount = 9 - guaranteedProducts.length;
+                        const randomProducts = remainingProducts.slice(0, randomCount);
+                        
+                        // 3. Unir y mezclar la lista final
+                        productsToShow = [...guaranteedProducts, ...randomProducts];
+                        productsToShow.sort(() => 0.5 - Math.random());
+
+                        // 4. Renderizar
                         gallery.innerHTML = '';
-                        const productsToShow = products.slice(0, 6);
                         productsToShow.forEach(product => {
-                            const imageUrl = product.image;
                             gallery.innerHTML += `
                                 <div class="product-card">
-                                    <img src="${imageUrl}" alt="${product.name}" data-title="${product.name}" data-images='["${imageUrl}"]' loading="lazy" decoding="async">
+                                    <img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async">
                                     <h3>${product.name}</h3>
                                     <div class="product-actions-preview">
                                         <a href="shop.html" class="shop-link">Ver en Shop</a>
