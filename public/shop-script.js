@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON IMAGEN MODAL AJUSTADA)
+//      ARCHIVO shop-script.js (CON ALT TEXT CORREGIDO)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -155,11 +155,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentPrice = isOnSale ? product.promo_price : product.price; 
         const priceHTML = isOnSale ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
         const imageUrl = product.image;
+        
+        // ¡SOLUCIÓN AQUÍ! Escapamos las comillas para el HTML del onclick
+        const safeProductName = product.name.replace(/"/g, '&quot;');
 
         return `
             <div id="product-${product.id}" class="product-item ${isOnSale ? 'on-sale' : ''}" data-category="${product.category}">
                 ${isOnSale ? '<div class="sale-badge">OFERTA</div>' : ''}
-                <img src="/${imageUrl}" alt="${product.name}" class="product-image" onclick="openProductModal('/${imageUrl}', '${product.name}')" loading="lazy">
+                <img src="/${imageUrl}" alt="${safeProductName}" class="product-image" onclick="openProductModal('/${imageUrl}', '${safeProductName}')" loading="lazy">
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
                     <p class="product-description">${product.description}</p>
@@ -231,14 +234,13 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addToCart = (event, id) => { const p = products.find(prod => prod.id === id); if (!p) return; const q = parseInt(document.getElementById(`qty-${id}`).value); const priceToUse = (p.promo_price && p.promo_price < p.price) ? p.promo_price : p.price; const itemInCart = cart.find(i => i.id === id); if (itemInCart) { if (itemInCart.quantity + q <= p.stock) itemInCart.quantity += q; else return alert(`Stock insuficiente.`); } else { if (q > p.stock) return alert(`Stock insuficiente.`); cart.push({ ...p, price: priceToUse, quantity: q }); } updateCartDisplay(); const btn = event.target; btn.textContent = '¡Agregado!'; btn.style.background = '#4CAF50'; setTimeout(() => { btn.textContent = 'Agregar'; btn.style.background = '#B5651D'; }, 1000); };
     window.updateCartItemQuantity = (id, newQ) => { const item = cart.find(i => i.id === id); if (!item) return; if (newQ <= 0) { removeFromCart(id); return; } const p = products.find(prod => prod.id === id); if (newQ > p.stock) return alert(`Stock insuficiente`); item.quantity = newQ; updateCartDisplay(); };
     window.removeFromCart = (id) => { cart = cart.filter(i => i.id !== id); updateCartDisplay(); };
-
-    // --- FUNCIÓN MODIFICADA ---
+    
     window.openProductModal = (src, title) => {
         const m = document.createElement('div');
         m.innerHTML = `
             <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;" onclick="this.remove()">
                 <div style="max-width:90%;max-height:90%;background:white;border-radius:12px;overflow:hidden;animation:modalAppear .3s;" onclick="event.stopPropagation()">
-                    <img src="${src}" style="width:100%;height:auto;display:block;max-height:80vh;object-fit:contain;">
+                    <img src="${src}" alt="${title}" style="width:100%;height:auto;display:block;max-height:80vh;object-fit:contain;">
                     <div style="padding:20px;text-align:center;font-family:'Lora',serif;font-size:1.2rem;">${title}</div>
                 </div>
             </div>`;
