@@ -7,41 +7,21 @@ body {
     overflow-x: hidden;
 }
 
-/* =====================================
-   HEADER FIJO Y CENTRADO (VERSIÓN CORRECTA)
-   ===================================== */
+/* Header and Navigation */
 header {
     display: flex;
-    justify-content: space-between; /* Mantiene el espacio entre elementos */
+    justify-content: center;
     align-items: center;
-    padding: 10px 50px;
+    padding: 15px 50px; 
+    flex-wrap: wrap;
     background-color: #B5651D; 
     color: #fff;
-    /* --- Propiedades para header fijo (sticky) --- */
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
-    box-sizing: border-box;
 }
 
-/* Contenedores de navegación */
 .main-nav {
     display: flex;
-    align-items: center;
-    gap: 30px;
-    flex: 1; /* ¡CLAVE! Hace que ambos nav ocupen el mismo espacio */
+    gap: 50px;
 }
-
-/* Alineación específica para cada nav */
-.main-nav:first-of-type {
-    justify-content: flex-start; /* Alinea el primer nav a la izquierda */
-}
-
-.main-nav:last-of-type {
-    justify-content: flex-end; /* Alinea el último nav a la derecha */
-}
-
 
 .main-nav a {
     text-decoration: none;
@@ -55,15 +35,12 @@ header {
     color: #F9DAB9; 
 }
 
-/* Logo */
 .logo {
-    margin: 0 20px; /* Margen reducido para dar más espacio a la navegación */
-    flex-shrink: 0;
+    margin: 0 70px;
 }
 
 .logo img {
-    width: 150px;
-    display: block;
+    width: 180px; 
 }
 
 /* Hero Section */
@@ -78,7 +55,7 @@ header {
     align-items: center;
     justify-content: center; 
     max-width: 1200px;
-    margin: 80px auto 0; 
+    margin: 40px auto 0; 
     padding: 0 50px;
     gap: 80px; 
 }
@@ -674,19 +651,15 @@ h2 {
 
 @media (max-width: 1024px) {
     header {
-        padding: 10px 30px;
+        padding: 20px 30px;
     }
 
     .main-nav {
-        gap: 20px;
+        gap: 35px;
     }
-
-    .main-nav a {
-        font-size: 16px;
-    }
-
+    
     .logo img {
-        width: 130px;
+        width: 180px;
     }
 
     .hero-section {
@@ -694,7 +667,6 @@ h2 {
         text-align: center;
         padding: 0 30px;
         gap: 40px; 
-        margin-top: 60px;
     }
 
     .hero-text h1 {
@@ -728,28 +700,43 @@ h2 {
     }
 }
 
-@media (max-width: 850px) {
+@media (max-width: 768px) {
     header {
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 15px 20px;
-        gap: 15px;
-    }
-
-    .main-nav {
-        flex-basis: 100%; /* Ocupa todo el ancho */
-        justify-content: center;
-        gap: 20px;
-        order: 3; /* Se mueve al final */
-    }
-
-    .main-nav.nav-left, .main-nav.nav-right {
-        flex-basis: auto; /* Ancho automático para los elementos */
+        flex-direction: column;
+        gap: 25px;
+        padding: 30px 20px;
     }
 
     .logo {
-        order: 1; /* El logo va primero */
+        order: -1;
         margin: 0;
+    }
+
+    .hero-cta {
+        margin-top: 30px;
+        text-align: center;
+    }
+    
+    .cta-button {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+    
+    .product-actions-preview {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .shop-link {
+        text-align: center;
+        padding: 10px 16px;
+    }
+    
+    .view-all-products {
+        padding: 14px 28px;
+        font-size: 1rem;
     }
 }
 
@@ -758,13 +745,12 @@ h2 {
         -webkit-text-size-adjust: 100%;
     }
     
-    .main-nav {
-        gap: 15px;
-        flex-wrap: wrap;
+    .logo img {
+        width: 160px;
     }
     
     .main-nav a {
-        font-size: 14px;
+        font-size: 18px;
     }
 
     .hero-text h1 {
