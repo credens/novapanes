@@ -3,167 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - NOVA Panes</title>
-    <link rel="stylesheet" href="admin-styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <title>NOVA Panes - Pan de Papa Premium para Hamburguesas y Más</title>
+    
+    <meta name="description" content="Descubrí la suavidad y el sabor de NOVA Panes. Pan de papa de calidad premium, ideal para hamburguesas, lomitos y panchos. ¡Hacé tu pedido online en Buenos Aires!">
+    <meta name="keywords" content="pan de papa, pan para hamburguesa, pan de pancho, panadería, panes artesanales, Buenos Aires, zona sur, Bernal, Quilmes">
+    <meta name="author" content="NOVA Panes">
+
+    <meta property="og:title" content="NOVA Panes - El Mejor Pan de Papa">
+    <meta property="og:description" content="Transformá tus comidas con nuestros panes de papa premium. Suaves, esponjosos y deliciosos. ¡Comprá online!">
+    <meta property="og:image" content="https://novapanes.com.ar/productos/pan-de-papa-1.png">
+    <meta property="og:url" content="https://novapanes.com.ar/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_AR">
+
+    <!-- INICIO: DATOS ESTRUCTURADOS MEJORADOS PARA SEO E IA -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Bakery",
+      "name": "NOVA Panes",
+      "image": "https://novapanes.com.ar/logo.png",
+      "@id": "https://novapanes.com.ar/",
+      "url": "https://novapanes.com.ar/",
+      "telephone": "+54-9-11-6437-2200",
+      "priceRange": "$$",
+      "description": "Elaboramos panes de papa de primera calidad, con la suavidad, el sabor y la frescura que nos caracterizan. Ideales para familias y negocios gastronómicos en Buenos Aires.",
+      "servesCuisine": "Panadería artesanal",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Gral. E. M. de Perón 3550, B1876",
+        "addressLocality": "Bernal Oeste",
+        "addressRegion": "Buenos Aires",
+        "addressCountry": "AR"
+      },
+      "areaServed": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": -34.7680045,
+          "longitude": -58.3262852
+        },
+        "geoRadius": "20000"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -34.7680045,
+        "longitude": -58.3262852
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" ],
+        "opens": "09:00",
+        "closes": "17:00"
+      },
+      "sameAs": [ "https://instagram.com/nova.panes", "https://wa.me/5491164372200" ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Catálogo de Panes",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "Pan de Papa para Hamburguesa",
+              "description": "Nuestro clásico pan de papa, suave y esponjoso, ideal para cualquier tipo de hamburguesa.",
+              "image": "https://novapanes.com.ar/productos/pan-de-papa-hamburguesa.png"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "Pan de Lomito",
+              "description": "Un pan alargado y resistente, perfecto para lomitos completos y sándwiches gourmet.",
+              "image": "https://novapanes.com.ar/productos/pan-de-lomito.png"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "name": "Pan de Pancho (Hot Dog)",
+              "description": "El pan de pancho más sabroso y tierno para llevar tus hot dogs al siguiente nivel.",
+              "image": "https://novapanes.com.ar/productos/pan-de-pancho.png"
+            }
+          }
+        ]
+      }
+    }
+    </script>
+    <!-- FIN: DATOS ESTRUCTURADOS -->
+    
+    <link rel="stylesheet" href="styles.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="dashboard-container" id="adminPanel" style="display: none;">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <span class="logo-text">NOVA Panes</span>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Resumen</span></a>
-                <a href="#products-section" class="nav-item"><i class="fas fa-box-open"></i><span>Productos</span></a>
-                <a href="#orders-section" class="nav-item"><i class="fas fa-receipt"></i><span>Pedidos</span></a>
-                <a href="#" class="nav-item disabled"><i class="fas fa-users"></i><span>Clientes</span></a>
-                <a href="/" class="nav-item"><i class="fas fa-sign-out-alt"></i><span>Salir</span></a>
-            </nav>
-        </aside>
 
-        <main class="main-content">
-            <header class="main-header">
-                <h1>Dashboard de Administración</h1>
-            </header>
-
-            <div class="stats-grid">
-                <a href="#products-section" class="stat-card-link">
-                    <div class="stat-card">
-                        <div class="card-icon"><i class="fas fa-box-open"></i></div>
-                        <div class="card-info">
-                            <span class="card-title">Productos Activos</span>
-                            <span class="card-value" id="totalProductsStat">0</span>
-                        </div>
-                    </div>
-                </a>
-                <a href="#categories-section" class="stat-card-link">
-                    <div class="stat-card">
-                        <div class="card-icon"><i class="fas fa-layer-group"></i></div>
-                        <div class="card-info">
-                            <span class="card-title">Categorías</span>
-                            <span class="card-value" id="totalCategoriesStat">0</span>
-                        </div>
-                    </div>
-                </a>
-                <a href="#orders-section" class="stat-card-link">
-                    <div class="stat-card">
-                        <div class="card-icon"><i class="fas fa-receipt"></i></div>
-                        <div class="card-info">
-                            <span class="card-title">Pedidos Totales</span>
-                            <span class="card-value" id="totalOrdersStat">0</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            
-            <section id="orders-section" class="card">
-                <div class="card-header">
-                    <h2>Historial de Pedidos</h2>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Fecha</th>
-                                <th>Total</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ordersTableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section id="categories-section" class="card">
-                <div class="card-header">
-                    <h2>Gestionar Categorías</h2>
-                </div>
-                <div id="categoriesList"></div>
-                <form id="addCategoryForm" class="category-form">
-                    <input type="text" id="newCategoryName" placeholder="Nombre de nueva categoría" required>
-                    <button type="submit">Añadir Categoría</button>
-                </form>
-            </section>
-
-            <section id="products-section" class="card">
-                <div class="card-header">
-                    <h2>Lista de Productos</h2>
-                    <button id="showAddProductModalBtn" class="btn-primary">Añadir Producto</button>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Categoría</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-
+    <div class="hero-background">
+        <header>
+            <nav class="main-nav"><a href="#">Inicio</a><a href="#productos">Productos</a></nav>
+            <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes"></div>
+            <nav class="main-nav"><a href="shop.html">Shop</a><a href="#quienes-somos">Quiénes Somos</a><a href="#contacto">Contacto</a></nav>
+        </header>
+        <main class="hero-section">
+            <div class="hero-text"><h1>Juntate con amigos y disfruta de los mejores panes.</h1><div class="hero-cta"><a href="shop.html" class="cta-button">🛒 Comprar Online</a></div></div>
+            <div class="hero-image" id="heroImageContainer"><img src="hero-images/hero-pan.png" alt="Variedad de panes artesanales de NOVA Panes" id="heroImage"></div>
         </main>
     </div>
 
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Añadir Producto</h2>
-                <span class="close-modal-btn">&times;</span>
+    <hr class="section-divider">
+
+    <section id="productos" class="products-section">
+        <h2>Panes de Papa Artesanales para Cada Ocasión</h2>
+        <div class="product-gallery" id="product-gallery-index">
+            <!-- Los productos se cargarán aquí dinámicamente -->
+        </div>
+        <div class="products-cta"><a href="shop.html" class="view-all-products">Ver Todos los Productos en Shop 🛒</a></div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section id="quienes-somos" class="about-us-section full-width">
+        <div class="about-us-content">
+            <h2>Nuestra Pasión: El Pan de Papa Perfecto</h2>
+            <p>En Nova Panes creemos que un buen pan puede transformar cualquier comida en un gran momento. Nacimos con el objetivo de ofrecer panes de papa de primera calidad, con la suavidad, el sabor y la frescura que nos caracterizan.</p>
+            <p>Nuestros productos están pensados tanto para familias como para negocios gastronómicos que buscan un pan distinto: esponjoso, sabroso y versátil. Elaboramos cada variedad con dedicación y materias primas seleccionadas, porque sabemos que detrás de cada mordida hay una experiencia para compartir.</p>
+        </div>
+    </section>
+    
+    <hr class="section-divider">
+
+    <!-- INICIO: NUEVA SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) -->
+    <section id="faq" class="faq-section">
+        <h2>Preguntas Frecuentes</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <h3>¿Qué hace especial a su pan de papa?</h3>
+                <p>Nuestro pan de papa se destaca por su increíble suavidad y un ligero sabor dulce, gracias al uso de puré de papa real en nuestra receta. Esto le da una miga tierna y una corteza dorada que resiste perfectamente los jugos de una hamburguesa sin desarmarse.</p>
             </div>
-            <div class="modal-body">
-                <form id="productForm">
-                    <input type="hidden" id="productId" name="id">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="name">Nombre:</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="price">Precio Regular:</label>
-                            <input type="number" id="price" name="price" step="0.01" required min="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="promo_price">Precio de Promoción (opcional):</label>
-                            <input type="number" id="promo_price" name="promo_price" step="0.01" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="stock">Stock:</label>
-                            <input type="number" id="stock" name="stock" required min="0">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="category">Categoría:</label>
-                            <select id="category" name="category" required></select>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="description">Descripción:</label>
-                            <textarea id="description" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Imagen Actual:</label>
-                            <img id="currentImage" src="" alt="Imagen del producto" width="100" style="display: none;">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="image">Imagen del Producto:</label>
-                            <input type="file" id="image" name="image" accept="image/*">
-                        </div>
-                    </div>
-                </form>
+            <div class="faq-item">
+                <h3>¿Hacen envíos? ¿Cuál es el área de cobertura?</h3>
+                <p>Sí, realizamos envíos. Principalmente cubrimos Zona Sur de Buenos Aires (Bernal, Quilmes, Avellaneda, etc.). Para pedidos mayoristas o en otras zonas, por favor contactanos para coordinar la logística.</p>
             </div>
-            <div class="modal-footer">
-                <button type="submit" form="productForm">Guardar</button>
+            <div class="faq-item">
+                <h3>¿Venden a locales gastronómicos y hamburgueserías?</h3>
+                <p>¡Absolutamente! Somos proveedores de numerosos locales. Ofrecemos precios mayoristas y una logística adaptada a las necesidades de tu negocio. Escribinos por WhatsApp o a través de nuestro formulario para recibir una propuesta personalizada.</p>
             </div>
+        </div>
+    </section>
+    <!-- FIN: NUEVA SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) -->
+
+    <hr class="section-divider">
+
+    <section id="contacto" class="bottom-section">
+        <div class="contact-form-container">
+            <h2>Contacto y Pedidos Mayoristas</h2>
+            <form id="contactForm">
+                <input type="text" name="nombre" placeholder="Nombre *" required>
+                <input type="email" name="email" placeholder="Correo electrónico">
+                <input type="tel" name="telefono" placeholder="Teléfono *" required>
+                <textarea name="mensaje" placeholder="Mensaje" rows="4"></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+            <div id="formMessage" class="form-message"></div>
+        </div>
+        <div class="contact-info-container">
+            <h2>Dónde Encontrarnos</h2>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa%2C%20ex%20Batistta%20e%20Hijos!5e0!3m2!1ses-419!2sar!4v1757366780914!5m2!1ses-419!2sar" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="map-info"><a href="https://maps.app.goo.gl/oJNFji4nYeB3hSBB6" target="_blank" class="map-link">Ver en Google Maps</a></div>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const formMessage = document.getElementById("formMessage");
+        const submitButton = this.querySelector('button[type="submit"]');
+
+        submitButton.textContent = "Enviando...";
+        submitButton.disabled = true;
+        formMessage.style.display = "none";
+
+        fetch("/api/contact", {
+            method: "POST",
+            body: new URLSearchParams(formData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            formMessage.textContent = data.message;
+            formMessage.className = "form-message " + (data.success ? "success" : "error");
+            formMessage.style.display = "block";
+            if (data.success) {
+                document.getElementById("contactForm").reset();
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            formMessage.textContent = "Error al enviar el mensaje. Inténtalo de nuevo.";
+            formMessage.className = "form-message error";
+            formMessage.style.display = "block";
+        })
+        .finally(() => {
+            submitButton.textContent = "Enviar";
+            submitButton.disabled = false;
+        });
+    });
+    </script>
+    
+    <hr class="section-divider">
+    
+    <footer class="footer">
+        <p>NOVA Panes® es una marca registrada de Grupo FeSa</p>
+        <div class="footer-links">
+            <a href="https://wa.me/5491164372200" target="_blank" class="footer-btn whatsapp-btn">📱 WhatsApp</a>
+            <span class="footer-divider">|</span>
+            <span class="phone-text">Tel: +54 9 11 6437 2200</span>
+            <span class="footer-divider">|</span>
+            <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">📷 @nova.panes</a>
+        </div>
+        <div class="footer-fiscal">
+            <p>Razón Social: GRUPO FESA S. CAP I SECC IV</p>
+            <p>CUIT: 30-71821628-8</p>
+        </div>
+    </footer>
+    
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content-wrapper">
+            <img class="modal-image" id="modalImage" alt="Imagen ampliada del producto de pan">
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-nav" id="modalNav"><button class="modal-nav-btn" id="prevBtn">◄</button><span class="modal-counter" id="modalCounter"></span><button class="modal-nav-btn" id="nextBtn">►</button></div>
         </div>
     </div>
     
-    <script src="admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gallery = document.getElementById('product-gallery-index');
+            if (gallery) {
+                fetch('/products.json')
+                    .then(response => {
+                        if (!response.ok) throw new Error('No se pudieron cargar los productos.');
+                        return response.json();
+                    })
+                    .then(allProducts => {
+                        let productsToShow = [];
+                        
+                        const guaranteedNames = ["Pan de Papa", "Pan de Lomito"];
+                        const guaranteedProducts = [];
+                        let remainingProducts = [...allProducts];
+
+                        guaranteedNames.forEach(name => {
+                            const product = remainingProducts.find(p => p.name.toLowerCase() === name.toLowerCase());
+                            if (product) {
+                                guaranteedProducts.push(product);
+                                remainingProducts = remainingProducts.filter(p => p.id !== product.id);
+                            }
+                        });
+
+                        remainingProducts.sort(() => 0.5 - Math.random());
+                        const randomCount = 9 - guaranteedProducts.length;
+                        const randomProducts = remainingProducts.slice(0, randomCount);
+                        
+                        productsToShow = [...guaranteedProducts, ...randomProducts];
+                        productsToShow.sort(() => 0.5 - Math.random());
+
+                        gallery.innerHTML = '';
+                        productsToShow.forEach(product => {
+                            gallery.innerHTML += `
+                                <div class="product-card">
+                                    <img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async">
+                                    <h3>${product.name}</h3>
+                                    <div class="product-actions-preview">
+                                        <a href="shop.html" class="shop-link">Ver en Shop</a>
+                                    </div>
+                                </div>`;
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar productos en el index:', error);
+                        gallery.innerHTML = '<p>No se pudieron cargar los productos en este momento.</p>';
+                    });
+            }
+        });
+        
+        const heroImages=['hero-images/hero-pan.png','hero-images/hero-pan-1.png','hero-images/hero-pan-2.png'];
+        function setRandomHeroImage(){
+            const e=document.getElementById("heroImage");
+            if(e){
+                const t=heroImages[Math.floor(Math.random()*heroImages.length)];
+                e.src=t;
+            }
+        }
+        document.addEventListener("DOMContentLoaded", setRandomHeroImage);
+    </script>
 </body>
 </html>

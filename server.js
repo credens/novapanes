@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (CORREGIDO Y COMPLETO)
+//      ARCHIVO server.js (COMPLETO Y ACTUALIZADO)
 // ===================================================
 
 const express = require('express');
@@ -308,9 +308,6 @@ app.get('/products', (req, res) => {
     }
 });
 
-// ==========================================================
-// ===== SECCIÓN DEL FORMULARIO DE CONTACTO MODIFICADA ======
-// ==========================================================
 app.post('/api/contact', async (req, res) => {
     const {
         nombre,
@@ -333,7 +330,6 @@ app.post('/api/contact', async (req, res) => {
     });
     const emailBody = `<h1>📬 Nueva Consulta desde el Sitio Web 📬</h1><h2>Detalles del Contacto:</h2><ul><li><strong>Nombre:</strong> ${nombre}</li><li><strong>Teléfono:</strong> ${telefono}</li>${email ? `<li><strong>Email:</strong> ${email}</li>` : ''}</ul><h3>Mensaje:</h3><p style="background-color:#f4f4f4; padding: 15px; border-radius: 5px;">${mensaje || 'No se ha escrito ningún mensaje.'}</p>`;
     
-    // Objeto base de opciones para el correo
     const mailOptions = {
         from: `"NOVA Panes Web" <${process.env.EMAIL_USER}>`,
         to: 'panes.nova@gmail.com',
@@ -341,7 +337,6 @@ app.post('/api/contact', async (req, res) => {
         html: emailBody,
     };
 
-    // Si el usuario proporcionó un email, lo añadimos como dirección de respuesta (replyTo)
     if (email) {
         mailOptions.replyTo = email;
     }
@@ -360,9 +355,6 @@ app.post('/api/contact', async (req, res) => {
         });
     }
 });
-// ==========================================================
-// ============ FIN DE LA SECCIÓN MODIFICADA ================
-// ==========================================================
 
 app.post('/api/submit-order', async (req, res) => {
     const orderData = req.body;
