@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (CORREGIDO PARA 1 IMAGEN)
+//      ARCHIVO server.js (CORREGIDO Y COMPLETO)
 // ===================================================
 
 const express = require('express');
@@ -164,7 +164,6 @@ adminRouter.post('/products', upload.single('image'), (req, res) => {
     }
 });
 
-// --- RUTA CORREGIDA ---
 adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
@@ -185,7 +184,6 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
         };
         
         if (req.file) {
-            // El campo `oldProduct.image` ahora es un STRING.
             if (oldProduct.image && typeof oldProduct.image === 'string') {
                 const oldPath = path.join(__dirname, 'public', oldProduct.image);
                 if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
@@ -203,7 +201,6 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
     }
 });
 
-// --- RUTA CORREGIDA ---
 adminRouter.delete('/products/:id', (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
@@ -212,7 +209,6 @@ adminRouter.delete('/products/:id', (req, res) => {
             message: 'Producto no encontrado.'
         });
 
-        // El campo `product.image` ahora es un STRING.
         if (product.image && typeof product.image === 'string') {
             const imgPath = path.join(__dirname, 'public', product.image);
             if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
@@ -311,6 +307,10 @@ app.get('/products', (req, res) => {
         });
     }
 });
+
+// ==========================================================
+// ===== SECCIÓN DEL FORMULARIO DE CONTACTO MODIFICADA ======
+// ==========================================================
 app.post('/api/contact', async (req, res) => {
     const {
         nombre,
@@ -332,12 +332,20 @@ app.post('/api/contact', async (req, res) => {
         },
     });
     const emailBody = `<h1>📬 Nueva Consulta desde el Sitio Web 📬</h1><h2>Detalles del Contacto:</h2><ul><li><strong>Nombre:</strong> ${nombre}</li><li><strong>Teléfono:</strong> ${telefono}</li>${email ? `<li><strong>Email:</strong> ${email}</li>` : ''}</ul><h3>Mensaje:</h3><p style="background-color:#f4f4f4; padding: 15px; border-radius: 5px;">${mensaje || 'No se ha escrito ningún mensaje.'}</p>`;
+    
+    // Objeto base de opciones para el correo
     const mailOptions = {
         from: `"NOVA Panes Web" <${process.env.EMAIL_USER}>`,
         to: 'panes.nova@gmail.com',
         subject: `Nueva consulta de: ${nombre}`,
         html: emailBody,
     };
+
+    // Si el usuario proporcionó un email, lo añadimos como dirección de respuesta (replyTo)
+    if (email) {
+        mailOptions.replyTo = email;
+    }
+
     try {
         await transporter.sendMail(mailOptions);
         res.status(200).json({
@@ -345,12 +353,16 @@ app.post('/api/contact', async (req, res) => {
             message: '¡Gracias! Nos pondremos en contacto contigo pronto.'
         });
     } catch (error) {
+        console.error("Error al enviar email de contacto:", error);
         res.status(500).json({
             success: false,
             message: 'Hubo un error al enviar el mensaje.'
         });
     }
 });
+// ==========================================================
+// ============ FIN DE LA SECCIÓN MODIFICADA ================
+// ==========================================================
 
 app.post('/api/submit-order', async (req, res) => {
     const orderData = req.body;
