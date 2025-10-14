@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const MINIMUM_PURCHASE = 15000;
 
-    // Elementos del DOM
     const shopProductsContainer = document.getElementById('shopProducts');
     const filterContainer = document.getElementById('filter-container');
     const searchInput = document.getElementById('searchInput'); 
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerCartIcon = document.getElementById('headerCartIcon');
 
     Promise.all([
-        fetch('/products').then(res => res.json()), // <-- ¡AQUÍ ESTÁ LA CORRECCIÓN DEFINITIVA!
+        fetch('/products.json').then(res => res.json()), // <-- UNIFICADO PARA USAR EL ARCHIVO ESTÁTICO
         fetch('/data/categories.json').then(res => res.json()),
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
@@ -44,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         handlePromoModal();
     }).catch(error => {
         console.error('Error fatal al cargar los datos iniciales:', error);
-        if(shopProductsContainer) shopProductsContainer.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda. Revisa que los archivos JSON (products, categories, logos) sean válidos y accesibles.</p>';
+        if(shopProductsContainer) shopProductsContainer.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda. Revisa que los archivos JSON sean válidos y accesibles.</p>';
     });
 
     function handlePromoModal() {
