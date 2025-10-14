@@ -238,11 +238,6 @@ button, .btn-primary {
     background-color: #d1fae5;
     color: #065f46;
 }
-/* Agrega más estados si los necesitas */
-.status-processing { background-color: #dbeafe; color: #1e40af; }
-.status-shipped { background-color: #cffafe; color: #0e7490; }
-.status-cancelled { background-color: #fee2e2; color: #991b1b; }
-
 
 .btn-toggle-status {
     background-color: #10b981;
@@ -300,8 +295,6 @@ button, .btn-primary {
     background-color: rgba(0,0,0,0.5);
     backdrop-filter: blur(4px);
     overflow-y: auto;
-    align-items: center;
-    justify-content: center;
 }
 .modal-content {
     background-color: #fff;
@@ -334,7 +327,6 @@ button, .btn-primary {
     padding: 15px 25px;
     border-top: 1px solid #e2e8f0;
     background-color: #f8fafc;
-    text-align: right;
 }
 .close-modal-btn {
     color: #aaa;
@@ -372,20 +364,20 @@ button, .btn-primary {
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 .modal-footer button {
-    padding: 12px 20px;
+    width: 100%;
+    padding: 15px;
     font-size: 1rem;
     background-color: #28a745;
     color: white;
-    border: none;
+    border: 1px solid #28a745;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 .modal-footer button:hover {
     background-color: #218838;
+    border-color: #1e7e34;
 }
