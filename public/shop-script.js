@@ -1,3 +1,5 @@
+--- START OF FILE shop-script.js ---
+
 // ===================================================
 //      ARCHIVO shop-script.js (CON ALT TEXT CORREGIDO)
 // ===================================================
@@ -32,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerCartIcon = document.getElementById('headerCartIcon');
 
     Promise.all([
-        fetch('/products.json').then(res => res.json()),
+        fetch('/products.json').then(res => res.json()), // <-- CORREGIDO Y UNIFICADO
         fetch('/data/categories.json').then(res => res.json()),
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
@@ -46,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         handlePromoModal();
     }).catch(error => {
         console.error('Error fatal al cargar los datos iniciales:', error);
-        if(shopProductsContainer) shopProductsContainer.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda.</p>';
+        if(shopProductsContainer) shopProductsContainer.innerHTML = '<p style="text-align: center; color: red; padding: 40px;">Error: No se pudieron cargar los datos de la tienda. Revisa que los archivos JSON (products, categories, logos) sean válidos y accesibles.</p>';
     });
 
     function handlePromoModal() {
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function closePromoModal() { if (promoModal) promoModal.style.display = 'none'; }
 
-    function renderLogoScroller(logos) { if (!logoScroller) return; const logosToRender = [...logos, ...logos]; logoScroller.innerHTML = logosToRender.map(logoFilename => `<img src="/logos/${logoFilename}" alt="Logo de marca">`).join(''); }
+    function renderLogoScroller(logos) { if (!logoScroller || !Array.isArray(logos)) return; const logosToRender = [...logos, ...logos]; logoScroller.innerHTML = logosToRender.map(logoFilename => `<img src="/logos/${logoFilename}" alt="Logo de marca">`).join(''); }
     
     function renderCategoryFilters() { 
         if (!filterContainer) return; 
@@ -156,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const priceHTML = isOnSale ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
         const imageUrl = product.image;
         
-        // ¡SOLUCIÓN AQUÍ! Escapamos las comillas para el HTML del onclick
         const safeProductName = product.name.replace(/"/g, '&quot;');
 
         return `
@@ -192,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.querySelector('.close-cart')?.addEventListener('click', closeCartModal);
         document.querySelector('.close-checkout')?.addEventListener('click', closeCheckout);
+        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout);
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
         document.getElementById('checkout')?.addEventListener('click', openCheckout);
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
