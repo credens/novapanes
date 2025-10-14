@@ -504,4 +504,6 @@ try {
         process.exit(1);
     });
 } catch (error) {
-    console.error('Error fatal al configurar el servido
+    console.error('Error fatal al configurar el servidor:', error);
+    process.exit(1);
+}
