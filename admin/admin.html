@@ -65,7 +65,6 @@
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Stock</th>
-                                    <th>Categoría</th> <!-- Columna añadida -->
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -85,10 +84,10 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID Pedido</th>
+                                    <th>Pedido ID</th>
                                     <th>Cliente</th>
-                                    <th>Fecha</th>
                                     <th>Total</th>
+                                    <th>Fecha</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -144,37 +143,35 @@
             </div>
             <form id="productForm">
                 <div class="modal-body">
-                    <input type="hidden" id="productId" name="id">
+                    <input type="hidden" id="productId">
                     <div class="form-grid">
                         <div class="form-group full-width">
                             <label for="productName">Nombre</label>
-                            <input type="text" id="productName" name="name" required>
+                            <input type="text" id="productName" required>
                         </div>
                         <div class="form-group">
                             <label for="productPrice">Precio</label>
-                            <input type="number" id="productPrice" name="price" step="0.01" required>
+                            <input type="number" id="productPrice" step="0.01" required>
                         </div>
                         <div class="form-group">
                             <label for="productPromoPrice">Precio Promocional (opcional)</label>
-                            <input type="number" id="productPromoPrice" name="promo_price" step="0.01">
+                            <input type="number" id="productPromoPrice" step="0.01">
                         </div>
                         <div class="form-group">
                             <label for="productStock">Stock</label>
-                            <input type="number" id="productStock" name="stock" required>
+                            <input type="number" id="productStock" required>
                         </div>
                         <div class="form-group">
                             <label for="productCategory">Categoría</label>
-                            <select id="productCategory" name="category" required></select>
+                            <select id="productCategory" required></select>
                         </div>
                         <div class="form-group full-width">
                             <label for="productDescription">Descripción</label>
-                            <textarea id="productDescription" name="description" rows="4"></textarea>
+                            <textarea id="productDescription" rows="4"></textarea>
                         </div>
                         <div class="form-group full-width">
-                            <label for="productImage">Imagen (Subir nueva reemplaza la actual)</label>
-                            <input type="file" id="productImage" name="image" accept="image/*">
-                            <!-- Previsualización de imagen actual -->
-                            <img id="currentImagePreview" src="#" alt="Imagen actual" style="display: none; max-width: 100px; margin-top: 10px; border-radius: 6px;">
+                            <label for="productImage">Imagen</label>
+                            <input type="file" id="productImage" accept="image/*">
                         </div>
                     </div>
                 </div>
