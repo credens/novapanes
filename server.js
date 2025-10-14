@@ -1,4 +1,6 @@
---- START OF FILE server.js ---
+// ===================================================
+//      ARCHIVO server.js (COMPLETO Y FINAL)
+// ===================================================
 
 const express = require('express');
 const cors = require('cors');
@@ -27,23 +29,16 @@ const upload = multer({
     storage: storage,
     limits: {
         fileSize: 10 * 1024 * 1024
-    }
+    } // 10 MB
 });
 
 const {
     MercadoPagoConfig,
     Preference
 } = require('mercadopago');
-
-// Inicialización segura de Mercado Pago para evitar crashes (Error 502)
-let client;
-if (process.env.MERCADO_PAGO_ACCESS_TOKEN) {
-    client = new MercadoPagoConfig({
-        accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN
-    });
-} else {
-    console.warn('ADVERTENCIA: MERCADO_PAGO_ACCESS_TOKEN no está configurado. La funcionalidad de Mercado Pago estará deshabilitada.');
-}
+const client = new MercadoPagoConfig({
+    accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN
+});
 
 const limitSize = '10mb';
 app.use(express.json({
@@ -337,9 +332,15 @@ adminRouter.put('/orders/:id', (req, res) => {
     }
 });
 
-// La ruta app.get('/products', ...) se ha eliminado para evitar conflictos.
-// express.static ya se encarga de servir /products.json
-
+app.get('/products', (req, res) => {
+    try {
+        res.json(readJsonFile(PRODUCTS_FILE_PATH));
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+});
 app.post('/api/contact', async (req, res) => {
     const {
         nombre,
@@ -450,13 +451,7 @@ app.post('/api/submit-order', async (req, res) => {
         });
     }
 });
-
 app.post('/create-preference', async (req, res) => {
-    if (!client) {
-        return res.status(500).json({
-            message: 'El servicio de Mercado Pago no está configurado.'
-        });
-    }
     try {
         const {
             items,
@@ -496,7 +491,6 @@ app.post('/create-preference', async (req, res) => {
         });
     }
 });
-
 try {
     app.listen(port, () => {
         console.log(`Servidor de NOVA Panes corriendo en http://localhost:${port}`);
