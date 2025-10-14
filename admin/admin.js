@@ -8,7 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const showAddProductModalBtn = document.getElementById('showAddProductModalBtn');
 
     const sections = document.querySelectorAll('.main-content > section');
-    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+    // --- INICIO DE LA CORRECCIÓN ---
+    // Ahora seleccionamos TODOS los elementos de navegación, no solo los de la barra lateral.
+    const navItems = document.querySelectorAll('.nav-item'); 
+    const sidebarNavItems = document.querySelectorAll('.sidebar-nav .nav-item'); // Mantenemos una referencia específica a los del sidebar para la clase 'active'
+    // --- FIN DE LA CORRECCIÓN ---
+
 
     // --- ESTADO DE LA APLICACIÓN ---
     let allProducts = [];
@@ -47,28 +52,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- NAVEGACIÓN ---
+    // --- NAVEGACIÓN (SECCIÓN MODIFICADA) ---
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = item.getAttribute('href').substring(1);
-            
+            const targetHref = item.getAttribute('href'); // e.g., "#products"
+            const targetId = targetHref.substring(1); // e.g., "products"
+
+            // 1. Mostrar la sección correcta
             sections.forEach(section => {
                 section.style.display = section.id === targetId ? 'block' : 'none';
             });
 
-            navItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
-
-            if (item.classList.contains('stat-card-link')) {
-                const correspondingNavItem = document.querySelector(`.sidebar-nav .nav-item[href="#${targetId}"]`);
-                if (correspondingNavItem) {
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    correspondingNavItem.classList.add('active');
-                }
+            // 2. Actualizar la clase 'active' SOLAMENTE en la barra lateral
+            sidebarNavItems.forEach(nav => nav.classList.remove('active'));
+            const correspondingSidebarItem = document.querySelector(`.sidebar-nav .nav-item[href="${targetHref}"]`);
+            if (correspondingSidebarItem) {
+                correspondingSidebarItem.classList.add('active');
             }
         });
     });
+
 
     // --- HELPERS DE API ---
     async function apiFetch(url, options = {}) {
