@@ -1,3 +1,6 @@
+// =================================================================
+//      ARCHIVO admin-script.js (LÓGICA DE LOGIN CORREGIDA)
+// =================================================================
 document.addEventListener('DOMContentLoaded', () => {
     // --- ELEMENTOS DEL DOM ---
     const passwordModal = document.getElementById('passwordModal');
@@ -19,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('.main-content > section');
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
 
-    // --- ESTADO DE LA APLICACIÓN ---
+    // --- ESTADO Y API ---
     let allProducts = [], allCategories = [], allOrders = [];
     const API_BASE_URL = '/api/admin';
 
@@ -35,10 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
     
-    // --- AUTENTICACIÓN (CON MODAL) ---
-    passwordForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const password = document.getElementById('adminPassword').value;
+    // --- AUTENTICACIÓN (USANDO TU LÓGICA ORIGINAL CON EL MODAL) ---
+    async function verifyPassword(password) {
         try {
             const response = await fetch('/api/admin/verify', {
                 method: 'POST',
@@ -48,13 +49,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.success) {
                 setPassword(password);
-                passwordModal.style.display = 'none';
-                loadInitialData();
+                passwordModal.style.display = 'none'; // Ocultamos el modal
+                loadInitialData(); // Cargamos los datos
             } else {
                 alert('Contraseña incorrecta.');
+                sessionStorage.removeItem('adminPassword');
+                passwordModal.style.display = 'flex'; // Mostramos modal de nuevo
             }
         } catch (error) {
             alert('Error al verificar la contraseña.');
+        }
+    }
+    
+    passwordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = document.getElementById('adminPassword').value;
+        if (password) {
+            verifyPassword(password);
         }
     });
 
@@ -91,7 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
             renderOrdersTable();
             populateCategoryDropdown();
         } catch (error) {
-            alert(error.message);
+            alert('Error al cargar datos: ' + error.message);
+            // Si falla la carga de datos, es posible que la pass sea inválida.
+            sessionStorage.removeItem('adminPassword');
+            passwordModal.style.display = 'flex';
         }
     }
 
@@ -188,10 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         productModal.style.display = 'flex';
     }
 
-    function closeModal() {
-        productModal.style.display = 'none';
-    }
-
+    function closeModal() { productModal.style.display = 'none'; }
     showAddProductModalBtn.addEventListener('click', () => openModal('add'));
     closeModalBtn.addEventListener('click', closeModal);
     window.addEventListener('click', (e) => (e.target === productModal) && closeModal());
@@ -236,27 +247,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.addEventListener('click', async (e) => {
         const target = e.target.closest('[data-id]');
         if (!target) return;
-
         const id = target.dataset.id;
-        if (target.matches('.btn-edit')) {
-            openModal('edit', parseInt(id));
-        } else if (target.matches('.btn-delete')) {
+        
+        if (target.matches('.btn-edit')) openModal('edit', parseInt(id));
+        if (target.matches('.btn-delete')) {
             if (confirm('¿Seguro que quieres eliminar este producto?')) {
                 try {
                     await fetch(`${API_BASE_URL}/products/${id}`, { method: 'DELETE', headers: { 'Authorization': getPassword() } }).then(handleFetchError);
                     loadInitialData();
-                } catch (error) {
-                    alert('Error al eliminar: ' + error.message);
-                }
+                } catch (error) { alert('Error al eliminar: ' + error.message); }
             }
-        } else if (target.matches('.btn-delete-category')) {
+        }
+        if (target.matches('.btn-delete-category')) {
              if (confirm(`¿Eliminar esta categoría?`)) {
                 try {
                     await fetch(`${API_BASE_URL}/categories/${id}`, { method: 'DELETE', headers: { 'Authorization': getPassword() } }).then(handleFetchError);
                     loadInitialData();
-                } catch (error) {
-                    alert(error.message);
-                }
+                } catch (error) { alert(error.message); }
              }
         }
     });
@@ -271,18 +278,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json', 'Authorization': getPassword() },
                     body: JSON.stringify({ status })
                 }).then(handleFetchError);
-                loadInitialData(); // Recargar para mostrar el cambio de color
-            } catch (error) {
-                alert('No se pudo actualizar el estado: ' + error.message);
-            }
+                loadInitialData();
+            } catch (error) { alert('No se pudo actualizar el estado: ' + error.message); }
         }
     });
 
     // --- INICIALIZACIÓN ---
-    if (getPassword()) {
-        loadInitialData(); // Si ya tenemos pass, intentamos cargar datos
-        passwordModal.style.display = 'none';
-    } else {
-        passwordModal.style.display = 'flex'; // Si no, mostramos modal de login
+    function initialize() {
+        const storedPassword = getPassword();
+        if (storedPassword) {
+            // Si hay una contraseña guardada, la verificamos antes de continuar.
+            verifyPassword(storedPassword);
+        } else {
+            // Si no hay contraseña, mostramos el modal para que la ingrese.
+            passwordModal.style.display = 'flex';
+        }
     }
+
+    initialize();
 });
