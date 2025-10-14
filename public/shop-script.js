@@ -1,5 +1,3 @@
---- START OF FILE shop-script.js ---
-
 // ===================================================
 //      ARCHIVO shop-script.js (CON ALT TEXT CORREGIDO)
 // ===================================================
@@ -158,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const priceHTML = isOnSale ? `<div class="product-price sale">$${currentPrice.toLocaleString()} <span class="original-price">$${product.price.toLocaleString()}</span></div>` : `<div class="product-price">$${currentPrice.toLocaleString()}</div>`; 
         const imageUrl = product.image;
         
+        // ¡SOLUCIÓN AQUÍ! Escapamos las comillas para el HTML del onclick
         const safeProductName = product.name.replace(/"/g, '&quot;');
 
         return `
@@ -193,9 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.querySelector('.close-cart')?.addEventListener('click', closeCartModal);
         document.querySelector('.close-checkout')?.addEventListener('click', closeCheckout);
-        // ===== LÍNEA CORREGIDA =====
-        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout);
-        // ===========================
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
         document.getElementById('checkout')?.addEventListener('click', openCheckout);
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
