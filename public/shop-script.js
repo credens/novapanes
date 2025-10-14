@@ -1,9 +1,5 @@
 --- START OF FILE shop-script.js ---
 
-// ===================================================
-//      ARCHIVO shop-script.js (CON ALT TEXT CORREGIDO)
-// ===================================================
-
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
     let allCategories = [];
@@ -34,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerCartIcon = document.getElementById('headerCartIcon');
 
     Promise.all([
-        fetch('/products.json').then(res => res.json()), // <-- CORREGIDO Y UNIFICADO
+        fetch('/products').then(res => res.json()), // <-- ¡AQUÍ ESTÁ LA CORRECCIÓN DEFINITIVA!
         fetch('/data/categories.json').then(res => res.json()),
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
