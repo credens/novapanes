@@ -1,5 +1,3 @@
---- START OF FILE server.js (La Versión Funcional Original) ---
-
 // ===================================================
 //      ARCHIVO server.js (COMPLETO Y FINAL)
 // ===================================================
@@ -334,6 +332,15 @@ adminRouter.put('/orders/:id', (req, res) => {
     }
 });
 
+app.get('/products', (req, res) => {
+    try {
+        res.json(readJsonFile(PRODUCTS_FILE_PATH));
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+});
 app.post('/api/contact', async (req, res) => {
     const {
         nombre,
