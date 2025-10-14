@@ -14,11 +14,13 @@ const session = require('express-session');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 
+// =================== BLOQUE DE VERIFICACIÓN AÑADIDO ===================
 // Verificación de variables de entorno críticas al inicio
 if (!process.env.MERCADO_PAGO_ACCESS_TOKEN) {
     console.error('FATAL ERROR: La variable de entorno MERCADO_PAGO_ACCESS_TOKEN no está definida.');
     process.exit(1); // Detiene la aplicación con un código de error
 }
+// ======================================================================
 
 process.on('uncaughtException', (err) => {
     console.error('ERROR INESPERADO (UNCAUGHT EXCEPTION):', err);
