@@ -1,295 +1,316 @@
-// ===================================================
-//      ARCHIVO admin.js (REVERTIDO A 1 IMAGEN)
-// ===================================================
-
 document.addEventListener('DOMContentLoaded', () => {
-    const adminPanel = document.getElementById('adminPanel');
-    const productsTableBody = document.getElementById('productsTableBody');
-    const categoriesList = document.getElementById('categoriesList');
-    const ordersTableBody = document.getElementById('ordersTableBody');
-    const addCategoryForm = document.getElementById('addCategoryForm');
+    // --- ELEMENTOS DEL DOM ---
+    const passwordModal = document.getElementById('passwordModal');
+    const passwordForm = document.getElementById('passwordForm');
     const productModal = document.getElementById('productModal');
     const productForm = document.getElementById('productForm');
-    const modalTitle = document.getElementById('modalTitle');
     const closeModalBtn = document.querySelector('.close-modal-btn');
     const showAddProductModalBtn = document.getElementById('showAddProductModalBtn');
-    const totalProductsStat = document.getElementById('totalProductsStat');
-    const totalCategoriesStat = document.getElementById('totalCategoriesStat');
-    const totalOrdersStat = document.getElementById('totalOrdersStat');
 
-    let allProducts = [],
-        allCategories = [],
-        allOrders = [];
-    const API_BASE_URL = '/api/admin';
+    const sections = document.querySelectorAll('.main-content > section');
+    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
 
-    const getPassword = () => sessionStorage.getItem('apiPassword');
-    const setPassword = (pass) => sessionStorage.setItem('apiPassword', pass);
-    
-    async function handleFetchError(response) {
-        if (!response.ok) {
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Ocurrió un error en el servidor.');
-            } else {
-                throw new Error(`Error del servidor: ${response.status} ${response.statusText}. La respuesta no es un JSON válido.`);
-            }
+    // --- ESTADO DE LA APLICACIÓN ---
+    let allProducts = [];
+    let allCategories = [];
+    let allOrders = [];
+
+    // --- AUTENTICACIÓN ---
+    function checkAuth() {
+        if (!sessionStorage.getItem('adminPassword')) {
+            passwordModal.style.display = 'flex';
+        } else {
+            loadDashboardData();
         }
-        return response.json();
     }
 
-    async function verifyPassword(password) {
+    passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = document.getElementById('adminPassword').value;
         try {
-            const response = await fetch(`${API_BASE_URL}/verify`, {
+            const response = await fetch('/api/admin/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ password })
             });
             const result = await response.json();
             if (result.success) {
-                setPassword(password);
-                loadInitialData();
+                sessionStorage.setItem('adminPassword', password);
+                passwordModal.style.display = 'none';
+                loadDashboardData();
             } else {
                 alert('Contraseña incorrecta.');
-                window.location.href = '/';
             }
         } catch (error) {
-            alert('Error al verificar la contraseña.');
-            window.location.href = '/';
-        }
-    }
-
-    function promptForPassword() {
-        const password = prompt('Por favor, introduce la contraseña de administrador:', '');
-        if (password) {
-            verifyPassword(password);
-        } else {
-            alert('Acceso cancelado.');
-            window.location.href = '/';
-        }
-    }
-
-    async function loadInitialData() {
-        adminPanel.style.display = 'flex';
-        try {
-            const headers = { 'Authorization': getPassword() };
-            const [productsRes, categoriesRes, ordersRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/products`, { headers }),
-                fetch(`${API_BASE_URL}/categories`, { headers }),
-                fetch(`${API_BASE_URL}/orders`, { headers })
-            ]);
-
-            if (!productsRes.ok || !categoriesRes.ok || !ordersRes.ok) throw new Error('No se pudieron cargar todos los datos iniciales.');
-
-            allProducts = await productsRes.json();
-            allCategories = await categoriesRes.json();
-            allOrders = await ordersRes.json();
-            
-            allProducts.sort((a, b) => {
-                const categoryNameA = allCategories.find(c => c.id === a.category)?.name || 'ZZZ';
-                const categoryNameB = allCategories.find(c => c.id === b.category)?.name || 'ZZZ';
-                const categoryComparison = categoryNameA.localeCompare(categoryNameB);
-                if (categoryComparison !== 0) return categoryComparison;
-                return a.name.localeCompare(b.name);
-            });
-
-            updateDashboardStats();
-            renderProductsTable();
-            renderCategoriesList();
-            renderOrdersTable();
-            populateCategoryDropdown();
-        } catch (error) {
-            alert(error.message);
-        }
-    }
-
-    function updateDashboardStats() {
-        totalProductsStat.textContent = allProducts.length;
-        totalCategoriesStat.textContent = allCategories.length;
-        totalOrdersStat.textContent = allOrders.length;
-    }
-
-    function renderProductsTable() {
-        productsTableBody.innerHTML = '';
-        allProducts.forEach(product => {
-            const categoryName = allCategories.find(c => c.id === product.category)?.name || 'Sin Categoría';
-            const row = document.createElement('tr');
-            row.innerHTML = `<td><img src="/${product.image}" alt="${product.name}"></td><td>${product.name}</td><td>$${product.price.toLocaleString('es-AR')}</td><td>${product.stock}</td><td>${categoryName}</td><td><button class="btn-edit" data-id="${product.id}">Editar</button><button class="btn-delete" data-id="${product.id}">Eliminar</button></td>`;
-            productsTableBody.appendChild(row);
-        });
-    }
-
-    function renderCategoriesList() {
-        categoriesList.innerHTML = '';
-        allCategories.forEach(category => {
-            const div = document.createElement('div');
-            div.className = 'category-item';
-            div.innerHTML = `<span>${category.name}</span><button class="btn-delete-category" data-id="${category.id}">&times;</button>`;
-            categoriesList.appendChild(div);
-        });
-    }
-
-    function populateCategoryDropdown() {
-        const categorySelect = document.getElementById('category');
-        categorySelect.innerHTML = '<option value="">Seleccionar...</option>';
-        allCategories.forEach(cat => {
-            categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
-        });
-    }
-
-    function renderOrdersTable() {
-        ordersTableBody.innerHTML = '';
-        if (allOrders.length === 0) {
-            ordersTableBody.innerHTML = '<tr><td colspan="5">No hay pedidos registrados.</td></tr>';
-            return;
-        }
-        allOrders.forEach(order => {
-            const row = document.createElement('tr');
-            const orderDate = new Date(order.date).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const statusClass = order.status === 'pending' ? 'status-pending' : 'status-delivered';
-            row.innerHTML = `<td>${order.customer.nombre}</td><td>${orderDate}</td><td>$${order.total.toLocaleString('es-AR')}</td><td><span class="status ${statusClass}">${order.status === 'pending' ? 'Pendiente' : 'Entregado'}</span></td><td><button class="btn-toggle-status" data-id="${order.id}" data-current-status="${order.status}">${order.status === 'pending' ? 'Marcar Entregado' : 'Marcar Pendiente'}</button></td>`;
-            ordersTableBody.appendChild(row);
-        });
-    }
-
-    function openModal(mode, productId = null) {
-        productForm.reset();
-        document.getElementById('currentImage').style.display = 'none';
-        document.getElementById('image').required = (mode === 'add');
-
-        if (mode === 'edit') {
-            const product = allProducts.find(p => p.id === productId);
-            modalTitle.textContent = 'Editar Producto';
-            productForm.elements['id'].value = product.id;
-            productForm.elements['name'].value = product.name;
-            productForm.elements['price'].value = product.price;
-            productForm.elements['promo_price'].value = product.promo_price || '';
-            productForm.elements['stock'].value = product.stock;
-            productForm.elements['description'].value = product.description;
-            productForm.elements['category'].value = product.category;
-            
-            const img = document.getElementById('currentImage');
-            img.src = `/${product.image}`;
-            img.style.display = 'block';
-        } else {
-            modalTitle.textContent = 'Añadir Nuevo Producto';
-            productForm.elements['id'].value = '';
-        }
-        productModal.style.display = 'block';
-    }
-
-    function closeModal() {
-        productModal.style.display = 'none';
-    }
-
-    showAddProductModalBtn.addEventListener('click', () => openModal('add'));
-    closeModalBtn.addEventListener('click', closeModal);
-    window.addEventListener('click', (e) => (e.target.classList.contains('modal')) && closeModal());
-    
-    productsTableBody.addEventListener('click', e => {
-        if (e.target.dataset.id) {
-            const id = parseInt(e.target.dataset.id);
-            if (e.target.classList.contains('btn-edit')) openModal('edit', id);
-            if (e.target.classList.contains('btn-delete')) handleDeleteProduct(id);
+            console.error('Error de verificación:', error);
+            alert('Error al conectar con el servidor.');
         }
     });
+
+    // --- NAVEGACIÓN ---
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = item.getAttribute('href').substring(1);
+            
+            sections.forEach(section => {
+                section.style.display = section.id === targetId ? 'block' : 'none';
+            });
+
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+
+            if (item.classList.contains('stat-card-link')) {
+                const correspondingNavItem = document.querySelector(`.sidebar-nav .nav-item[href="#${targetId}"]`);
+                if (correspondingNavItem) {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    correspondingNavItem.classList.add('active');
+                }
+            }
+        });
+    });
+
+    // --- HELPERS DE API ---
+    async function apiFetch(url, options = {}) {
+        const password = sessionStorage.getItem('adminPassword');
+        if (!password) {
+            alert('Autenticación requerida.');
+            passwordModal.style.display = 'flex';
+            throw new Error('Autenticación fallida');
+        }
+        
+        const headers = { 'Authorization': password };
+        if (!(options.body instanceof FormData)) {
+            headers['Content-Type'] = 'application/json';
+        }
+        
+        const response = await fetch(`/api/admin${url}`, { ...options, headers });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Error ${response.status}`);
+        }
+        return response.json();
+    }
     
-    productForm.addEventListener('submit', async e => {
+    // --- CARGA DE DATOS ---
+    async function loadDashboardData() {
+        try {
+            [allProducts, allCategories, allOrders] = await Promise.all([
+                apiFetch('/products'),
+                apiFetch('/categories'),
+                apiFetch('/orders')
+            ]);
+            renderAll();
+        } catch (error) {
+            console.error('Error al cargar datos del dashboard:', error);
+            alert(`No se pudieron cargar los datos: ${error.message}`);
+        }
+    }
+
+    // --- RENDERIZADO ---
+    function renderAll() {
+        renderStats();
+        renderProducts();
+        renderOrders();
+        renderCategories();
+        populateCategorySelect();
+    }
+
+    function renderStats() {
+        document.getElementById('totalProducts').textContent = allProducts.length;
+        const pending = allOrders.filter(o => o.status.toLowerCase() === 'pending').length;
+        document.getElementById('pendingOrders').textContent = pending;
+    }
+
+    function renderProducts() {
+        const tableBody = document.getElementById('productsTableBody');
+        tableBody.innerHTML = '';
+        allProducts.forEach(p => {
+            const categoryName = allCategories.find(c => c.id === p.category)?.name || 'Sin Categoría';
+            const price = (p.promo_price && p.promo_price > 0) ? `<del>$${p.price.toFixed(2)}</del> <strong style="color: #28a745;">$${p.promo_price.toFixed(2)}</strong>` : `$${p.price.toFixed(2)}`;
+            const row = `
+                <tr>
+                    <td><img src="/${p.image}" alt="${p.name}"></td>
+                    <td>${p.name}</td>
+                    <td>${price}</td>
+                    <td>${p.stock}</td>
+                    <td>${categoryName}</td>
+                    <td>
+                        <button class="btn-edit" data-id="${p.id}"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" data-id="${p.id}"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    function renderOrders() {
+        const tableBody = document.getElementById('ordersTableBody');
+        tableBody.innerHTML = '';
+        allOrders.sort((a, b) => new Date(b.date) - new Date(a.date)); // Ordenar por fecha más reciente
+        allOrders.forEach(o => {
+            const statusClass = `status-${o.status ? o.status.toLowerCase() : 'pending'}`;
+            const row = `
+                <tr>
+                    <td>${o.id}</td>
+                    <td>${o.customer.nombre}</td>
+                    <td>$${o.total.toLocaleString('es-AR')}</td>
+                    <td>${new Date(o.date).toLocaleDateString()}</td>
+                    <td><span class="status ${statusClass}">${o.status}</span></td>
+                    <td>
+                        <select class="order-status-select" data-id="${o.id}">
+                            <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
+                            <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>Procesando</option>
+                            <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Enviado</option>
+                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregado</option>
+                            <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
+                        </select>
+                    </td>
+                </tr>`;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    function renderCategories() {
+        const list = document.getElementById('categoriesList');
+        list.innerHTML = '';
+        allCategories.forEach(c => {
+            const item = `
+                <div class="category-item">
+                    ${c.name}
+                    <button class="btn-delete-category" data-id="${c.id}">&times;</button>
+                </div>`;
+            list.innerHTML += item;
+        });
+    }
+    
+    function populateCategorySelect() {
+        const select = document.getElementById('productCategory');
+        select.innerHTML = '<option value="">Seleccione una categoría</option>';
+        allCategories.forEach(c => {
+            select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+        });
+    }
+    
+    // --- MANEJO DE MODALES ---
+    showAddProductModalBtn.addEventListener('click', () => {
+        productForm.reset();
+        document.getElementById('productId').value = '';
+        document.getElementById('modalTitle').textContent = 'Agregar Producto';
+        document.getElementById('productImage').required = true;
+        productModal.style.display = 'flex';
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        productModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === productModal) {
+            productModal.style.display = 'none';
+        }
+    });
+
+    // --- MANEJO DE FORMULARIOS ---
+    productForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('productId').value;
-        const url = id ? `${API_BASE_URL}/products/${id}` : `${API_BASE_URL}/products`;
-        const method = id ? 'PUT' : 'POST';
+        const formData = new FormData(productForm);
+
         try {
-            const response = await fetch(url, {
-                method,
-                headers: { 'Authorization': getPassword() },
-                body: new FormData(productForm)
-            });
-            await handleFetchError(response);
-            closeModal();
-            loadInitialData();
+            if (id) {
+                await apiFetch(`/products/${id}`, { method: 'PUT', body: formData });
+            } else {
+                await apiFetch('/products', { method: 'POST', body: formData });
+            }
+            productModal.style.display = 'none';
+            loadDashboardData();
         } catch (error) {
-            console.error('Error al guardar producto:', error);
-            alert('Error al guardar: ' + error.message);
+            alert(`Error al guardar el producto: ${error.message}`);
         }
     });
-    
-    async function handleDeleteProduct(id) {
-        if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
-        try {
-            const response = await fetch(`${API_BASE_URL}/products/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': getPassword() }
-            });
-            await handleFetchError(response);
-            loadInitialData();
-        } catch (error) {
-            alert('Error al eliminar: ' + error.message);
-        }
-    }
 
-    addCategoryForm.addEventListener('submit', async e => {
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('newCategoryName').value;
+        if (!name) return;
+
         try {
-            const response = await fetch(`${API_BASE_URL}/categories`, {
+            await apiFetch('/categories', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': getPassword()
-                },
                 body: JSON.stringify({ name })
             });
-            await handleFetchError(response);
-            addCategoryForm.reset();
-            loadInitialData();
+            document.getElementById('newCategoryName').value = '';
+            loadDashboardData();
         } catch (error) {
-            alert(error.message);
+            alert(`Error al crear la categoría: ${error.message}`);
         }
     });
     
-    categoriesList.addEventListener('click', async e => {
-        if (e.target.classList.contains('btn-delete-category')) {
+    // --- EVENT DELEGATION PARA ACCIONES ---
+    document.body.addEventListener('click', async (e) => {
+        const editBtn = e.target.closest('.btn-edit');
+        const deleteBtn = e.target.closest('.btn-delete');
+        const deleteCategoryBtn = e.target.closest('.btn-delete-category');
+
+        if (editBtn) {
+            const id = editBtn.dataset.id;
+            const product = allProducts.find(p => p.id == id);
+            if (product) {
+                document.getElementById('productId').value = product.id;
+                document.getElementById('modalTitle').textContent = 'Editar Producto';
+                productForm.elements.name.value = product.name;
+                productForm.elements.description.value = product.description;
+                productForm.elements.price.value = product.price;
+                productForm.elements.promo_price.value = product.promo_price || '';
+                productForm.elements.stock.value = product.stock;
+                productForm.elements.category.value = product.category;
+                productForm.elements.image.required = false;
+                productModal.style.display = 'flex';
+            }
+        }
+        
+        if (deleteBtn) {
+            const id = deleteBtn.dataset.id;
+            if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+                try {
+                    await apiFetch(`/products/${id}`, { method: 'DELETE' });
+                    loadDashboardData();
+                } catch (error) {
+                    alert(`Error al eliminar el producto: ${error.message}`);
+                }
+            }
+        }
+        
+        if (deleteCategoryBtn) {
+            const id = deleteCategoryBtn.dataset.id;
+            if (confirm('¿Estás seguro de que quieres eliminar esta categoría? Esto no se puede deshacer.')) {
+                try {
+                    await apiFetch(`/categories/${id}`, { method: 'DELETE' });
+                    loadDashboardData();
+                } catch (error) {
+                    alert(`Error al eliminar la categoría: ${error.message}`);
+                }
+            }
+        }
+    });
+
+    document.body.addEventListener('change', async (e) => {
+        if (e.target.classList.contains('order-status-select')) {
             const id = e.target.dataset.id;
-            const categoryName = allCategories.find(c => c.id === id)?.name || id;
-            if (!confirm(`¿Eliminar la categoría "${categoryName}"?`)) return;
+            const status = e.target.value;
             try {
-                const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': getPassword() }
-                });
-                await handleFetchError(response);
-                loadInitialData();
-            } catch (error) {
-                alert(error.message);
-            }
-        }
-    });
-
-    ordersTableBody.addEventListener('click', async e => {
-        if (e.target.classList.contains('btn-toggle-status')) {
-            const orderId = e.target.dataset.id;
-            const newStatus = e.target.dataset.currentStatus === 'pending' ? 'delivered' : 'pending';
-            try {
-                const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
+                await apiFetch(`/orders/${id}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': getPassword()
-                    },
-                    body: JSON.stringify({ status: newStatus })
+                    body: JSON.stringify({ status })
                 });
-                await handleFetchError(response);
-                loadInitialData();
+                loadDashboardData();
             } catch (error) {
-                alert('No se pudo actualizar el estado: ' + error.message);
+                alert(`Error al actualizar el estado del pedido: ${error.message}`);
             }
         }
     });
 
-    if (getPassword()) {
-        verifyPassword(getPassword());
-    } else {
-        promptForPassword();
-    }
+    // --- INICIALIZACIÓN ---
+    checkAuth();
 });

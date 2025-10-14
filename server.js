@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (COMPLETO Y ACTUALIZADO)
+//      ARCHIVO server.js (COMPLETO Y CORREGIDO)
 // ===================================================
 
 const express = require('express');
@@ -59,6 +59,15 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
+// --- INICIO DE LA CORRECCIÓN ---
+// Asegurarse de que el directorio de datos exista antes de definir las rutas de los archivos.
+const DATA_DIR = path.join(__dirname, 'public', 'data');
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    console.log(`Directorio de datos creado en: ${DATA_DIR}`);
+}
+// --- FIN DE LA CORRECCIÓN ---
+
 const PRODUCTS_FILE_PATH = path.join(__dirname, 'public', 'products.json');
 const CATEGORIES_FILE_PATH = path.join(__dirname, 'public', 'data', 'categories.json');
 const ORDERS_FILE_PATH = path.join(__dirname, 'public', 'data', 'orders.json');
@@ -71,6 +80,7 @@ function readJsonFile(filePath) {
         }
         return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     } catch (error) {
+        console.error(`Error al leer el archivo ${filePath}:`, error);
         throw new Error(`Error al leer archivo: ${path.basename(filePath)}`);
     }
 }
@@ -79,6 +89,7 @@ function writeJsonFile(filePath, data) {
     try {
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
     } catch (error) {
+        console.error(`Error al escribir el archivo ${filePath}:`, error);
         throw new Error(`Error al escribir archivo: ${path.basename(filePath)}`);
     }
 }
@@ -145,7 +156,7 @@ adminRouter.post('/products', upload.single('image'), (req, res) => {
         });
         const products = readJsonFile(PRODUCTS_FILE_PATH);
         const newProduct = {
-            id: products.length > 0 ? Math.max(0, ...products.map(p => p.id)) + 1 : 1,
+            id: products.length > 0 ? Math.max(0, ...products.map(p => p.id || 0)) + 1 : 1,
             name: req.body.name,
             description: req.body.description,
             price: parseFloat(req.body.price),
@@ -178,7 +189,7 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
             name: req.body.name,
             description: req.body.description,
             price: parseFloat(req.body.price),
-            promo_price: req.body.promo_price ? parseFloat(req.body.promo_price) : null,
+            promo_price: (req.body.promo_price && req.body.promo_price !== 'null') ? parseFloat(req.body.promo_price) : null,
             stock: parseInt(req.body.stock),
             category: req.body.category
         };
@@ -440,7 +451,7 @@ app.post('/create-preference', async (req, res) => {
                 id: p.id.toString(),
                 title: p.name,
                 quantity: i.quantity,
-                unit_price: p.price,
+                unit_price: p.promo_price || p.price,
                 currency_id: 'ARS'
             };
         });
