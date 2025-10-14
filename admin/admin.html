@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - NOVA Panes</title>
     <link rel="stylesheet" href="admin-styles.css">
-    <!-- Iconos de Font Awesome para el dashboard -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <div class="dashboard-container">
-        <!-- Barra Lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 NOVA Panes
@@ -23,11 +24,11 @@
             </nav>
         </aside>
 
-        <!-- Contenido Principal -->
         <main class="main-content">
-            <!-- Sección Dashboard -->
             <section id="dashboard">
-                <div class="main-header"><h1>Resumen General</h1></div>
+                <div class="main-header">
+                    <h1>Resumen General</h1>
+                </div>
                 <div class="stats-grid">
                     <a href="#products" class="stat-card-link nav-item">
                         <div class="stat-card">
@@ -48,9 +49,27 @@
                         </div>
                     </a>
                 </div>
+
+                <div class="charts-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Ventas Mensuales (Año Actual)</h2>
+                        </div>
+                        <div class="card-body" style="padding: 20px; height: 350px;">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Visitas a la Tienda (Año Actual)</h2>
+                        </div>
+                        <div class="card-body" style="padding: 20px; height: 350px;">
+                            <canvas id="visitsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </section>
 
-            <!-- Sección Productos -->
             <section id="products" style="display: none;">
                 <div class="card">
                     <div class="card-header">
@@ -69,18 +88,17 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="productsTableBody">
-                                <!-- Los productos se cargarán aquí -->
-                            </tbody>
+                            <tbody id="productsTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Sección Pedidos -->
             <section id="orders" style="display: none;">
                 <div class="card">
-                    <div class="card-header"><h2>Historial de Pedidos</h2></div>
+                    <div class="card-header">
+                        <h2>Historial de Pedidos</h2>
+                    </div>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -93,21 +111,18 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="ordersTableBody">
-                                <!-- Los pedidos se cargarán aquí -->
-                            </tbody>
+                            <tbody id="ordersTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Sección Categorías -->
             <section id="categories" style="display: none;">
                 <div class="card">
-                    <div class="card-header"><h2>Gestión de Categorías</h2></div>
-                    <div id="categoriesList">
-                        <!-- Las categorías se cargarán aquí -->
+                    <div class="card-header">
+                        <h2>Gestión de Categorías</h2>
                     </div>
+                    <div id="categoriesList"></div>
                     <form id="categoryForm" class="category-form">
                         <input type="text" id="newCategoryName" placeholder="Nombre de la nueva categoría" required>
                         <button type="submit" class="btn-primary">Agregar</button>
@@ -117,10 +132,11 @@
         </main>
     </div>
 
-    <!-- Modal para Contraseña -->
     <div id="passwordModal" class="modal" style="display: flex;">
         <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header"><h2>Acceso de Administrador</h2></div>
+            <div class="modal-header">
+                <h2>Acceso de Administrador</h2>
+            </div>
             <div class="modal-body">
                 <form id="passwordForm">
                     <div class="form-group full-width">
@@ -135,7 +151,6 @@
         </div>
     </div>
 
-    <!-- Modal para Agregar/Editar Producto -->
     <div id="productModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -146,43 +161,21 @@
                 <div class="modal-body">
                     <input type="hidden" id="productId">
                     <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label for="productName">Nombre</label>
-                            <input type="text" id="productName" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productPrice">Precio</label>
-                            <input type="number" id="productPrice" name="price" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productPromoPrice">Precio Promocional (opcional)</label>
-                            <input type="number" id="productPromoPrice" name="promo_price" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label for="productStock">Stock</label>
-                            <input type="number" id="productStock" name="stock" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productCategory">Categoría</label>
-                            <select id="productCategory" name="category" required></select>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="productDescription">Descripción</label>
-                            <textarea id="productDescription" name="description" rows="4"></textarea>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="productImage">Imagen</label>
-                            <input type="file" id="productImage" name="image" accept="image/*">
-                        </div>
+                        <div class="form-group full-width"><label for="productName">Nombre</label><input type="text" id="productName" name="name" required></div>
+                        <div class="form-group"><label for="productPrice">Precio</label><input type="number" id="productPrice" name="price" step="0.01" required></div>
+                        <div class="form-group"><label for="productPromoPrice">Precio Promocional (opcional)</label><input type="number" id="productPromoPrice" name="promo_price" step="0.01"></div>
+                        <div class="form-group"><label for="productStock">Stock</label><input type="number" id="productStock" name="stock" required></div>
+                        <div class="form-group"><label for="productCategory">Categoría</label><select id="productCategory" name="category" required></select></div>
+                        <div class="form-group full-width"><label for="productDescription">Descripción</label><textarea id="productDescription" name="description" rows="4"></textarea></div>
+                        <div class="form-group full-width"><label for="productImage">Imagen</label><input type="file" id="productImage" name="image" accept="image/*"></div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit">Guardar Cambios</button>
-                </div>
+                <div class="modal-footer"><button type="submit">Guardar Cambios</button></div>
             </form>
         </div>
     </div>
-    
+
     <script src="admin.js"></script>
 </body>
+
 </html>

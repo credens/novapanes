@@ -168,5 +168,11 @@
     </footer>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="shop-script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/track-visit', { method: 'POST' })
+            .catch(error => console.error('No se pudo registrar la visita:', error));
+    });
+    </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (COMPLETO Y CORREGIDO)
+//      ARCHIVO server.js (COMPLETO Y FINAL)
 // ===================================================
 
 const express = require('express');
@@ -27,7 +27,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
+    limits: {
+        fileSize: 10 * 1024 * 1024
+    } // 10 MB
 });
 
 const {
@@ -39,7 +41,9 @@ const client = new MercadoPagoConfig({
 });
 
 const limitSize = '10mb';
-app.use(express.json({ limit: limitSize }));
+app.use(express.json({
+    limit: limitSize
+}));
 app.use(cors());
 app.use(express.urlencoded({
     extended: true,
@@ -59,18 +63,18 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// --- INICIO DE LA CORRECCIÓN ---
-// Asegurarse de que el directorio de datos exista antes de definir las rutas de los archivos.
 const DATA_DIR = path.join(__dirname, 'public', 'data');
 if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.mkdirSync(DATA_DIR, {
+        recursive: true
+    });
     console.log(`Directorio de datos creado en: ${DATA_DIR}`);
 }
-// --- FIN DE LA CORRECCIÓN ---
 
 const PRODUCTS_FILE_PATH = path.join(__dirname, 'public', 'products.json');
-const CATEGORIES_FILE_PATH = path.join(__dirname, 'public', 'data', 'categories.json');
-const ORDERS_FILE_PATH = path.join(__dirname, 'public', 'data', 'orders.json');
+const CATEGORIES_FILE_PATH = path.join(DATA_DIR, 'categories.json');
+const ORDERS_FILE_PATH = path.join(DATA_DIR, 'orders.json');
+const VISITS_FILE_PATH = path.join(DATA_DIR, 'visits.json');
 
 function readJsonFile(filePath) {
     try {
@@ -96,6 +100,24 @@ function writeJsonFile(filePath, data) {
 
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin', 'admin.html')));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+
+app.post('/api/track-visit', (req, res) => {
+    try {
+        const visits = readJsonFile(VISITS_FILE_PATH);
+        visits.push({
+            date: new Date().toISOString()
+        });
+        writeJsonFile(VISITS_FILE_PATH, visits);
+        res.status(200).json({
+            success: true
+        });
+    } catch (error) {
+        console.error('Error al registrar visita:', error);
+        res.status(500).json({
+            success: false
+        });
+    }
+});
 
 app.post('/api/admin/verify', express.json(), async (req, res) => {
     const {
@@ -139,6 +161,16 @@ adminRouter.use(async (req, res, next) => {
 });
 app.use('/api/admin', adminRouter);
 
+adminRouter.get('/visits', (req, res) => {
+    try {
+        res.json(readJsonFile(VISITS_FILE_PATH));
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+});
+
 adminRouter.get('/products', (req, res) => {
     try {
         res.json(readJsonFile(PRODUCTS_FILE_PATH));
@@ -148,7 +180,6 @@ adminRouter.get('/products', (req, res) => {
         });
     }
 });
-
 adminRouter.post('/products', upload.single('image'), (req, res) => {
     try {
         if (!req.file || !req.body.name) return res.status(400).json({
@@ -174,7 +205,6 @@ adminRouter.post('/products', upload.single('image'), (req, res) => {
         });
     }
 });
-
 adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
@@ -182,7 +212,6 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
         if (index === -1) return res.status(404).json({
             message: 'Producto no encontrado.'
         });
-        
         const oldProduct = products[index];
         const updatedProduct = {
             ...oldProduct,
@@ -193,7 +222,6 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
             stock: parseInt(req.body.stock),
             category: req.body.category
         };
-        
         if (req.file) {
             if (oldProduct.image && typeof oldProduct.image === 'string') {
                 const oldPath = path.join(__dirname, 'public', oldProduct.image);
@@ -201,7 +229,6 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
             }
             updatedProduct.image = `productos/${req.file.filename}`;
         }
-
         products[index] = updatedProduct;
         writeJsonFile(PRODUCTS_FILE_PATH, products);
         res.json(updatedProduct);
@@ -211,7 +238,6 @@ adminRouter.put('/products/:id', upload.single('image'), (req, res) => {
         });
     }
 });
-
 adminRouter.delete('/products/:id', (req, res) => {
     try {
         let products = readJsonFile(PRODUCTS_FILE_PATH);
@@ -219,12 +245,10 @@ adminRouter.delete('/products/:id', (req, res) => {
         if (!product) return res.status(404).json({
             message: 'Producto no encontrado.'
         });
-
         if (product.image && typeof product.image === 'string') {
             const imgPath = path.join(__dirname, 'public', product.image);
             if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
         }
-        
         products = products.filter(p => p.id !== parseInt(req.params.id));
         writeJsonFile(PRODUCTS_FILE_PATH, products);
         res.status(200).json({
@@ -236,7 +260,6 @@ adminRouter.delete('/products/:id', (req, res) => {
         });
     }
 });
-
 adminRouter.get('/categories', (req, res) => {
     try {
         res.json(readJsonFile(CATEGORIES_FILE_PATH));
@@ -318,7 +341,6 @@ app.get('/products', (req, res) => {
         });
     }
 });
-
 app.post('/api/contact', async (req, res) => {
     const {
         nombre,
@@ -340,18 +362,15 @@ app.post('/api/contact', async (req, res) => {
         },
     });
     const emailBody = `<h1>📬 Nueva Consulta desde el Sitio Web 📬</h1><h2>Detalles del Contacto:</h2><ul><li><strong>Nombre:</strong> ${nombre}</li><li><strong>Teléfono:</strong> ${telefono}</li>${email ? `<li><strong>Email:</strong> ${email}</li>` : ''}</ul><h3>Mensaje:</h3><p style="background-color:#f4f4f4; padding: 15px; border-radius: 5px;">${mensaje || 'No se ha escrito ningún mensaje.'}</p>`;
-    
     const mailOptions = {
         from: `"NOVA Panes Web" <${process.env.EMAIL_USER}>`,
         to: 'panes.nova@gmail.com',
         subject: `Nueva consulta de: ${nombre}`,
         html: emailBody,
     };
-
     if (email) {
         mailOptions.replyTo = email;
     }
-
     try {
         await transporter.sendMail(mailOptions);
         res.status(200).json({
@@ -366,7 +385,6 @@ app.post('/api/contact', async (req, res) => {
         });
     }
 });
-
 app.post('/api/submit-order', async (req, res) => {
     const orderData = req.body;
     try {
@@ -392,7 +410,6 @@ app.post('/api/submit-order', async (req, res) => {
             pass: process.env.EMAIL_APP_PASSWORD
         }
     });
-
     let deliveryDetails = `<li><strong>Método de Entrega:</strong> ${orderData.customer.metodoEntrega}</li>`;
     if (orderData.customer.metodoEntrega === 'Envío a Domicilio') {
         deliveryDetails += `
@@ -400,7 +417,6 @@ app.post('/api/submit-order', async (req, res) => {
             <li><strong>Horario Preferido:</strong> ${orderData.customer.horarioEntrega}</li>
         `;
     }
-
     const emailBody = `
         <h1>🍞 Pedido Recibido</h1>
         <h2>Cliente: ${orderData.customer.nombre}</h2>
@@ -417,7 +433,6 @@ app.post('/api/submit-order', async (req, res) => {
         <h3 style="text-align:right;">Total: $${orderData.total.toLocaleString('es-AR')}</h3>
         <p><strong>Pago:</strong> ${orderData.metodoPago}</p>
     `;
-
     const mailOptions = {
         from: `"NOVA Panes Web" <${process.env.EMAIL_USER}>`,
         to: 'panes.nova@gmail.com',
@@ -436,7 +451,6 @@ app.post('/api/submit-order', async (req, res) => {
         });
     }
 });
-
 app.post('/create-preference', async (req, res) => {
     try {
         const {
@@ -477,7 +491,6 @@ app.post('/create-preference', async (req, res) => {
         });
     }
 });
-
 try {
     app.listen(port, () => {
         console.log(`Servidor de NOVA Panes corriendo en http://localhost:${port}`);
