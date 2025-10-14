@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerCartIcon = document.getElementById('headerCartIcon');
 
     Promise.all([
-        fetch('/products').then(res => res.json()), // <-- URL CORREGIDA PARA COINCIDIR CON server.js
+        fetch('/products.json').then(res => res.json()), // <-- CORREGIDO Y UNIFICADO
         fetch('/data/categories.json').then(res => res.json()),
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
