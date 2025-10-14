@@ -1,5 +1,3 @@
---- START OF FILE server.js ---
-
 // ===================================================
 //      ARCHIVO server.js (COMPLETO Y FINAL)
 // ===================================================
@@ -334,8 +332,15 @@ adminRouter.put('/orders/:id', (req, res) => {
     }
 });
 
-// LA RUTA app.get('/products', ...) FUE ELIMINADA DE AQUÍ
-
+app.get('/products', (req, res) => {
+    try {
+        res.json(readJsonFile(PRODUCTS_FILE_PATH));
+    } catch (e) {
+        res.status(500).json({
+            message: e.message
+        });
+    }
+});
 app.post('/api/contact', async (req, res) => {
     const {
         nombre,
