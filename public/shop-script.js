@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CON TODAS LAS CORRECCIONES)
+//      ARCHIVO shop-script.js (CORREGIDO Y COMPLETO)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -212,35 +212,18 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.addEventListener('input', () => {
             renderProducts();
         });
-
-        // ==================================================================
-        //  SOLUCIÓN 3: LÓGICA DE CAMPOS OBLIGATORIOS (CORREGIDA)
-        // ==================================================================
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
-                const direccionInput = deliveryAddressContainer.querySelector('input[name="direccion"]');
-                const ciudadInput = deliveryAddressContainer.querySelector('input[name="ciudad"]');
-                const codigoPostalInput = deliveryAddressContainer.querySelector('input[name="codigoPostal"]');
-                
                 if (e.target.value === 'Envío a Domicilio') {
                     deliveryAddressContainer.style.display = 'block';
-                    direccionInput.required = true;
-                    ciudadInput.required = true;
                     deliveryTimeSelect.required = true;
-                } else { 
+                } else {
                     deliveryAddressContainer.style.display = 'none';
-                    direccionInput.required = false;
-                    ciudadInput.required = false;
                     deliveryTimeSelect.required = false;
-                    
-                    direccionInput.value = '';
-                    ciudadInput.value = '';
-                    codigoPostalInput.value = '';
                     deliveryTimeSelect.value = '';
                 }
             });
         });
-        
         paymentMethodSelect.addEventListener('change', (e) => {
             if (e.target.value === 'transferencia') {
                 transferInfo.style.display = 'block';
@@ -257,9 +240,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const targetId = promoLink.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
                     targetElement.classList.add('highlight');
-                    setTimeout(() => { targetElement.classList.remove('highlight'); }, 3000);
+                    setTimeout(() => {
+                        targetElement.classList.remove('highlight');
+                    }, 3000);
                 }
             });
         }
@@ -268,12 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.querySelector('.close-cart')?.addEventListener('click', closeCartModal);
         document.querySelector('.close-checkout')?.addEventListener('click', closeCheckout);
-        
-        // ==================================================================
-        //  SOLUCIÓN 1: BOTÓN CANCELAR (CORREGIDO)
-        // ==================================================================
-        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout);
-        
+        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout); // Listener para el botón "Cancelar"
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
         document.getElementById('checkout')?.addEventListener('click', openCheckout);
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
@@ -342,7 +325,8 @@ document.addEventListener('DOMContentLoaded', function() {
             else return alert(`Stock insuficiente.`);
         } else {
             if (q > p.stock) return alert(`Stock insuficiente.`);
-            cart.push({ ...p,
+            cart.push({
+                ...p,
                 price: priceToUse,
                 quantity: q
             });
@@ -436,19 +420,9 @@ document.addEventListener('DOMContentLoaded', function() {
     async function handleCheckout(e) {
         e.preventDefault();
         const form = e.target;
-        const btn = form.querySelector('button[type="submit"]');
-
-        // ==================================================================
-        //  SOLUCIÓN 2: VALIDACIÓN DE FORMULARIO (CORREGIDA)
-        // ==================================================================
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            alert('Por favor, completa todos los campos obligatorios (*) antes de continuar.');
-            return;
-        }
-
         const fData = new FormData(form);
         const pMethod = fData.get('metodoPago');
+        const btn = form.querySelector('button[type="submit"]');
         btn.textContent = 'Procesando...';
         btn.disabled = true;
 
@@ -468,9 +442,32 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         };
 
+        // Objeto de la orden que se guardará en el sistema
+        const orderDataForServer = {
+            customer: customerData,
+            metodoPago: pMethod,
+            items: cart,
+            total: cart.reduce((s, i) => s + (i.price * i.quantity), 0)
+        };
+
         if (pMethod === 'mercadopago') {
             try {
-                const oData = {
+                // 1. PRIMERO, GUARDAMOS EL PEDIDO EN NUESTRO SISTEMA CON ESTADO PENDIENTE
+                const saveOrderResponse = await fetch('/api/submit-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderDataForServer),
+                });
+
+                if (!saveOrderResponse.ok) {
+                    // Si falla al guardar, no continuamos al pago.
+                    throw new Error('No se pudo registrar el pedido antes de proceder al pago.');
+                }
+
+                // 2. LUEGO, CREAMOS LA PREFERENCIA DE PAGO EN MERCADO PAGO
+                const oDataMP = {
                     items: cart.map(i => ({
                         id: i.id,
                         title: i.name,
@@ -485,54 +482,76 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 };
+
                 const res = await fetch('/create-preference', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(oData),
+                    body: JSON.stringify(oDataMP),
                 });
+
                 if (!res.ok) {
                     throw new Error((await res.json()).message || 'Error al generar link de pago.');
                 }
+
                 const pref = await res.json();
+
+                // 3. FINALMENTE, REDIRIGIMOS AL USUARIO PARA QUE PAGUE
+                // Limpiamos el carrito del localStorage antes de redirigir
+                cart = [];
+                updateCartDisplay();
                 window.location.href = pref.init_point;
+
             } catch (err) {
                 alert(`Error: ${err.message}`);
                 btn.textContent = 'Confirmar Pedido';
                 btn.disabled = false;
             }
         } else {
-            const oData = {
-                customer: customerData,
-                metodoPago: pMethod,
-                items: cart,
-                total: cart.reduce((s, i) => s + (i.price * i.quantity), 0)
-            };
+            // Flujo para Efectivo o Transferencia (ya funciona bien)
+            try {
+                // Enviamos el pedido al backend para guardarlo y enviar el email
+                await fetch('/api/submit-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderDataForServer),
+                });
 
-            let deliveryInfo = `🚚 *Método de Entrega:* ${oData.customer.metodoEntrega}`;
-            if (oData.customer.metodoEntrega === 'Envío a Domicilio') {
-                deliveryInfo += `\n📍 *Dirección:* ${oData.customer.direccion}, ${oData.customer.ciudad}\n⏰ *Horario:* ${oData.customer.horarioEntrega}`;
+                // Creamos el mensaje para WhatsApp
+                let deliveryInfo = `🚚 *Método de Entrega:* ${customerData.metodoEntrega}`;
+                if (customerData.metodoEntrega === 'Envío a Domicilio') {
+                    deliveryInfo += `\n📍 *Dirección:* ${customerData.direccion}, ${customerData.ciudad}\n⏰ *Horario:* ${customerData.horarioEntrega}`;
+                }
+                const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
+
+                window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(wMsg)}`, '_blank');
+
+                alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
+                cart = [];
+                updateCartDisplay();
+                closeCheckout();
+
+            } catch (err) {
+                console.error('Error al enviar el pedido:', err);
+                alert('Hubo un error al procesar tu pedido. Por favor, intenta de nuevo.');
+            } finally {
+                btn.textContent = 'Confirmar Pedido';
+                btn.disabled = false;
             }
-
-            const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${oData.customer.nombre}\n📧 *Email:* ${oData.customer.email}\n📱 *Teléfono:* ${oData.customer.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${oData.metodoPago}\n\n🛒 *PRODUCTOS:*\n${oData.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${oData.total.toLocaleString()}*`;
-
-            window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(wMsg)}`, '_blank');
-
-            fetch('/api/submit-order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(oData),
-            }).catch(err => console.error('Error de red al enviar email:', err));
-
-            alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
-            cart = [];
-            updateCartDisplay();
-            closeCheckout();
-            btn.textContent = 'Confirmar Pedido';
-            btn.disabled = false;
         }
+    }
+
+    // CÓDIGO PARA MANEJAR EL REGRESO DE MERCADO PAGO
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+        alert('¡Tu pago fue aprobado! Gracias por tu compra.');
+        // Limpia los parámetros de la URL para no mostrar el mensaje de nuevo si se recarga la página
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (urlParams.get('payment') === 'failure') {
+        alert('Hubo un problema con tu pago. Por favor, intenta de nuevo o elige otro método.');
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
 });
