@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
 
-                window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(wMsg)}`, '_blank');
+                window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
 
                 alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
                 cart = [];
