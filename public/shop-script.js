@@ -503,28 +503,42 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Flujo para Efectivo o Transferencia
             try {
-                // Creamos el mensaje para WhatsApp
+                // 1. PRIMERO, GUARDAMOS EL PEDIDO EN EL SERVIDOR
+                const response = await fetch('/api/submit-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderDataForServer),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al registrar el pedido en el servidor');
+                }
+
+                const result = await response.json();
+                console.log('Pedido guardado:', result);
+
+                // 2. CREAMOS EL MENSAJE PARA WHATSAPP
                 let deliveryInfo = `🚚 *Método de Entrega:* ${customerData.metodoEntrega}`;
                 if (customerData.metodoEntrega === 'Envío a Domicilio') {
                     deliveryInfo += `\n📍 *Dirección:* ${customerData.direccion}, ${customerData.ciudad}\n⏰ *Horario:* ${customerData.horarioEntrega}`;
                 }
                 
-                const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
+                const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - ${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: ${orderDataForServer.total.toLocaleString()}*`;
 
-                // Limpiar el carrito
+                // 3. LIMPIAR EL CARRITO
                 cart = [];
                 updateCartDisplay();
                 
-                // Cerrar el modal
+                // 4. CERRAR EL MODAL Y RESETEAR FORMULARIO
                 closeCheckout();
-                
-                // Resetear el formulario
                 form.reset();
                 
-                // Abrir WhatsApp
+                // 5. ABRIR WHATSAPP
                 window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
 
-                // Mostrar mensaje de éxito
+                // 6. MOSTRAR MENSAJE DE ÉXITO
                 setTimeout(() => {
                     alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
                 }, 500);

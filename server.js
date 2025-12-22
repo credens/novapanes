@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO server.js (COMPLETO Y FINAL)
+//      ARCHIVO server.js (COMPLETO Y CORREGIDO)
 // ===================================================
 
 const express = require('express');
@@ -341,6 +341,7 @@ app.get('/products', (req, res) => {
         });
     }
 });
+
 app.post('/api/contact', async (req, res) => {
     const {
         nombre,
@@ -385,9 +386,24 @@ app.post('/api/contact', async (req, res) => {
         });
     }
 });
+
+// ===================================================
+// ENDPOINT CORREGIDO: /api/submit-order
+// ===================================================
 app.post('/api/submit-order', async (req, res) => {
+    console.log('📦 Pedido recibido:', req.body);
+    
     const orderData = req.body;
+    
+    if (!orderData || !orderData.customer || !orderData.items) {
+        return res.status(400).json({
+            success: false,
+            message: 'Datos de pedido incompletos'
+        });
+    }
+
     try {
+        // 1. GUARDAR EL PEDIDO EN EL ARCHIVO orders.json
         const orders = readJsonFile(ORDERS_FILE_PATH);
         const newOrder = {
             id: `order_${Date.now()}`,
@@ -400,57 +416,103 @@ app.post('/api/submit-order', async (req, res) => {
         };
         orders.unshift(newOrder);
         writeJsonFile(ORDERS_FILE_PATH, orders);
-    } catch (error) {
-        console.error("Error al guardar el pedido:", error);
-    }
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_APP_PASSWORD
-        }
-    });
-    let deliveryDetails = `<li><strong>Método de Entrega:</strong> ${orderData.customer.metodoEntrega}</li>`;
-    if (orderData.customer.metodoEntrega === 'Envío a Domicilio') {
-        deliveryDetails += `
-            <li><strong>Dirección:</strong> ${orderData.customer.direccion}, ${orderData.customer.ciudad}</li>
-            <li><strong>Horario Preferido:</strong> ${orderData.customer.horarioEntrega}</li>
-        `;
-    }
-    const emailBody = `
-        <h1>🍞 Pedido Recibido</h1>
-        <h2>Cliente: ${orderData.customer.nombre}</h2>
-        <ul>
-            <li><strong>Email:</strong> ${orderData.customer.email}</li>
-            <li><strong>Teléfono:</strong> ${orderData.customer.telefono}</li>
-            ${deliveryDetails}
-        </ul>
-        <h2>Pedido:</h2>
-        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
-            <thead><tr style="background-color:#f2f2f2;"><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
-            <tbody>${orderData.items.map(i => `<tr><td>${i.name}</td><td style="text-align:center;">${i.quantity}</td><td style="text-align:right;">$${(i.price * i.quantity).toLocaleString('es-AR')}</td></tr>`).join('')}</tbody>
-        </table>
-        <h3 style="text-align:right;">Total: $${orderData.total.toLocaleString('es-AR')}</h3>
-        <p><strong>Pago:</strong> ${orderData.metodoPago}</p>
-    `;
-    const mailOptions = {
-        from: `"NOVA Panes Web" <${process.env.EMAIL_USER}>`,
-        to: 'panes.nova@gmail.com',
-        subject: `Pedido de ${orderData.customer.nombre}`,
-        html: emailBody
-    };
-    try {
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({
-            message: 'OK'
+        console.log('✅ Pedido guardado con ID:', newOrder.id);
+
+        // 2. ENVIAR EMAIL DE NOTIFICACIÓN
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_APP_PASSWORD
+            }
         });
-    } catch (e) {
-        console.error("Error al enviar email:", e);
+
+        let deliveryDetails = `<li><strong>Método de Entrega:</strong> ${orderData.customer.metodoEntrega}</li>`;
+        if (orderData.customer.metodoEntrega === 'Envío a Domicilio') {
+            deliveryDetails += `
+                <li><strong>Dirección:</strong> ${orderData.customer.direccion}, ${orderData.customer.ciudad}</li>
+                ${orderData.customer.codigoPostal ? `<li><strong>Código Postal:</strong> ${orderData.customer.codigoPostal}</li>` : ''}
+                ${orderData.customer.referencias ? `<li><strong>Referencias:</strong> ${orderData.customer.referencias}</li>` : ''}
+                <li><strong>Horario Preferido:</strong> ${orderData.customer.horarioEntrega}</li>
+            `;
+        }
+
+        const emailBody = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="background-color: #B5651D; color: white; padding: 20px; text-align: center;">
+                    🍞 Nuevo Pedido - NOVA Panes
+                </h1>
+                <div style="padding: 20px; background-color: #f9f9f9;">
+                    <h2 style="color: #B5651D;">Información del Cliente</h2>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><strong>Nombre:</strong> ${orderData.customer.nombre}</li>
+                        <li><strong>Email:</strong> ${orderData.customer.email}</li>
+                        <li><strong>Teléfono:</strong> ${orderData.customer.telefono}</li>
+                        ${deliveryDetails}
+                    </ul>
+                    
+                    <h2 style="color: #B5651D; margin-top: 30px;">Detalle del Pedido</h2>
+                    <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse; background-color: white;">
+                        <thead>
+                            <tr style="background-color:#B5651D; color: white;">
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unit.</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${orderData.items.map(i => `
+                                <tr>
+                                    <td>${i.name}</td>
+                                    <td style="text-align:center;">${i.quantity}</td>
+                                    <td style="text-align:right;">$${i.price.toLocaleString('es-AR')}</td>
+                                    <td style="text-align:right;">$${(i.price * i.quantity).toLocaleString('es-AR')}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div style="text-align: right; margin-top: 20px; font-size: 1.2em;">
+                        <strong>TOTAL: $${orderData.total.toLocaleString('es-AR')}</strong>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107;">
+                        <strong>Método de Pago:</strong> ${orderData.metodoPago}
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background-color: #d1ecf1; border-left: 4px solid #0c5460;">
+                        <strong>ID del Pedido:</strong> ${newOrder.id}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const mailOptions = {
+            from: `"NOVA Panes Web" <${process.env.EMAIL_USER}>`,
+            to: 'panes.nova@gmail.com',
+            subject: `🍞 Nuevo Pedido de ${orderData.customer.nombre} - ${orderData.metodoPago}`,
+            html: emailBody
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('✅ Email enviado correctamente');
+
+        res.status(200).json({
+            success: true,
+            message: 'Pedido registrado correctamente',
+            orderId: newOrder.id
+        });
+
+    } catch (error) {
+        console.error('❌ Error al procesar el pedido:', error);
         res.status(500).json({
-            message: 'Error en email.'
+            success: false,
+            message: 'Error al procesar el pedido'
         });
     }
 });
+
 app.post('/create-preference', async (req, res) => {
     try {
         const {
@@ -491,6 +553,7 @@ app.post('/create-preference', async (req, res) => {
         });
     }
 });
+
 try {
     app.listen(port, () => {
         console.log(`Servidor de NOVA Panes corriendo en http://localhost:${port}`);
