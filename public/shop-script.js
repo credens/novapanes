@@ -214,13 +214,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
+                const direccionInput = document.querySelector('input[name="direccion"]');
+                const ciudadInput = document.querySelector('input[name="ciudad"]');
+                
                 if (e.target.value === 'Envío a Domicilio') {
                     deliveryAddressContainer.style.display = 'block';
                     deliveryTimeSelect.required = true;
+                    if (direccionInput) direccionInput.required = true;
+                    if (ciudadInput) ciudadInput.required = true;
                 } else {
                     deliveryAddressContainer.style.display = 'none';
                     deliveryTimeSelect.required = false;
                     deliveryTimeSelect.value = '';
+                    if (direccionInput) {
+                        direccionInput.required = false;
+                        direccionInput.value = '';
+                    }
+                    if (ciudadInput) {
+                        ciudadInput.required = false;
+                        ciudadInput.value = '';
+                    }
                 }
             });
         });
@@ -411,7 +424,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function closeCheckout() {
-        if (checkoutModal) checkoutModal.style.display = 'none';
+        if (checkoutModal) {
+            checkoutModal.style.display = 'none';
+            
+            // Resetear el formulario
+            const checkoutForm = document.getElementById('checkoutForm');
+            if (checkoutForm) {
+                checkoutForm.reset();
+                
+                // Resetear el botón de submit
+                const submitBtn = checkoutForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.textContent = 'Confirmar Pedido';
+                    submitBtn.disabled = false;
+                }
+                
+                // Ocultar información de transferencia si estaba visible
+                if (transferInfo) {
+                    transferInfo.style.display = 'none';
+                }
+                
+                // Asegurarse de que el contenedor de dirección esté visible por defecto
+                if (deliveryAddressContainer) {
+                    deliveryAddressContainer.style.display = 'block';
+                }
+            }
+        }
     }
 
     function renderOrderSummary() {
@@ -507,8 +545,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const pref = await res.json();
+                
+                // Limpiar carrito y cerrar modal
                 cart = [];
                 updateCartDisplay();
+                closeCheckout();
+                
+                // Redirigir a Mercado Pago
                 window.location.href = pref.init_point;
 
             } catch (err) {
@@ -543,13 +586,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     deliveryInfo += `\n📍 *Dirección:* ${customerData.direccion}, ${customerData.ciudad}\n⏰ *Horario:* ${customerData.horarioEntrega}`;
                 }
                 
-                const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
+                const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - ${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: ${orderDataForServer.total.toLocaleString()}*`;
 
-                // Limpiar y cerrar
+                // Limpiar carrito y cerrar modal
                 cart = [];
                 updateCartDisplay();
                 closeCheckout();
-                form.reset();
                 
                 // Abrir WhatsApp
                 window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
