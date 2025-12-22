@@ -1,9 +1,5 @@
 --- START OF FILE shop-script.js ---
 
-// ===================================================
-//      ARCHIVO shop-script.js (CORREGIDO Y COMPLETO)
-// ===================================================
-
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
     let allCategories = [];
@@ -36,10 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elementos para la validación del formulario
     const deliveryAddressInput = document.querySelector('input[name="direccion"]');
     const deliveryCityInput = document.querySelector('input[name="ciudad"]');
-    const deliveryPostalInput = document.querySelector('input[name="codigoPostal"]'); // También lo añadimos para robustez
 
     Promise.all([
-        fetch('/products').then(res => res.json()), // Accediendo a la API /products
+        fetch('/products').then(res => res.json()), // CORRECCIÓN 1: Apunta a la API /products de tu server.js
         fetch('/data/categories.json').then(res => res.json()),
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
@@ -219,29 +214,23 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.addEventListener('input', () => {
             renderProducts();
         });
-        
-        // CORRECCIÓN CRÍTICA PARA EL CHECKOUT
+
+        // CORRECCIÓN 2: Lógica para manejar campos requeridos del checkout
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const isDelivery = e.target.value === 'Envío a Domicilio';
                 
-                // Mostrar/Ocultar sección de dirección
                 deliveryAddressContainer.style.display = isDelivery ? 'block' : 'none';
                 
-                // Actualizar el atributo 'required' de los campos
                 deliveryTimeSelect.required = isDelivery;
                 deliveryAddressInput.required = isDelivery;
                 deliveryCityInput.required = isDelivery;
-                // Si se oculta la sección, limpiar los valores
+
                 if (!isDelivery) {
-                    deliveryAddressInput.value = '';
-                    deliveryCityInput.value = '';
-                    if (deliveryPostalInput) deliveryPostalInput.value = ''; // Limpiar postal también si existe
                     deliveryTimeSelect.value = '';
                 }
             });
         });
-        // Fin de la corrección
 
         paymentMethodSelect.addEventListener('change', (e) => {
             if (e.target.value === 'transferencia') {
@@ -535,8 +524,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     deliveryInfo += `\n📍 *Dirección:* ${customerData.direccion}, ${customerData.ciudad}\n⏰ *Horario:* ${customerData.horarioEntrega}`;
                 }
                 const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
-
-                window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
+                
+                window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(wMsg)}`, '_blank');
 
                 alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
                 cart = [];
