@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (VERSIÓN CORREGIDA COMPLETA)
+//      ARCHIVO shop-script.js (VERSIÓN DEPURADA)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -259,7 +259,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout);
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
         document.getElementById('checkout')?.addEventListener('click', openCheckout);
-        document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
+        
+        // LISTENER DEL FORMULARIO DE CHECKOUT
+        const checkoutForm = document.getElementById('checkoutForm');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', handleCheckout);
+            console.log('✅ Listener del formulario agregado correctamente');
+        } else {
+            console.error('❌ No se encontró el formulario de checkout');
+        }
+        
         cartModal?.addEventListener('click', e => {
             if (e.target === cartModal) closeCartModal();
         });
@@ -304,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
             renderOrderSummary();
         }
     }
+    
     window.changeQuantity = (id, change) => {
         const input = document.getElementById(`qty-${id}`);
         if (!input) return;
@@ -314,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (val > p.stock) val = p.stock;
         input.value = val;
     };
+    
     window.addToCart = (event, id) => {
         const p = products.find(prod => prod.id === id);
         if (!p) return;
@@ -340,6 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.style.background = '#B5651D';
         }, 1000);
     };
+    
     window.updateCartItemQuantity = (id, newQ) => {
         const item = cart.find(i => i.id === id);
         if (!item) return;
@@ -352,6 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
         item.quantity = newQ;
         updateCartDisplay();
     };
+    
     window.removeFromCart = (id) => {
         cart = cart.filter(i => i.id !== id);
         updateCartDisplay();
@@ -418,13 +431,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function handleCheckout(e) {
+        console.log('🎯 handleCheckout ejecutado');
         e.preventDefault();
+        
         const form = e.target;
         const fData = new FormData(form);
         const pMethod = fData.get('metodoPago');
-        const btn = form.querySelector('button[type="submit"]');
         
-        // Guardar el texto original del botón
+        console.log('💳 Método de pago seleccionado:', pMethod);
+        
+        if (!pMethod) {
+            alert('Por favor selecciona un método de pago');
+            return;
+        }
+        
+        const btn = form.querySelector('button[type="submit"]');
         const originalBtnText = btn.textContent;
         btn.textContent = 'Procesando...';
         btn.disabled = true;
@@ -435,17 +456,17 @@ document.addEventListener('DOMContentLoaded', function() {
             nombre: fData.get('nombre'),
             email: fData.get('email'),
             telefono: fData.get('telefono'),
-            metodoEntrega: deliveryMethod,
-            ...(deliveryMethod === 'Envío a Domicilio' && {
-                direccion: fData.get('direccion'),
-                ciudad: fData.get('ciudad'),
-                codigoPostal: fData.get('codigoPostal'),
-                referencias: fData.get('referencias'),
-                horarioEntrega: fData.get('horarioEntrega')
-            })
+            metodoEntrega: deliveryMethod
         };
+        
+        if (deliveryMethod === 'Envío a Domicilio') {
+            customerData.direccion = fData.get('direccion');
+            customerData.ciudad = fData.get('ciudad');
+            customerData.codigoPostal = fData.get('codigoPostal');
+            customerData.referencias = fData.get('referencias');
+            customerData.horarioEntrega = fData.get('horarioEntrega');
+        }
 
-        // Objeto de la orden
         const orderDataForServer = {
             customer: customerData,
             metodoPago: pMethod,
@@ -454,8 +475,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         if (pMethod === 'mercadopago') {
+            console.log('🟢 Procesando pago con Mercado Pago');
             try {
-                // Crear la preferencia de pago en Mercado Pago
                 const oDataMP = {
                     items: cart.map(i => ({
                         id: i.id,
@@ -486,24 +507,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const pref = await res.json();
-
-                // Limpiamos el carrito del localStorage antes de redirigir
                 cart = [];
                 updateCartDisplay();
-                
-                // Redirigimos al usuario para que pague
                 window.location.href = pref.init_point;
 
             } catch (err) {
-                console.error('Error en Mercado Pago:', err);
+                console.error('❌ Error en Mercado Pago:', err);
                 alert(`Error: ${err.message}`);
                 btn.textContent = originalBtnText;
                 btn.disabled = false;
             }
         } else {
-            // Flujo para Efectivo o Transferencia
+            console.log('🟡 Procesando pago con:', pMethod);
             try {
-                // 1. PRIMERO, GUARDAMOS EL PEDIDO EN EL SERVIDOR
+                // Guardar pedido en el servidor
                 const response = await fetch('/api/submit-order', {
                     method: 'POST',
                     headers: {
@@ -513,46 +530,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Error al registrar el pedido en el servidor');
+                    console.error('Error del servidor:', response.status);
+                    throw new Error('Error al registrar el pedido');
                 }
 
                 const result = await response.json();
-                console.log('Pedido guardado:', result);
+                console.log('✅ Pedido guardado:', result);
 
-                // 2. CREAMOS EL MENSAJE PARA WHATSAPP
+                // Crear mensaje de WhatsApp
                 let deliveryInfo = `🚚 *Método de Entrega:* ${customerData.metodoEntrega}`;
                 if (customerData.metodoEntrega === 'Envío a Domicilio') {
                     deliveryInfo += `\n📍 *Dirección:* ${customerData.direccion}, ${customerData.ciudad}\n⏰ *Horario:* ${customerData.horarioEntrega}`;
                 }
                 
-                const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - ${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: ${orderDataForServer.total.toLocaleString()}*`;
+                const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
 
-                // 3. LIMPIAR EL CARRITO
+                // Limpiar y cerrar
                 cart = [];
                 updateCartDisplay();
-                
-                // 4. CERRAR EL MODAL Y RESETEAR FORMULARIO
                 closeCheckout();
                 form.reset();
                 
-                // 5. ABRIR WHATSAPP
+                // Abrir WhatsApp
                 window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
-
-                // 6. MOSTRAR MENSAJE DE ÉXITO
+                
+                // Mensaje de éxito
                 setTimeout(() => {
                     alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
                 }, 500);
 
             } catch (err) {
-                console.error('Error al procesar el pedido:', err);
-                alert('Hubo un error al procesar tu pedido. Por favor, intenta de nuevo o contactanos por WhatsApp.');
+                console.error('❌ Error al procesar el pedido:', err);
+                alert('Hubo un error al procesar tu pedido. Por favor, intenta de nuevo.');
                 btn.textContent = originalBtnText;
                 btn.disabled = false;
             }
         }
     }
 
-    // CÓDIGO PARA MANEJAR EL REGRESO DE MERCADO PAGO
+    // Manejo de retorno de Mercado Pago
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('payment') === 'success') {
         alert('¡Tu pago fue aprobado! Gracias por tu compra.');
