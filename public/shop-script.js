@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (CORREGIDO Y COMPLETO)
+//      ARCHIVO shop-script.js (VERSIÓN CORREGIDA COMPLETA)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.querySelector('.close-cart')?.addEventListener('click', closeCartModal);
         document.querySelector('.close-checkout')?.addEventListener('click', closeCheckout);
-        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout); // Listener para el botón "Cancelar"
+        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout);
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
         document.getElementById('checkout')?.addEventListener('click', openCheckout);
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
@@ -423,6 +423,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const fData = new FormData(form);
         const pMethod = fData.get('metodoPago');
         const btn = form.querySelector('button[type="submit"]');
+        
+        // Guardar el texto original del botón
+        const originalBtnText = btn.textContent;
         btn.textContent = 'Procesando...';
         btn.disabled = true;
 
@@ -442,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         };
 
-        // Objeto de la orden que se guardará en el sistema
+        // Objeto de la orden
         const orderDataForServer = {
             customer: customerData,
             metodoPago: pMethod,
@@ -452,21 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (pMethod === 'mercadopago') {
             try {
-                // 1. PRIMERO, GUARDAMOS EL PEDIDO EN NUESTRO SISTEMA CON ESTADO PENDIENTE
-                const saveOrderResponse = await fetch('/api/submit-order', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(orderDataForServer),
-                });
-
-                if (!saveOrderResponse.ok) {
-                    // Si falla al guardar, no continuamos al pago.
-                    throw new Error('No se pudo registrar el pedido antes de proceder al pago.');
-                }
-
-                // 2. LUEGO, CREAMOS LA PREFERENCIA DE PAGO EN MERCADO PAGO
+                // Crear la preferencia de pago en Mercado Pago
                 const oDataMP = {
                     items: cart.map(i => ({
                         id: i.id,
@@ -492,53 +481,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 if (!res.ok) {
-                    throw new Error((await res.json()).message || 'Error al generar link de pago.');
+                    const errorData = await res.json();
+                    throw new Error(errorData.message || 'Error al generar link de pago.');
                 }
 
                 const pref = await res.json();
 
-                // 3. FINALMENTE, REDIRIGIMOS AL USUARIO PARA QUE PAGUE
                 // Limpiamos el carrito del localStorage antes de redirigir
                 cart = [];
                 updateCartDisplay();
+                
+                // Redirigimos al usuario para que pague
                 window.location.href = pref.init_point;
 
             } catch (err) {
+                console.error('Error en Mercado Pago:', err);
                 alert(`Error: ${err.message}`);
-                btn.textContent = 'Confirmar Pedido';
+                btn.textContent = originalBtnText;
                 btn.disabled = false;
             }
         } else {
-            // Flujo para Efectivo o Transferencia (ya funciona bien)
+            // Flujo para Efectivo o Transferencia
             try {
-                // Enviamos el pedido al backend para guardarlo y enviar el email
-                await fetch('/api/submit-order', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(orderDataForServer),
-                });
-
                 // Creamos el mensaje para WhatsApp
                 let deliveryInfo = `🚚 *Método de Entrega:* ${customerData.metodoEntrega}`;
                 if (customerData.metodoEntrega === 'Envío a Domicilio') {
                     deliveryInfo += `\n📍 *Dirección:* ${customerData.direccion}, ${customerData.ciudad}\n⏰ *Horario:* ${customerData.horarioEntrega}`;
                 }
+                
                 const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
 
-                window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
-
-                alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
+                // Limpiar el carrito
                 cart = [];
                 updateCartDisplay();
+                
+                // Cerrar el modal
                 closeCheckout();
+                
+                // Resetear el formulario
+                form.reset();
+                
+                // Abrir WhatsApp
+                window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
+
+                // Mostrar mensaje de éxito
+                setTimeout(() => {
+                    alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
+                }, 500);
 
             } catch (err) {
-                console.error('Error al enviar el pedido:', err);
-                alert('Hubo un error al procesar tu pedido. Por favor, intenta de nuevo.');
-            } finally {
-                btn.textContent = 'Confirmar Pedido';
+                console.error('Error al procesar el pedido:', err);
+                alert('Hubo un error al procesar tu pedido. Por favor, intenta de nuevo o contactanos por WhatsApp.');
+                btn.textContent = originalBtnText;
                 btn.disabled = false;
             }
         }
@@ -548,7 +542,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('payment') === 'success') {
         alert('¡Tu pago fue aprobado! Gracias por tu compra.');
-        // Limpia los parámetros de la URL para no mostrar el mensaje de nuevo si se recarga la página
         window.history.replaceState({}, document.title, window.location.pathname);
     } else if (urlParams.get('payment') === 'failure') {
         alert('Hubo un problema con tu pago. Por favor, intenta de nuevo o elige otro método.');
