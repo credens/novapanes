@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const deliveryCityInput = document.querySelector('input[name="ciudad"]');
 
     Promise.all([
-        fetch('/products').then(res => res.json()),
+        fetch('/products.json').then(res => res.json()),
         fetch('/data/categories.json').then(res => res.json()),
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
