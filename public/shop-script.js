@@ -1,4 +1,6 @@
---- START OF FILE shop-script.js ---
+// ===================================================
+//      ARCHIVO shop-script.js (CORREGIDO Y COMPLETO)
+// ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
@@ -28,10 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const paymentMethodSelect = document.getElementById('paymentMethodSelect');
     const transferInfo = document.getElementById('transferInfo');
     const headerCartIcon = document.getElementById('headerCartIcon');
-
-    // Elementos para la validación del formulario
-    const deliveryAddressInput = document.querySelector('input[name="direccion"]');
-    const deliveryCityInput = document.querySelector('input[name="ciudad"]');
 
     Promise.all([
         fetch('/products.json').then(res => res.json()),
@@ -73,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderLogoScroller(logos) {
-        if (!logoScroller || !Array.isArray(logos)) return;
+        if (!logoScroller) return;
         const logosToRender = [...logos, ...logos];
         logoScroller.innerHTML = logosToRender.map(logoFilename => `<img src="/logos/${logoFilename}" alt="Logo de marca">`).join('');
     }
@@ -214,30 +212,18 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.addEventListener('input', () => {
             renderProducts();
         });
-
-        // ================================================================= //
-        // CORRECCIÓN PARA EL BUG DEL CHECKOUT CON "RETIRO EN FÁBRICA"
-        // ================================================================= //
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
-                const isDelivery = e.target.value === 'Envío a Domicilio';
-                
-                // Muestra u oculta el contenedor de la dirección
-                deliveryAddressContainer.style.display = isDelivery ? 'block' : 'none';
-                
-                // Activa o desactiva la obligatoriedad de los campos
-                deliveryTimeSelect.required = isDelivery;
-                deliveryAddressInput.required = isDelivery;
-                deliveryCityInput.required = isDelivery;
-
-                // Si no es envío, limpia el valor del selector de horario
-                if (!isDelivery) {
+                if (e.target.value === 'Envío a Domicilio') {
+                    deliveryAddressContainer.style.display = 'block';
+                    deliveryTimeSelect.required = true;
+                } else {
+                    deliveryAddressContainer.style.display = 'none';
+                    deliveryTimeSelect.required = false;
                     deliveryTimeSelect.value = '';
                 }
             });
         });
-        // ================================================================= //
-
         paymentMethodSelect.addEventListener('change', (e) => {
             if (e.target.value === 'transferencia') {
                 transferInfo.style.display = 'block';
@@ -270,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.querySelector('.close-cart')?.addEventListener('click', closeCartModal);
         document.querySelector('.close-checkout')?.addEventListener('click', closeCheckout);
-        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout);
+        document.querySelector('.close-checkout-btn')?.addEventListener('click', closeCheckout); // Listener para el botón "Cancelar"
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
         document.getElementById('checkout')?.addEventListener('click', openCheckout);
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
@@ -456,6 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         };
 
+        // Objeto de la orden que se guardará en el sistema
         const orderDataForServer = {
             customer: customerData,
             metodoPago: pMethod,
@@ -465,6 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (pMethod === 'mercadopago') {
             try {
+                // 1. PRIMERO, GUARDAMOS EL PEDIDO EN NUESTRO SISTEMA CON ESTADO PENDIENTE
                 const saveOrderResponse = await fetch('/api/submit-order', {
                     method: 'POST',
                     headers: {
@@ -474,9 +462,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 if (!saveOrderResponse.ok) {
+                    // Si falla al guardar, no continuamos al pago.
                     throw new Error('No se pudo registrar el pedido antes de proceder al pago.');
                 }
 
+                // 2. LUEGO, CREAMOS LA PREFERENCIA DE PAGO EN MERCADO PAGO
                 const oDataMP = {
                     items: cart.map(i => ({
                         id: i.id,
@@ -506,6 +496,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const pref = await res.json();
+
+                // 3. FINALMENTE, REDIRIGIMOS AL USUARIO PARA QUE PAGUE
+                // Limpiamos el carrito del localStorage antes de redirigir
                 cart = [];
                 updateCartDisplay();
                 window.location.href = pref.init_point;
@@ -516,7 +509,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.disabled = false;
             }
         } else {
+            // Flujo para Efectivo o Transferencia (ya funciona bien)
             try {
+                // Enviamos el pedido al backend para guardarlo y enviar el email
                 await fetch('/api/submit-order', {
                     method: 'POST',
                     headers: {
@@ -525,13 +520,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(orderDataForServer),
                 });
 
+                // Creamos el mensaje para WhatsApp
                 let deliveryInfo = `🚚 *Método de Entrega:* ${customerData.metodoEntrega}`;
                 if (customerData.metodoEntrega === 'Envío a Domicilio') {
                     deliveryInfo += `\n📍 *Dirección:* ${customerData.direccion}, ${customerData.ciudad}\n⏰ *Horario:* ${customerData.horarioEntrega}`;
                 }
                 const wMsg = `🍞 *NUEVO PEDIDO - NOVA PANES* 🍞\n\n👤 *Cliente:* ${customerData.nombre}\n📧 *Email:* ${customerData.email}\n📱 *Teléfono:* ${customerData.telefono}\n\n${deliveryInfo}\n\n💳 *Método de pago:* ${pMethod}\n\n🛒 *PRODUCTOS:*\n${orderDataForServer.items.map(item => `• ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n💰 *TOTAL: $${orderDataForServer.total.toLocaleString()}*`;
-                
-                window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(wMsg)}`, '_blank');
+
+                window.open(`https://wa.me/5491140882236?text=${encodeURIComponent(wMsg)}`, '_blank');
 
                 alert('¡Pedido enviado! Te hemos redirigido a WhatsApp para confirmar.');
                 cart = [];
@@ -548,9 +544,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // CÓDIGO PARA MANEJAR EL REGRESO DE MERCADO PAGO
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('payment') === 'success') {
         alert('¡Tu pago fue aprobado! Gracias por tu compra.');
+        // Limpia los parámetros de la URL para no mostrar el mensaje de nuevo si se recarga la página
         window.history.replaceState({}, document.title, window.location.pathname);
     } else if (urlParams.get('payment') === 'failure') {
         alert('Hubo un problema con tu pago. Por favor, intenta de nuevo o elige otro método.');
