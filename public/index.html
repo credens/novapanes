@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOVA Panes - Pan de Papa Premium</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -19,7 +22,7 @@
     </header>
 
     <main>
-        <!-- HERO -->
+        <!-- HERO SECTION -->
         <section style="background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%); padding: 120px 20px; border-radius: 0 0 80px 80px; max-width: 100%;">
             <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; align-items: center; gap: 60px;">
                 <div>
@@ -27,7 +30,7 @@
                     <p style="font-size: 1.3rem; color: var(--text-light); margin-bottom: 40px;">Artesanal, suave y con ese toque de papa que cambia todo. Elevá tus hamburguesas al estándar premium.</p>
                     <a href="shop.html" style="background: var(--primary-red); color: white; padding: 22px 50px; border-radius: 60px; text-decoration: none; font-weight: 700; display: inline-block; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(211,47,47,0.3);">HACER PEDIDO ONLINE</a>
                 </div>
-                <img src="hero-images/hero-pan.png" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
+                <img src="hero-images/hero-pan.png" alt="Pan Nova Principal" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
             </div>
         </section>
 
@@ -37,25 +40,25 @@
             <p style="color: var(--text-light); max-width: 600px; margin: 20px auto;">Horneamos diferentes estilos de pan de papa para cada ocasión.</p>
             <div class="range-grid">
                 <div class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-papa-1.png"></div>
+                    <div class="circle-img"><img src="productos/pan-de-papa-1.png" alt="Pan Hamburguesa"></div>
                     <h3>Hamburguesa</h3>
                 </div>
                 <div class="range-item">
-                    <div class="circle-img"><img src="productos/pancho-1.png"></div>
+                    <div class="circle-img"><img src="productos/pancho-1.png" alt="Pan Panchos"></div>
                     <h3>Panchos</h3>
                 </div>
                 <div class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-molde-1.png"></div>
+                    <div class="circle-img"><img src="productos/pan-de-molde-1.png" alt="Pan Especial"></div>
                     <h3>Especiales</h3>
                 </div>
                 <div class="range-item">
-                    <div class="circle-img"><img src="logo.png" style="width: 60px;"></div>
+                    <div class="circle-img"><img src="logo.png" style="width: 60px;" alt="Combos"></div>
                     <h3>Combos</h3>
                 </div>
             </div>
         </section>
 
-        <!-- THE PERFECT MATCH (Sección Inspiración) -->
+        <!-- THE PERFECT MATCH (IMAGEN CORREGIDA AQUÍ) -->
         <div class="split-section">
             <div class="split-content">
                 <h2 style="font-size: 3rem; color: var(--primary-red); margin-bottom: 20px;">La hamburguesa perfecta empieza acá.</h2>
@@ -63,8 +66,7 @@
                 <a href="shop.html" style="color: var(--primary-red); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--primary-red); padding-bottom: 5px;">VER TODOS LOS PRODUCTOS</a>
             </div>
             <div class="split-image">
-                <!-- Imagen de hamburguesa estilo Martin's -->
-                <img src="https://potatorolls.com/wp-content/uploads/Burger-Recipes-Thumbnail.jpg" alt="Hamburguesa Premium">
+                <img src="hero-images/hero-pan-1.png" alt="Detalle Pan Nova Premium">
             </div>
         </div>
 
@@ -92,11 +94,12 @@
             <div class="contact-form-container">
                 <h2 style="font-size: 3rem; margin-bottom: 30px;">Hablemos</h2>
                 <form id="contactForm">
-                    <input type="text" name="nombre" placeholder="Nombre completo" required style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; border:1px solid #DDD;">
-                    <input type="tel" name="telefono" placeholder="WhatsApp" required style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; border:1px solid #DDD;">
-                    <textarea placeholder="¿Sos un local gastronómico? Escribinos." rows="5" style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; border:1px solid #DDD;"></textarea>
-                    <button type="submit" style="background: var(--primary-red); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: 700; cursor: pointer;">ENVIAR CONSULTA</button>
+                    <input type="text" name="nombre" placeholder="Nombre completo" required>
+                    <input type="tel" name="telefono" placeholder="WhatsApp" required>
+                    <textarea name="mensaje" placeholder="¿En qué podemos ayudarte? ¿Sos un local gastronómico?" rows="5"></textarea>
+                    <button type="submit">ENVIAR CONSULTA</button>
                 </form>
+                <div id="formMessage" class="form-message"></div>
             </div>
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa!5e0!3m2!1ses!2sar!4v1710000000000" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
@@ -115,9 +118,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('/products.json').then(res => res.json()).then(products => {
-                // Lógica de productos si se necesita en el index
-            });
+            const gallery = document.getElementById('product-gallery-index');
+            if (gallery) {
+                fetch('/products.json')
+                    .then(res => res.json())
+                    .then(products => {
+                        gallery.innerHTML = products.slice(0, 3).map(p => `
+                            <div style="background: white; border-radius: 30px; padding: 35px; text-align: center; box-shadow: var(--soft-shadow);">
+                                <img src="${p.image}" alt="${p.name}" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 25px;">
+                                <h3 style="font-size: 1.5rem; margin-bottom: 15px;">${p.name}</h3>
+                                <a href="shop.html" style="color: var(--primary-red); font-weight: 700; text-decoration: none; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Ver en Tienda</a>
+                            </div>
+                        `).join('');
+                    });
+            }
         });
     </script>
 </body>
