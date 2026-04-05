@@ -1,6 +1,9 @@
+/* ===================================================
+   ESTILOS TIENDA: Diseño Boutique Premium
+   =================================================== */
+
 .shop-main { max-width: 1200px; margin: 0 auto 40px; padding: 0 20px; }
 
-/* BANNER AJUSTADO */
 .shop-hero {
     background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%);
     padding: 40px 20px; 
@@ -9,6 +12,7 @@
     margin-bottom: 30px;
 }
 .shop-hero h1 { font-family: 'Lora'; font-size: 3rem; color: var(--primary-red); margin: 0; }
+.shop-hero p { font-size: 1rem; color: var(--text-light); margin-top: 5px; }
 
 /* BUSCADOR */
 .shop-search-container { max-width: 700px; margin: 0 auto 25px; }
@@ -18,28 +22,24 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none; transition: 0.3s;
 }
 
-/* FILTROS UNA SOLA LÍNEA */
+/* FILTROS COMPACTOS */
 .filter-container { 
-    display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;
-    flex-wrap: nowrap; overflow-x: auto; padding: 10px 0;
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 15px;
+    flex-wrap: nowrap; overflow-x: auto; padding: 10px 5px;
     -webkit-overflow-scrolling: touch;
 }
 .filter-container::-webkit-scrollbar { display: none; }
 .filter-btn {
-    background: var(--white); border: 2px solid #EEE; padding: 10px 22px;
+    background: var(--white); border: 1px solid #EEE; padding: 8px 16px;
     border-radius: 50px; cursor: pointer; font-weight: 600; font-family: 'Poppins';
-    transition: 0.3s; font-size: 0.85rem; color: var(--text-dark); white-space: nowrap;
+    transition: 0.3s; font-size: 0.8rem; color: var(--text-dark); white-space: nowrap;
 }
 .filter-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
 
-/* LOGOS PEGADOS */
-.logo-scroller-container {
-    width: 100%; overflow: hidden; background: white;
-    padding: 25px 0; margin: 0 0 20px; border-radius: 20px;
-}
+/* LOGOS */
+.logo-scroller-container { width: 100%; overflow: hidden; background: white; padding: 20px 0; margin: 0 0 20px; border-radius: 20px; }
 .logo-scroller { display: flex; align-items: center; width: max-content; animation: scrollLogos 50s linear infinite; }
-.logo-scroller img { height: 35px; margin: 0 40px; filter: grayscale(1); opacity: 0.4; }
-
+.logo-scroller img { height: 32px; margin: 0 35px; filter: grayscale(1); opacity: 0.4; }
 @keyframes scrollLogos { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* PRODUCTOS */
@@ -55,12 +55,68 @@
 .product-item:hover .product-image { transform: scale(1.08); }
 
 .product-price { color: var(--primary-red); font-weight: 800; font-size: 1.4rem; margin-bottom: 15px; }
-.add-to-cart-btn { background: var(--accent-yellow); color: var(--text-dark); border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
 
-/* MODALES PREMIUM */
+/* --- SELECTOR DE CANTIDAD Y BOTÓN AGREGAR --- */
+.product-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    background: #F5F5F5;
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid #EEE;
+}
+
+.qty-btn {
+    background: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-dark);
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.qty-btn:hover { background: var(--accent-yellow); }
+
+.qty-input {
+    width: 35px;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-weight: 700;
+    font-family: 'Poppins';
+    font-size: 0.9rem;
+    outline: none;
+}
+/* Quitar flechas del input number */
+.qty-input::-webkit-inner-spin-button, .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+.add-to-cart-btn {
+    background: var(--accent-yellow);
+    color: var(--text-dark);
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    flex: 1;
+    font-size: 0.85rem;
+}
+.add-to-cart-btn:hover { background: #FFA000; }
+
+/* MODALES */
 .cart-modal, .checkout-modal { position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; }
-.cart-modal-content, .checkout-modal-content { background: white; width: 95%; max-width: 500px; border-radius: 35px; padding: 35px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.2); }
-.cart-header, .checkout-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EEE; padding-bottom: 15px; margin-bottom: 20px; }
-.cart-item-row { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid #F9F9F9; }
-.cart-item-row img { width: 50px; height: 50px; object-fit: contain; border-radius: 8px; background: #FAFAFA; }
+.cart-modal-content, .checkout-modal-content { background: white; width: 95%; max-width: 550px; border-radius: 35px; padding: 35px; max-height: 90vh; overflow-y: auto; }
 .btn-primary { background: var(--primary-red); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 20px; }
