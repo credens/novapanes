@@ -1,5 +1,5 @@
 // ===================================================
-//      ARCHIVO shop-script.js (LÓGICA FUNCIONAL)
+//      ARCHIVO shop-script.js (SIN POPUP PROMO)
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -17,20 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoScroller = document.getElementById('logo-scroller');
     const cartModal = document.getElementById('cartModal');
     const checkoutModal = document.getElementById('checkoutModal');
-    const promoModal = document.getElementById('promoModal');
-    const promoModalOverlay = document.querySelector('.promo-modal-overlay');
-    const closePromoModalBtn = document.getElementById('closePromoModal');
-    const promoLink = document.getElementById('promoLink');
-    const promoImage = document.getElementById('promoImage');
     const deliveryAddressContainer = document.getElementById('deliveryAddressContainer');
     const deliveryTimeSelect = document.getElementById('deliveryTimeSelect');
     const deliveryMethodRadios = document.querySelectorAll('input[name="metodoEntrega"]');
     const paymentMethodSelect = document.getElementById('paymentMethodSelect');
     const transferInfo = document.getElementById('transferInfo');
     const headerCartIcon = document.getElementById('headerCartIcon');
+    
+    // Elementos para validación dinámica
+    const direccionInput = document.querySelector('input[name="direccion"]');
+    const ciudadInput = document.querySelector('input[name="ciudad"]');
 
     Promise.all([
-        fetch('/products.json').then(res => res.json()),
+        fetch('/products').then(res => res.json()),
         fetch('/data/categories.json').then(res => res.json()),
         fetch('/data/logos.json').then(res => res.json())
     ]).then(([productsData, categoriesData, logosData]) => {
@@ -41,31 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
         renderProducts();
         setupEventListeners();
         updateCartDisplayFromStorage();
-        handlePromoModal();
     }).catch(error => {
         console.error('Error fatal al cargar los datos:', error);
     });
 
-    function handlePromoModal() {
-        if (sessionStorage.getItem('promoShown')) return;
-        const comboCategoryID = 'combos';
-        const comboProducts = products.filter(p => p.category === comboCategoryID);
-        if (comboProducts.length > 0 && promoModal) {
-            const randomIndex = Math.floor(Math.random() * comboProducts.length);
-            const promoProduct = comboProducts[randomIndex];
-            promoImage.src = promoProduct.image;
-            promoImage.alt = `Oferta: ${promoProduct.name}`;
-            promoLink.href = `#product-${promoProduct.id}`;
-            promoModal.style.display = 'flex';
-            sessionStorage.setItem('promoShown', 'true');
-        }
-    }
-
-    function closePromoModal() { if (promoModal) promoModal.style.display = 'none'; }
-
     function renderLogoScroller(logos) {
         if (!logoScroller || !Array.isArray(logos)) return;
-        // Duplicamos los logos para que el scroll sea infinito y fluido
         const logosToRender = [...logos, ...logos, ...logos];
         logoScroller.innerHTML = logosToRender.map(logoFilename => `<img src="/logos/${logoFilename}" alt="Marca Proveedora">`).join('');
     }
@@ -143,8 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const isDelivery = e.target.value === 'Envío a Domicilio';
                 deliveryAddressContainer.style.display = isDelivery ? 'block' : 'none';
                 deliveryTimeSelect.required = isDelivery;
-                document.querySelector('input[name="direccion"]').required = isDelivery;
-                document.querySelector('input[name="ciudad"]').required = isDelivery;
+                if (direccionInput) direccionInput.required = isDelivery;
+                if (ciudadInput) ciudadInput.required = isDelivery;
             });
         });
 
@@ -159,9 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('clearCart')?.addEventListener('click', clearCart);
         document.getElementById('checkout')?.addEventListener('click', openCheckout);
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
-        
-        closePromoModalBtn?.addEventListener('click', closePromoModal);
-        promoModalOverlay?.addEventListener('click', closePromoModal);
     }
 
     function updateCartDisplay() {
@@ -220,9 +197,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const btn = form.querySelector('button[type="submit"]');
         btn.textContent = 'Procesando...'; btn.disabled = true;
 
+        const deliveryMethod = fData.get('metodoEntrega');
+
         const customerData = {
             nombre: fData.get('nombre'), email: fData.get('email'), telefono: fData.get('telefono'),
-            metodoEntrega: fData.get('metodoEntrega'), direccion: fData.get('direccion'), ciudad: fData.get('ciudad'),
+            metodoEntrega: deliveryMethod, direccion: fData.get('direccion'), ciudad: fData.get('ciudad'),
             horarioEntrega: fData.get('horarioEntrega')
         };
 
