@@ -8,96 +8,86 @@
 </head>
 <body>
 
-    <header>
-        <div class="logo"><img src="logo.png" alt="NOVA Panes"></div>
-        <nav class="main-nav">
-            <a href="index.html" class="active">Inicio</a>
-            <a href="shop.html">Tienda Online</a>
-            <a href="#contacto">Donde estamos</a>
-            <a href="shop.html" class="header-cart-icon">🛒 CARRITO</a>
-        </nav>
-    </header>
+    <div class="hero-background">
+        <header>
+            <nav class="main-nav"><a href="#">Inicio</a><a href="#productos">Productos</a></nav>
+            <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes"></div>
+            <nav class="main-nav"><a href="shop.html">Shop</a><a href="#contacto">Contacto</a></nav>
+        </header>
+        <main class="hero-section">
+            <div class="hero-text">
+                <h1>Mucho más que un simple pan.</h1>
+                <div class="hero-cta"><a href="shop.html" class="cta-button">🛒 Comprar Online</a></div>
+            </div>
+            <div class="hero-image">
+                <img src="hero-images/hero-pan.png" alt="Pan Nova" id="heroImage">
+            </div>
+        </main>
+    </div>
 
-    <main>
-        <section style="background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%); padding: 100px 20px; border-radius: 0 0 80px 80px; max-width: 100%;">
-            <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; align-items: center; gap: 60px;">
-                <div class="reveal active">
-                    <h1 style="font-size: 5rem; color: var(--primary-red); line-height: 1; margin-bottom: 25px;">Mucho más que un simple pan.</h1>
-                    <p style="font-size: 1.3rem; color: var(--text-light); margin-bottom: 40px;">Artesanal, suave y con ese toque de papa que cambia todo. Elevá tus hamburguesas al estándar premium.</p>
-                    <a href="shop.html" class="cta-button">HACER PEDIDO ONLINE</a>
-                </div>
-                <div class="reveal active" style="text-align: center;">
-                    <img src="hero-images/hero-pan.png" alt="Pan Nova" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
-                </div>
-            </div>
-        </section>
-
-        <section class="text-center reveal">
-            <h2 style="font-size: 3.5rem; margin-bottom: 50px;">Nuestra Variedad</h2>
-            <div class="range-grid">
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-papa-1.png" alt="Hamburguesa"></div>
-                    <h3>Hamburguesa</h3>
-                </div>
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pancho-1.png" alt="Panchos"></div>
-                    <h3>Panchos</h3>
-                </div>
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-molde-1.png" alt="Especiales"></div>
-                    <h3>Especiales</h3>
-                </div>
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pancho-doble.png" alt="Combos"></div>
-                    <h3>Combos</h3>
-                </div>
-            </div>
-        </section>
-
-        <div class="split-section reveal">
-            <div class="split-content">
-                <h2 style="font-size: 3rem; color: var(--primary-red); margin-bottom: 20px;">La perfección empieza acá.</h2>
-                <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 35px;">Nuestro pan de papa artesanal es el soporte ideal para resaltar tus mejores ingredientes.</p>
-                <a href="shop.html" style="color: var(--primary-red); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--primary-red);">VER TODOS LOS PRODUCTOS</a>
-            </div>
-            <div class="split-image">
-                <img src="hero-images/hero-pan-1.png" alt="Detalle Pan">
-            </div>
+    <section id="productos" style="max-width:1200px; margin: 80px auto; padding: 0 50px; text-align:center;">
+        <h2 style="font-family:'Lora'; font-size: 3rem;">Nuestros Productos</h2>
+        <div class="product-gallery" id="product-gallery-index" style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 50px;">
+            <!-- Cargados dinámicamente por JS -->
         </div>
+    </section>
 
-        <section id="contacto" class="reveal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
-            <div class="contact-form-container">
-                <h2 style="font-size: 3rem; margin-bottom: 30px;">Hablemos</h2>
-                <form id="contactForm">
-                    <input type="text" name="nombre" placeholder="Nombre completo" required>
-                    <input type="tel" name="telefono" placeholder="WhatsApp" required>
-                    <textarea placeholder="¿Sos un local gastronómico?" rows="5"></textarea>
-                    <button type="submit" class="cta-button">ENVIAR CONSULTA</button>
-                </form>
-            </div>
-            <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa!5e0!3m2!1ses!2sar!4v1710000000000" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </section>
-    </main>
+    <!-- SECCIÓN CONTACTO CON MARGEN INFERIOR AÑADIDO (EL SEPARADOR) -->
+    <section id="contacto" class="bottom-section" style="margin-bottom: 100px;">
+        <div class="contact-form-container">
+            <h2 style="font-family:Lora;">Contacto</h2>
+            <form id="contactForm" style="display:flex; flex-direction:column; gap:15px;">
+                <input type="text" name="nombre" placeholder="Nombre *" required style="padding:15px; border-radius:8px; border:1px solid #000; background: transparent;">
+                <input type="email" name="email" placeholder="Email (Opcional)" style="padding:15px; border-radius:8px; border:1px solid #000; background: transparent;">
+                <input type="tel" name="telefono" placeholder="Teléfono *" required style="padding:15px; border-radius:8px; border:1px solid #000; background: transparent;">
+                <textarea name="mensaje" placeholder="Mensaje" rows="4" style="padding:15px; border-radius:8px; border:1px solid #000; background: transparent;"></textarea>
+                <button type="submit" class="cta-button" style="background-color: #000; color: #fff; cursor: pointer; border: none;">ENVIAR CONSULTA</button>
+            </form>
+            <div id="formMessage" style="margin-top: 15px; display: none; font-weight: 600;"></div>
+        </div>
+        <div class="map-container" style="border-radius: 8px; overflow: hidden; border: 1px solid #E0E0E0;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa!5e0!3m2!1ses!2sar!4v1710000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </section>
 
     <footer class="footer">
-        <h2 style="color: white; font-size: 2.5rem; margin-bottom: 20px;">NOVA Panes®</h2>
-        <div class="footer-links">
-            <a href="https://wa.me/5491164372200" class="footer-btn">📱 WHATSAPP</a>
-            <a href="https://instagram.com/nova.panes" class="footer-btn">📷 INSTAGRAM</a>
-        </div>
+        <h2>NOVA Panes®</h2>
         <p>Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8</p>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('active');
+            // Carga de productos destacados
+            fetch('/products')
+                .then(res => res.json())
+                .then(products => {
+                    const gallery = document.getElementById('product-gallery-index');
+                    gallery.innerHTML = products.slice(0, 3).map(p => `
+                        <div class="product-card" style="border: 1px solid #E0E0E0; border-radius: 8px; overflow: hidden; background: #fff;">
+                            <img src="${p.image}" alt="${p.name}" style="width: 100%; height: 250px; object-fit: cover;">
+                            <h3 style="margin:20px; font-family:'Lora';">${p.name}</h3>
+                            <div style="padding-bottom:25px;"><a href="shop.html" style="color:#B5651D; font-weight:700; text-decoration:none;">VER EN TIENDA</a></div>
+                        </div>
+                    `).join('');
                 });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // Lógica del formulario de contacto
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const msg = document.getElementById('formMessage');
+                fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(new FormData(this))
+                })
+                .then(res => res.json())
+                .then(data => {
+                    msg.innerText = data.message;
+                    msg.style.display = 'block';
+                    msg.style.color = data.success ? 'green' : 'red';
+                    if(data.success) this.reset();
+                });
+            });
         });
     </script>
 </body>
