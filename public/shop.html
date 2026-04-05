@@ -4,175 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Online - NOVA Panes</title>
-    <meta name="description" content="Comprá online pan de papa, snacks, papas congeladas y productos en oferta. Elegí tus favoritos, añadilos al carrito y recibilos en tu casa.">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop-styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="sticky-header-page">
 
-    <div id="promoModal" class="promo-modal" style="display: none;">
-        <div class="promo-modal-overlay"></div>
-        <div class="promo-modal-content">
-            <span id="closePromoModal" class="close-promo-modal">&times;</span>
-            <a id="promoLink" href="#">
-                <img id="promoImage" src="" alt="Promoción de la semana">
-                <div class="promo-modal-title">¡Oferta de la semana!</div>
-            </a>
-        </div>
-    </div>
+    <div id="promoModal" class="promo-modal"><div class="promo-modal-overlay"></div><div class="promo-modal-content"><span id="closePromoModal" style="cursor:pointer; float:right;">&times;</span><a id="promoLink" href="#"><img id="promoImage" src="" style="width:100%"><div class="promo-modal-title">Oferta!</div></a></div></div>
 
     <header>
-        <nav class="main-nav"><a href="index.html">Inicio</a></nav>
-        <div class="logo"><img src="logo.png" alt="Logo de NOVA Panes - Tienda"></div>
+        <div class="logo"><img src="logo.png" alt="NOVA Panes"></div>
         <nav class="main-nav">
+            <a href="index.html">Inicio</a>
             <a href="shop.html" class="active">Shop</a>
-            <a href="#" id="headerCartIcon" class="header-cart-icon">
-                🛒 Carrito (<span id="cartCount">0</span>)
-            </a>
+            <a href="#" id="headerCartIcon" class="header-cart-icon">🛒 Carrito (<span id="cartCount">0</span>)</a>
         </nav>
     </header>
 
     <div class="shop-hero">
-        <div class="shop-hero-content">
-            <h1>Tienda Online</h1>
-            <p>Comprá nuestros productos frescos y recibilos en tu casa</p>
-        </div>
+        <h1>Nuestra Panadería</h1>
+        <p>Frescura artesanal directo a tu puerta.</p>
     </div>
 
     <div class="logo-scroller-container"><div class="logo-scroller" id="logo-scroller"></div></div>
-    
+
+    <main class="shop-main">
+        <div class="shop-search-container"><input type="search" id="searchInput" placeholder="¿Qué buscás hoy?"></div>
+        <div class="filter-container" id="filter-container"></div>
+        <div id="shopProducts"></div>
+    </main>
+
+    <!-- MODAL CARRITO -->
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
-            <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart">&times;</span></div>
-            <div id="cartItems" class="cart-items"></div>
+            <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart" style="cursor:pointer">&times;</span></div>
+            <div id="cartItems"></div>
             <div class="cart-footer">
-                <div class="cart-shipping-info">
-                    Costo de envío $8.000. Envío sin cargo en CABA y GBA Sur para compras mayores a $75.000.<br>El pedido llega entre 24 y 48 hs hábiles.
-                </div>
+                <p>Costo envío: $8.000 (GBA Sur/CABA gratis > $75k)</p>
                 <div class="cart-total"><strong>Total: $<span id="cartTotal">0</span></strong></div>
-                <div id="minPurchaseMessage" class="min-purchase-message" style="display: none;"></div>
-                <div class="cart-actions">
-                    <button id="clearCart" class="btn-secondary">Vaciar Carrito</button>
-                    <button id="checkout" class="btn-primary">Finalizar Compra</button>
-                </div>
+                <div id="minPurchaseMessage" style="color: red; font-size: 0.8rem;"></div>
+                <button id="clearCart" class="btn-secondary" style="margin-bottom:10px">Vaciar</button>
+                <button id="checkout" class="btn-primary">Finalizar Compra</button>
             </div>
         </div>
     </div>
 
+    <!-- MODAL CHECKOUT -->
     <div id="checkoutModal" class="checkout-modal">
         <div class="checkout-modal-content">
-            <div class="checkout-header">
-                <h2>Finalizar Compra</h2>
-                <span class="close-checkout">&times;</span>
-            </div>
-            <form id="checkoutForm" class="checkout-form">
-                <div class="form-section">
-                    <h3>Datos de Contacto</h3>
-                    <input type="text" name="nombre" placeholder="Nombre completo *" required>
-                    <input type="email" name="email" placeholder="Email *" required>
-                    <input type="tel" name="telefono" placeholder="Teléfono *" required>
+            <div class="checkout-header"><h2>Finalizar Compra</h2><span class="close-checkout" style="cursor:pointer">&times;</span></div>
+            <form id="checkoutForm">
+                <input type="text" name="nombre" placeholder="Nombre completo *" required style="width:100%; margin:10px 0; padding:10px">
+                <input type="email" name="email" placeholder="Email *" required style="width:100%; margin:10px 0; padding:10px">
+                <input type="tel" name="telefono" placeholder="Teléfono *" required style="width:100%; margin:10px 0; padding:10px">
+                
+                <div style="margin:20px 0">
+                    <label><input type="radio" name="metodoEntrega" value="Envío a Domicilio" checked> Envío</label>
+                    <label style="margin-left:20px"><input type="radio" name="metodoEntrega" value="Retiro en Fábrica"> Retiro</label>
                 </div>
-                <div class="form-section">
-                    <h3>Método de Entrega</h3>
-                    <div class="delivery-options">
-                        <label>
-                            <input type="radio" name="metodoEntrega" value="Envío a Domicilio" checked required>
-                            Envío a Domicilio
-                        </label>
-                        <label>
-                            <input type="radio" name="metodoEntrega" value="Retiro en Fábrica">
-                            Retiro en Fábrica
-                        </label>
-                    </div>
-                </div>
+
                 <div id="deliveryAddressContainer">
-                    <div class="form-section">
-                        <h3>Dirección de Entrega</h3>
-                        <input type="text" name="direccion" placeholder="Dirección *" >
-                        <input type="text" name="ciudad" placeholder="Ciudad *" >
-                        <input type="text" name="codigoPostal" placeholder="Código Postal">
-                        <textarea name="referencias" placeholder="Referencias adicionales" rows="2"></textarea>
-                    </div>
-                    <div class="form-section delivery-time-container">
-                        <h3>Horario de Entrega</h3>
-                        <select name="horarioEntrega" id="deliveryTimeSelect" required>
-                            <option value="">Seleccionar horario *</option>
-                            <option value="10 a 14 hs">10 a 14 hs</option>
-                            <option value="14 a 18 hs">14 a 18 hs</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-section">
-                    <h3>Método de Pago</h3>
-                    <select name="metodoPago" id="paymentMethodSelect" required>
-                        <option value="">Seleccionar método *</option>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="transferencia">Transferencia Bancaria</option>
-                        <option value="mercadopago">Mercado Pago</option>
+                    <input type="text" name="direccion" placeholder="Dirección *" style="width:100%; margin:5px 0; padding:10px">
+                    <input type="text" name="ciudad" placeholder="Ciudad *" style="width:100%; margin:5px 0; padding:10px">
+                    <select name="horarioEntrega" id="deliveryTimeSelect" style="width:100%; margin:10px 0; padding:10px">
+                        <option value="10 a 14 hs">10 a 14 hs</option>
+                        <option value="14 a 18 hs">14 a 18 hs</option>
                     </select>
-                    <div id="transferInfo" class="payment-info" style="display: none;">
-                        <p>Por favor, realiza la transferencia a los siguientes datos:</p>
-                        <ul>
-                            <li><strong>Alias:</strong> novapanes</li>
-                            <li><strong>CUIT:</strong> 20-33785913-6</li>
-                        </ul>
-                    </div>
                 </div>
-                <div class="order-summary">
-                    <h3>Resumen del Pedido</h3>
-                    <div id="orderItems"></div>
-                    <div class="cart-shipping-info">
-                        Costo de envío $8.000. Envío sin cargo en CABA y GBA Sur para compras mayores a $75.000.<br>El pedido llega entre 24 y 48 hs hábiles.
-                    </div>
-                    <div class="order-total"><strong>Total: $<span id="orderTotal">0</span></strong></div>
+
+                <select name="metodoPago" id="paymentMethodSelect" required style="width:100%; margin:10px 0; padding:10px">
+                    <option value="efectivo">Efectivo</option>
+                    <option value="transferencia">Transferencia</option>
+                    <option value="mercadopago">Mercado Pago</option>
+                </select>
+
+                <div id="transferInfo" style="display:none; background:#F9F9F9; padding:15px; border-radius:10px; font-size:0.8rem">
+                    Alias: <b>novapanes</b><br>CUIT: <b>20-33785913-6</b>
                 </div>
-                <div class="checkout-actions">
-                    <button type="button" class="btn-secondary close-checkout-btn">Cancelar</button>
-                    <button type="submit" class="btn-primary">Confirmar Pedido</button>
-                </div>
+
+                <div id="orderItems" style="margin-top:20px; font-size:0.9rem"></div>
+                <div style="text-align:right; margin:10px 0">Total: $<span id="orderTotal">0</span></div>
+
+                <button type="button" class="close-checkout-btn btn-secondary" style="margin-bottom:10px">Cancelar</button>
+                <button type="submit" class="btn-primary">Confirmar Pedido</button>
             </form>
         </div>
     </div>
-    
-    <main class="shop-main">
-        <div class="shop-search-container">
-            <input type="search" id="searchInput" placeholder="Buscar productos por nombre...">
-        </div>
-        
-        <div class="view-switcher-container">
-            <button class="view-btn active" id="view-grouped">Ver por Categoría</button>
-            <button class="view-btn" id="view-list">Ver Todos</button>
-        </div>
 
-        <div class="shop-filters"><div class="filter-container" id="filter-container"></div></div>
-        
-        <div id="shopProducts"></div>
-    </main>
-    <hr class="section-divider">
-    <footer class="footer">
-        <p>NOVA Panes® es una marca registrada de Grupo FeSa</p>
-        <div class="footer-links">
-            <a href="https://wa.me/5491164372200" target="_blank" class="footer-btn whatsapp-btn">📱 WhatsApp</a>
-            <span class="footer-divider">|</span>
-            <span class="phone-text">Tel: +54 9 11 6437 2200</span>
-            <span class="footer-divider">|</span>
-            <a href="https://instagram.com/nova.panes" target="_blank" class="footer-btn instagram-btn">📷 @nova.panes</a>
-        </div>
-        <div class="footer-fiscal">
-            <p>Razón Social: GRUPO FESA S. CAP I SECC IV</p>
-            <p>CUIT: 30-71821628-8</p>
-        </div>
-    </footer>
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <footer class="footer"><h2>NOVA Panes®</h2><p>CUIT: 30-71821628-8</p></footer>
     <script src="shop-script.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('/api/track-visit', { method: 'POST' })
-            .catch(error => console.error('No se pudo registrar la visita:', error));
-    });
-    </script>
 </body>
 </html>

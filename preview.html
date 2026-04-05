@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Nova Panes - Nuevo Estilo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #D32F2F;
+            --accent-yellow: #FFB300;
+            --bg-cream: #FFFDF9;
+            --text-dark: #2D2D2D;
+            --text-light: #666666;
+            --white: #ffffff;
+            --soft-shadow: 0 10px 40px rgba(0,0,0,0.06);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+        }
+
+        /* --- NAVEGACIÓN --- */
+        header {
+            background-color: var(--white);
+            padding: 15px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.03);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-left: 30px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary-red); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px;
+            gap: 60px;
+        }
+
+        .hero-content { flex: 1; }
+        .hero-image { flex: 1; text-align: center; }
+
+        .hero-content h1 {
+            font-family: 'Lora', serif;
+            font-size: 4.2rem;
+            line-height: 1.1;
+            color: var(--primary-red);
+            margin: 0 0 20px 0;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-main {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.25);
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            background-color: #b71c1c;
+        }
+
+        /* --- FILTROS DE TIENDA --- */
+        .shop-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-family: 'Lora', serif;
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 60px;
+        }
+
+        .filter-pill {
+            background: var(--white);
+            border: 2px solid #EEE;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-pill.active {
+            background: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+        }
+
+        /* --- GRILLA DE PRODUCTOS --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: var(--soft-shadow);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin: 10px 0;
+            font-family: 'Lora', serif;
+        }
+
+        .card .price {
+            color: var(--primary-red);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-add {
+            background: var(--accent-yellow);
+            color: var(--text-dark);
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover { background: #ffa000; }
+
+        .sale-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-red);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            .hero { flex-direction: column; text-align: center; padding: 50px 20px; }
+            .hero-content h1 { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div style="font-weight: 900; font-size: 1.5rem; color: var(--primary-red);">NOVA PANES</div>
+        <nav class="nav-links">
+            <a href="#">Inicio</a>
+            <a href="#">Productos</a>
+            <a href="#">Tienda</a>
+            <a href="#">Carrito (0)</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>El secreto de una gran hamburguesa.</h1>
+            <p>Nacimos para ofrecer el pan de papa definitivo. Suavidad inigualable, frescura diaria y el sabor que tu negocio o familia merece.</p>
+            <a href="#" class="btn-main">VER TIENDA ONLINE</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://potatorolls.com/wp-content/uploads/Sandwich-Potato-Rolls-1.png" style="max-width: 100%;" alt="Pan de Papa">
+        </div>
+    </section>
+
+    <div class="shop-container">
+        <h2 class="section-title">Nuestra Panadería</h2>
+        
+        <div class="filters">
+            <div class="filter-pill active">Todos</div>
+            <div class="filter-pill">Hamburguesas</div>
+            <div class="filter-pill">Panificados</div>
+            <div class="filter-pill">Combos</div>
+        </div>
+
+        <div class="products-grid">
+            <!-- Producto 1 -->
+            <div class="card">
+                <div class="sale-badge">OFERTA</div>
+                <img src="https://potatorolls.com/wp-content/uploads/Sandwich-Potato-Rolls-1.png" alt="Pan 1">
+                <h3>Pan de Papa Tradicional</h3>
+                <div class="price">$1.500</div>
+                <button class="btn-add">AGREGAR AL CARRITO</button>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="card">
+                <img src="https://potatorolls.com/wp-content/uploads/Sandwich-Potato-Rolls-1.png" alt="Pan 2">
+                <h3>Pan de Papa Sésamo</h3>
+                <div class="price">$1.700</div>
+                <button class="btn-add">AGREGAR AL CARRITO</button>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="card">
+                <img src="https://potatorolls.com/wp-content/uploads/Sandwich-Potato-Rolls-1.png" alt="Pan 3">
+                <h3>Pan de Lomito Premium</h3>
+                <div class="price">$1.850</div>
+                <button class="btn-add">AGREGAR AL CARRITO</button>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background: var(--text-dark); color: white; padding: 60px 20px; text-align: center; margin-top: 80px;">
+        <h2 style="font-family: 'Lora'; margin-bottom: 20px;">NOVA Panes</h2>
+        <p style="color: #aaa; max-width: 500px; margin: 0 auto 30px;">Llevando la cultura del mejor pan de papa a todo el país.</p>
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            <a href="#" style="color: white; text-decoration: none;">Instagram</a>
+            <a href="#" style="color: white; text-decoration: none;">WhatsApp</a>
+        </div>
+    </footer>
+
+</body>
+</html>
