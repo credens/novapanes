@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
     <header>
         <div class="logo"><img src="logo.png" alt="NOVA Panes"></div>
         <nav class="main-nav">
@@ -16,7 +17,9 @@
             <a href="shop.html" class="header-cart-icon">🛒 CARRITO</a>
         </nav>
     </header>
+
     <main>
+        <!-- HERO -->
         <section style="background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%); padding: 100px 20px; border-radius: 0 0 80px 80px; max-width: 100%;">
             <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; align-items: center; gap: 60px;">
                 <div class="reveal active">
@@ -25,11 +28,12 @@
                     <a href="shop.html" class="cta-button">HACER PEDIDO ONLINE</a>
                 </div>
                 <div class="reveal active" style="text-align: center;">
-                    <img src="hero-images/hero-pan.png" alt="Pan Principal" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
+                    <img src="hero-images/hero-pan.png" alt="Pan Nova" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
                 </div>
             </div>
         </section>
 
+        <!-- VARIEDAD -->
         <section class="text-center reveal">
             <h2 style="font-size: 3.5rem; margin-bottom: 50px;">Nuestra Variedad</h2>
             <div class="range-grid">
@@ -40,6 +44,7 @@
             </div>
         </section>
 
+        <!-- PERFECT MATCH -->
         <div class="split-section reveal">
             <div class="split-content">
                 <h2 style="font-size: 3rem; color: var(--primary-red); margin-bottom: 20px;">La perfección empieza acá.</h2>
@@ -49,7 +54,8 @@
             <div class="split-image"><img src="hero-images/hero-pan-1.png" alt="Detalle Pan"></div>
         </div>
 
-        <section id="contacto" class="reveal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+        <!-- CONTACTO -->
+        <section id="contacto" class="bottom-section reveal">
             <div class="contact-form-container">
                 <h2 style="font-size: 3rem; margin-bottom: 30px;">Hablemos</h2>
                 <form id="contactForm">
@@ -64,14 +70,18 @@
             </div>
         </section>
     </main>
+
     <footer class="footer">
-        <h2 style="color: white; font-size: 2.5rem; margin-bottom: 20px;">NOVA Panes®</h2>
+        <h2>NOVA Panes®</h2>
         <div class="footer-links">
             <a href="https://wa.me/5491164372200" class="footer-btn">📱 WHATSAPP</a>
             <a href="https://instagram.com/nova.panes" class="footer-btn">📷 INSTAGRAM</a>
         </div>
-        <p>Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8</p>
+        <div class="footer-legal">
+            Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8
+        </div>
     </footer>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
