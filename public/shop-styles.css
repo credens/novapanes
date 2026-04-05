@@ -1,48 +1,40 @@
-/* ===================================================
-   ESTILOS TIENDA: Efectos Bakeworks
-   =================================================== */
-
-.shop-main { max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; }
+.shop-main { max-width: 1200px; margin: 0 auto; padding: 0 50px; }
 
 .shop-hero {
-    background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%);
-    padding: 80px 20px;
+    background: linear-gradient(to bottom, #F9DAB9, #FEFBF5);
+    padding: 60px 50px 40px;
     text-align: center;
-    border-radius: 0 0 50px 50px;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
-.shop-hero h1 { font-size: 4rem; color: var(--primary-red); }
+.shop-hero h1 { font-family: 'Lora', serif; font-size: 3.5rem; margin: 0; }
 
-/* --- PRODUCTOS (Efecto Bakeworks) --- */
+/* --- PRODUCTOS (Zoom y Elevación) --- */
+.shop-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    gap: 30px;
+}
+
 .product-item {
-    background: var(--white);
-    border-radius: 28px;
-    padding: 25px;
-    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-    box-shadow: var(--soft-shadow);
+    background: #fff;
+    border: 1px solid #E0E0E0;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Para el zoom de la imagen */
 }
 
 .product-item:hover {
-    transform: translateY(-15px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
-}
-
-.product-image-container {
-    width: 100%;
-    height: 220px;
-    overflow: hidden;
-    border-radius: 20px;
-    margin-bottom: 20px;
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
 .product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    width: 100%; height: 180px;
+    object-fit: cover;
+    cursor: pointer;
     transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
@@ -50,31 +42,29 @@
     transform: scale(1.1);
 }
 
-.product-title { font-size: 1.4rem; color: var(--text-dark); margin-bottom: 10px; }
-.product-price { color: var(--primary-red); font-weight: 800; font-size: 1.6rem; }
+.product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+.product-title { font-family: 'Lora', serif; font-size: 1.2rem; margin: 0 0 10px 0; }
+.product-price { font-size: 1.3rem; font-weight: 600; color: #B5651D; margin-bottom: 15px; }
 
 .add-to-cart-btn {
-    background: var(--accent-yellow);
-    color: var(--text-dark);
+    background: #B5651D;
+    color: #fff;
     border: none;
-    padding: 15px;
-    border-radius: 15px;
-    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: 600;
     transition: 0.3s;
-    margin-top: 15px;
 }
-
-.add-to-cart-btn:hover {
-    background: #FFA000;
-    letter-spacing: 1px;
-}
+.add-to-cart-btn:hover { background: #8B4A15; }
 
 /* Scroller Logos */
-.logo-scroller-container {
-    width: 100%; overflow: hidden; background: white;
-    padding: 40px 0; margin: 20px 0 60px; border-radius: 30px;
-}
-.logo-scroller { display: flex; align-items: center; width: max-content; animation: scrollLogos 40s linear infinite; }
-.logo-scroller img { height: 40px; margin: 0 50px; filter: grayscale(1); opacity: 0.4; transition: 0.4s; }
+.logo-scroller-container { overflow: hidden; padding: 40px 0; }
+.logo-scroller { display: flex; animation: scrollLogos 40s linear infinite; width: max-content; }
+.logo-scroller img { height: 45px; margin: 0 40px; filter: grayscale(1); opacity: 0.5; transition: 0.4s; }
 .logo-scroller img:hover { filter: grayscale(0); opacity: 1; transform: scale(1.1); }
+@keyframes scrollLogos { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Modales */
+.cart-modal, .checkout-modal { position: fixed; z-index: 2000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:none; }
+.cart-modal-content, .checkout-modal-content { background:white; margin: 5vh auto; width: 90%; max-width: 500px; border-radius: 20px; padding: 30px; }
