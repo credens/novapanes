@@ -1,3 +1,7 @@
+/* ===================================================
+   ESTILO NOVA PANES: Efectos Premium & Animaciones
+   =================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
@@ -17,12 +21,27 @@ body {
     background-color: var(--bg-cream);
     color: var(--text-dark);
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 h1, h2, h3 { font-family: 'Lora', serif; font-weight: 700; margin: 0; }
 
+/* --- ANIMACIONES DE ENTRADA (Scroll Reveal) --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- HEADER --- */
 header {
-    background-color: var(--white);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     padding: 0 50px;
     display: flex;
     justify-content: space-between;
@@ -34,49 +53,73 @@ header {
     height: var(--header-height);
 }
 
-.logo img { height: 55px; width: auto; }
+.logo img { height: 55px; transition: transform 0.3s ease; }
+.logo img:hover { transform: scale(1.05); }
+
 .main-nav { display: flex; align-items: center; gap: 30px; }
 .main-nav a {
     text-decoration: none; color: var(--text-dark);
     font-weight: 600; font-size: 0.85rem;
     text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+    position: relative;
 }
-.main-nav a:hover, .main-nav a.active { color: var(--primary-red); }
-.header-cart-icon { background-color: var(--bg-cream); padding: 10px 20px; border-radius: 50px; border: 1px solid #F0F0F0; color: var(--text-dark) !important; }
 
+.main-nav a::after {
+    content: '';
+    position: absolute; width: 0; height: 2px;
+    bottom: -5px; left: 0; background-color: var(--primary-red);
+    transition: width 0.3s;
+}
+.main-nav a:hover::after { width: 100%; }
+
+/* --- BOTÓN PREMIUM (Brillo Dinámico) --- */
+.btn-premium {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-premium::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: all 0.5s;
+}
+
+.btn-premium:hover::before { left: 100%; }
+.btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(211, 47, 47, 0.3); }
+
+/* --- SECCIONES --- */
 section { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
-.text-center { text-align: center; }
 
-.range-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 50px; }
-.range-item { text-align: center; transition: 0.3s; }
-.range-item:hover { transform: translateY(-10px); }
-.circle-img { width: 180px; height: 180px; border-radius: 50%; background: white; margin: 0 auto 20px; box-shadow: var(--soft-shadow); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 5px solid white; }
-.circle-img img { width: 80%; object-fit: contain; }
-
-.split-section { display: flex; align-items: center; gap: 80px; background: white; padding: 0; max-width: 100%; border-radius: 60px; margin: 100px 50px; overflow: hidden; box-shadow: var(--soft-shadow); }
-.split-content { flex: 1; padding: 80px; }
-.split-image { flex: 1.2; line-height: 0; }
-.split-image img { width: 100%; height: 600px; object-fit: cover; }
-
-.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 60px; }
-.feature-box { padding: 40px; background: white; border-radius: 30px; box-shadow: var(--soft-shadow); text-align: center; }
-.feature-box h3 { color: var(--primary-red); margin-bottom: 15px; }
-
-.contact-form-container input, .contact-form-container textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #DDD; font-family: inherit; }
-.contact-form-container button { background: var(--primary-red); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: 700; cursor: pointer; width: 100%; }
-.map-container { border-radius: 24px; overflow: hidden; box-shadow: var(--soft-shadow); height: 400px; }
-
-.footer { background-color: var(--text-dark); color: var(--white); padding: 80px 20px; text-align: center; }
-.footer-links { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
-.footer-btn { border: 1px solid rgba(255,255,255,0.2); padding: 12px 30px; border-radius: 50px; color: white; text-decoration: none; font-weight: 600; transition: 0.3s; }
-.footer-btn:hover { background: var(--primary-red); border-color: var(--primary-red); }
-
-@media (max-width: 768px) {
-    header { padding: 15px 20px; flex-direction: column; height: auto; }
-    .main-nav { margin-top: 15px; gap: 15px; }
-    .split-section { flex-direction: column; margin: 50px 20px; border-radius: 40px; }
-    .split-content { padding: 40px; }
-    .split-image img { height: 300px; }
-    .features-grid { grid-template-columns: 1fr; }
-    section { padding: 60px 20px; }
+.circle-img {
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: white;
+    margin: 0 auto 20px;
+    box-shadow: var(--soft-shadow);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border: 5px solid white;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+.range-item:hover .circle-img { transform: scale(1.1) rotate(5deg); }
+
+.split-section {
+    display: flex; align-items: center; gap: 80px;
+    background: white; padding: 0; max-width: 1200px; border-radius: 60px;
+    margin: 100px auto; overflow: hidden;
+    box-shadow: var(--soft-shadow);
+}
+
+.split-image img { 
+    width: 100%; height: 600px; object-fit: cover; 
+    transition: transform 1.5s ease;
+}
+
+.split-section:hover .split-image img { transform: scale(1.05); }
+
+/* --- FOOTER --- */
+.footer { background-color: var(--text-dark); color: var(--white); padding: 80px 20px; text-align: center; }
