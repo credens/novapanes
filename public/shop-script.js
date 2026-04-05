@@ -147,15 +147,43 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('clearCart')?.addEventListener('click', () => { if(confirm('¿Vaciar?')) { cart = []; updateCartDisplay(); } });
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
 
+        // NUEVA LÓGICA: Control de método de pago vs método de entrega
+        const efectivoOption = paymentMethodSelect?.querySelector('option[value="efectivo"]');
+        if (efectivoOption) {
+            efectivoOption.disabled = true; // Por defecto arranca en "Envío", así que lo deshabilitamos
+            efectivoOption.textContent = "Efectivo (Solo para Retiro)";
+        }
+
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const isDelivery = e.target.value === 'Envío a Domicilio';
+                
+                // Mostrar/ocultar campos de dirección
                 deliveryAddressContainer.style.display = isDelivery ? 'block' : 'none';
                 if(direccionInput) direccionInput.required = isDelivery;
                 if(ciudadInput) ciudadInput.required = isDelivery;
                 document.getElementById('deliveryTimeSelect').required = isDelivery;
+
+                // Lógica de pago
+                if (efectivoOption) {
+                    if (isDelivery) {
+                        // Si es envío, bloqueamos efectivo
+                        efectivoOption.disabled = true;
+                        efectivoOption.textContent = "Efectivo (Solo para Retiro)";
+                        // Si estaba seleccionado, lo des-seleccionamos
+                        if (paymentMethodSelect.value === 'efectivo') {
+                            paymentMethodSelect.value = '';
+                            transferInfo.style.display = 'none';
+                        }
+                    } else {
+                        // Si es retiro, habilitamos efectivo
+                        efectivoOption.disabled = false;
+                        efectivoOption.textContent = "Efectivo al recibir";
+                    }
+                }
             });
         });
+
         paymentMethodSelect?.addEventListener('change', e => {
             transferInfo.style.display = e.target.value === 'transferencia' ? 'block' : 'none';
         });
@@ -186,6 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateCartDisplayFromStorage() { const saved = localStorage.getItem('novaPanesCart'); if (saved) { cart = JSON.parse(saved); updateCartDisplay(); } }
+    
     window.openProductModal = (src, title) => {
         const m = document.createElement('div');
         m.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(5px);";
