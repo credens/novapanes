@@ -7,17 +7,15 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <header>
         <div class="logo"><img src="logo.png" alt="NOVA Panes"></div>
         <nav class="main-nav">
             <a href="index.html" class="active">Inicio</a>
             <a href="shop.html">Tienda Online</a>
-            <a href="#contacto">Donde estamos</a>
+            <a href="#contacto">Contacto</a>
             <a href="shop.html" class="header-cart-icon">🛒 CARRITO</a>
         </nav>
     </header>
-
     <main>
         <section style="background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%); padding: 100px 20px; border-radius: 0 0 80px 80px; max-width: 100%;">
             <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; align-items: center; gap: 60px;">
@@ -27,7 +25,7 @@
                     <a href="shop.html" class="cta-button">HACER PEDIDO ONLINE</a>
                 </div>
                 <div class="reveal active" style="text-align: center;">
-                    <img src="hero-images/hero-pan.png" alt="Pan Nova" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
+                    <img src="hero-images/hero-pan.png" alt="Pan Principal" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
                 </div>
             </div>
         </section>
@@ -35,22 +33,10 @@
         <section class="text-center reveal">
             <h2 style="font-size: 3.5rem; margin-bottom: 50px;">Nuestra Variedad</h2>
             <div class="range-grid">
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-papa-1.png" alt="Hamburguesa"></div>
-                    <h3>Hamburguesa</h3>
-                </div>
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pancho-1.png" alt="Panchos"></div>
-                    <h3>Panchos</h3>
-                </div>
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-molde-1.png" alt="Especiales"></div>
-                    <h3>Especiales</h3>
-                </div>
-                <div class="range-item">
-                    <div class="circle-img"><img src="productos/pancho-doble.png" alt="Combos"></div>
-                    <h3>Combos</h3>
-                </div>
+                <div class="range-item"><div class="circle-img"><img src="productos/pan-de-papa-1.png"></div><h3>Hamburguesa</h3></div>
+                <div class="range-item"><div class="circle-img"><img src="productos/pancho-1.png"></div><h3>Panchos</h3></div>
+                <div class="range-item"><div class="circle-img"><img src="productos/pan-de-molde-1.png"></div><h3>Especiales</h3></div>
+                <div class="range-item"><div class="circle-img"><img src="productos/pancho-doble.png"></div><h3>Combos</h3></div>
             </div>
         </section>
 
@@ -60,9 +46,7 @@
                 <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 35px;">Nuestro pan de papa artesanal es el soporte ideal para resaltar tus mejores ingredientes.</p>
                 <a href="shop.html" style="color: var(--primary-red); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--primary-red);">VER TODOS LOS PRODUCTOS</a>
             </div>
-            <div class="split-image">
-                <img src="hero-images/hero-pan-1.png" alt="Detalle Pan">
-            </div>
+            <div class="split-image"><img src="hero-images/hero-pan-1.png" alt="Detalle Pan"></div>
         </div>
 
         <section id="contacto" class="reveal" style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
@@ -80,7 +64,6 @@
             </div>
         </section>
     </main>
-
     <footer class="footer">
         <h2 style="color: white; font-size: 2.5rem; margin-bottom: 20px;">NOVA Panes®</h2>
         <div class="footer-links">
@@ -89,13 +72,10 @@
         </div>
         <p>Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8</p>
     </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('active');
-                });
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
             }, { threshold: 0.1 });
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
