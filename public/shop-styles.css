@@ -1,10 +1,10 @@
 /* ===================================================
-   ESTILOS TIENDA: Cards Uniformes y Modales Prolijos
+   ESTILOS TIENDA: Diseño Boutique Premium (Definitivo)
    =================================================== */
 
 .shop-main { max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; }
 
-/* BANNER */
+/* BANNER COMPACTO */
 .shop-hero {
     background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%);
     padding: 40px 20px;
@@ -12,61 +12,88 @@
     border-radius: 0 0 50px 50px;
     margin-bottom: 30px;
 }
-.shop-hero h1 { font-family: 'Lora'; font-size: 3rem; color: var(--primary-red); margin: 0; }
+.shop-hero h1 { font-family: 'Lora'; font-size: 2.8rem; color: var(--primary-red); margin: 0; }
+.shop-hero p { font-size: 1rem; color: var(--text-light); margin-top: 5px; }
 
-/* BUSCADOR Y FILTROS */
+/* BUSCADOR */
 .shop-search-container { max-width: 700px; margin: 0 auto 25px; }
 #searchInput {
-    width: 100%; padding: 15px 30px; border-radius: 60px;
+    width: 100%; padding: 16px 30px; border-radius: 60px;
     border: 2px solid #EEE; font-family: 'Poppins'; font-size: 1rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none; box-sizing: border-box;
 }
+
+/* FILTROS UNA SOLA LÍNEA */
 .filter-container { 
     display: flex; justify-content: center; gap: 8px; margin-bottom: 25px;
     flex-wrap: nowrap; overflow-x: auto; padding: 10px 5px; -webkit-overflow-scrolling: touch;
 }
 .filter-container::-webkit-scrollbar { display: none; }
+
 .filter-btn {
-    background: var(--white); border: 1px solid #EEE; padding: 8px 16px;
-    border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.8rem; white-space: nowrap;
+    background: var(--white); border: 1px solid #EEE; padding: 10px 20px;
+    border-radius: 50px; cursor: pointer; font-weight: 600; font-family: 'Poppins';
+    font-size: 0.8rem; color: var(--text-dark); white-space: nowrap; transition: 0.3s;
 }
 .filter-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
 
-/* PRODUCTOS: ALTURA UNIFORME */
+/* LOGO SCROLLER (CORRECCIÓN TAMAÑO) */
+.logo-scroller-container {
+    width: 100%; overflow: hidden; background: white;
+    padding: 25px 0; margin-bottom: 40px; border-radius: 24px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.01);
+}
+.logo-scroller { display: flex; align-items: center; width: max-content; animation: scrollLogos 60s linear infinite; }
+.logo-scroller img { 
+    height: 40px; /* Tamaño controlado */
+    width: auto;
+    margin: 0 40px; 
+    filter: grayscale(1); 
+    opacity: 0.4; 
+    transition: 0.4s;
+}
+.logo-scroller img:hover { filter: grayscale(0); opacity: 1; transform: scale(1.1); }
+
+@keyframes scrollLogos { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* GRILLA DE PRODUCTOS Y TÍTULOS */
+.category-group { margin-bottom: 60px; clear: both; }
+
+.category-group-title { 
+    font-family: 'Lora'; font-size: 2rem; 
+    margin: 0 0 30px 0; border-bottom: 3px solid var(--accent-yellow); 
+    display: inline-block; padding-bottom: 5px; color: var(--text-dark);
+}
+
 .shop-products { 
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
     gap: 30px; 
-    align-items: stretch; /* Asegura que todas las cards de la fila midan lo mismo */
+    align-items: stretch;
 }
 
 .product-item {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 25px;
-    box-shadow: var(--soft-shadow);
-    display: flex;
-    flex-direction: column; /* Organiza contenido verticalmente */
-    height: 100%; /* Ocupa todo el alto de la celda de la grilla */
-    transition: transform 0.3s ease;
+    background: var(--white); border-radius: 28px; padding: 25px;
+    box-shadow: var(--soft-shadow); display: flex; flex-direction: column;
+    height: 100%; box-sizing: border-box; transition: 0.4s;
 }
-
-.product-item:hover { transform: translateY(-8px); }
+.product-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
 .product-image { 
     width: 100%; 
     height: 200px; 
     object-fit: contain; 
     margin-bottom: 20px; 
+    cursor: pointer;
 }
 
 .product-info {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Hace que esta sección crezca para ocupar el espacio */
+    flex-grow: 1;
 }
 
-.product-title { font-family: 'Lora'; font-size: 1.3rem; margin: 0 0 10px 0; color: var(--text-dark); }
+.product-title { font-family: 'Lora'; font-size: 1.3rem; margin: 0 0 10px 0; color: var(--text-dark); line-height: 1.2; }
 .product-description { font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px; flex-grow: 1; }
 
 .product-price { 
@@ -74,68 +101,32 @@
     font-weight: 800; 
     font-size: 1.5rem; 
     margin-bottom: 15px; 
-    margin-top: auto; /* Alinea el precio y los controles al fondo */
 }
 
-.product-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
+.product-controls { display: flex; align-items: center; gap: 10px; margin-top: auto; }
 .quantity-selector { display: flex; align-items: center; background: #F5F5F5; border-radius: 12px; padding: 4px; border: 1px solid #EEE; }
 .qty-btn { background: white; border: none; width: 30px; height: 30px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.qty-input { width: 30px; border: none; background: transparent; text-align: center; font-weight: 700; outline: none; }
+.qty-input { width: 30px; border: none; background: transparent; text-align: center; font-weight: 700; font-size: 0.9rem; outline: none; -moz-appearance: textfield; }
+.qty-input::-webkit-inner-spin-button, .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-.add-to-cart-btn {
-    background: var(--accent-yellow);
-    color: var(--text-dark);
-    border: none;
-    padding: 14px;
-    border-radius: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    flex: 1;
-}
+.add-to-cart-btn { background: var(--accent-yellow); color: var(--text-dark); border: none; padding: 14px; border-radius: 15px; font-weight: 700; cursor: pointer; flex: 1; transition: 0.3s; }
+.add-to-cart-btn:hover { background: #FFA000; }
 
-/* ===================================================
-   MODALES (Carrito Corregido)
-   =================================================== */
+/* MODALES */
 .cart-modal, .checkout-modal { position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; }
 .cart-modal-content, .checkout-modal-content { background: var(--bg-cream); width: 95%; max-width: 500px; border-radius: 35px; padding: 35px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.2); }
 
-.cart-header { border-bottom: 1px solid #EEE; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; }
-
-.cart-item-row { 
-    display: flex; 
-    align-items: center; 
-    gap: 15px; 
-    padding: 15px 0; 
-    border-bottom: 1px solid #EEE; 
-}
+.cart-header, .checkout-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EEE; padding-bottom: 15px; margin-bottom: 20px; }
+.cart-item-row { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #EEE; }
 .cart-item-row img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; background: white; }
-.cart-item-info { flex: 1; line-height: 1.3; }
-.cart-item-info b { display: block; font-size: 0.95rem; margin-bottom: 4px; color: var(--text-dark); }
-.cart-item-info span { color: var(--primary-red); font-weight: 700; }
+.cart-item-info { flex: 1; }
+.cart-item-info b { display: block; font-size: 0.95rem; margin-bottom: 2px; }
+.cart-item-info span { color: var(--primary-red); font-weight: 700; font-size: 0.9rem; }
 
-.remove-btn { background: #FEEBEB; color: var(--primary-red); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; line-height: 1; }
+.remove-btn { background: #FEEBEB; color: var(--primary-red); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
-.cart-total-box { margin-top: 25px; text-align: right; }
+.cart-total-box { margin-top: 25px; text-align: right; border-top: 1px solid #EEE; padding-top: 15px; }
 .cart-total-box strong { font-size: 1.6rem; color: var(--text-dark); }
 
-.btn-primary { background: var(--primary-red); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 700; width: 100%; cursor: pointer; font-size: 1rem; margin-top: 15px; }
-
-/* Botón Vaciar Estilizado */
-.btn-vaciar {
-    background: transparent;
-    color: #999;
-    border: 2px solid #EEE;
-    padding: 10px;
-    border-radius: 50px;
-    font-weight: 600;
-    width: 100%;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.btn-vaciar:hover { border-color: var(--primary-red); color: var(--primary-red); }
+.btn-primary { background: var(--primary-red); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 15px; font-size: 1rem; }
+.btn-vaciar { background: transparent; color: #999; border: 2px solid #EEE; padding: 10px; border-radius: 50px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; }

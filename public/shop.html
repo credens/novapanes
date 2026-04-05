@@ -21,31 +21,41 @@
         </nav>
     </header>
 
-    <div class="shop-hero"><h1>Nuestros Productos</h1><p>Frescura artesanal directo a tu puerta.</p></div>
+    <div class="shop-hero">
+        <h1>Nuestros Productos</h1>
+        <p>Frescura artesanal directo a tu puerta.</p>
+    </div>
 
     <main class="shop-main">
-        <div class="shop-search-container"><input type="search" id="searchInput" placeholder="¿Qué estás buscando?"></div>
+        <div class="shop-search-container">
+            <input type="search" id="searchInput" placeholder="¿Qué estás buscando?">
+        </div>
+
         <div class="filter-container" id="filter-container"></div>
-        <div class="logo-scroller-container"><div class="logo-scroller" id="logo-scroller"></div></div>
+        
+        <div class="logo-scroller-container">
+            <div class="logo-scroller" id="logo-scroller"></div>
+        </div>
+
         <div id="shopProducts"></div>
     </main>
 
-    <!-- CARRITO -->
+    <!-- MODAL CARRITO -->
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
             <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart">&times;</span></div>
             <div id="cartItems"></div>
             <div class="cart-total-box">
-                <p style="color:#999; font-size:0.85rem;">Envío: $8.000 (Gratis > $75k)</p>
+                <p style="font-size: 0.85rem; color: #999;">Costo envío: $8.000 (Gratis > $75k)</p>
                 <strong>Total: $<span id="cartTotal">0</span></strong>
             </div>
-            <div id="minPurchaseMessage" style="color:var(--primary-red); font-size:0.85rem; margin-top:10px; text-align:center; font-weight:600;"></div>
+            <div id="minPurchaseMessage" style="color: var(--primary-red); font-size: 0.85rem; margin-top: 10px; text-align: center; font-weight: 600;"></div>
             <button id="checkout" class="btn-primary">FINALIZAR COMPRA</button>
             <button id="clearCart" class="btn-vaciar">Vaciar carrito</button>
         </div>
     </div>
 
-    <!-- CHECKOUT -->
+    <!-- MODAL CHECKOUT -->
     <div id="checkoutModal" class="checkout-modal">
         <div class="checkout-modal-content">
             <div class="checkout-header"><h2>Finalizar Compra</h2><span class="close-checkout">&times;</span></div>
@@ -79,8 +89,8 @@
                     Alias: <b>novapanes</b><br>CUIT: <b>20-33785913-6</b>
                 </div>
 
-                <div id="orderItems" style="background:#FAFAFA; padding:15px; border-radius:15px; margin-top:20px; font-size:0.9rem;"></div>
-                <div style="text-align:right; margin:15px 0; font-size:1.4rem;"><strong>Total: $<span id="orderTotal">0</span></strong></div>
+                <div id="orderItems" style="background: #FAFAFA; padding: 15px; border-radius: 15px; margin-top: 20px; font-size: 0.9rem;"></div>
+                <div style="text-align:right; margin:15px 0; font-size: 1.4rem;"><strong>Total: $<span id="orderTotal">0</span></strong></div>
 
                 <button type="submit" class="btn-primary">CONFIRMAR PEDIDO</button>
                 <button type="button" class="close-checkout-btn btn-vaciar">Cancelar</button>
