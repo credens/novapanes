@@ -1,54 +1,141 @@
-.shop-main { max-width: 1200px; margin: 0 auto 40px; padding: 0 20px; }
+/* ===================================================
+   ESTILOS TIENDA: Cards Uniformes y Modales Prolijos
+   =================================================== */
 
+.shop-main { max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; }
+
+/* BANNER */
 .shop-hero {
     background: linear-gradient(135deg, #FFECB3 0%, var(--bg-cream) 100%);
-    padding: 40px 20px; text-align: center; border-radius: 0 0 50px 50px; margin-bottom: 30px;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 0 0 50px 50px;
+    margin-bottom: 30px;
 }
-.shop-hero h1 { font-family: 'Lora'; font-size: 3rem; color: var(--primary-red); }
+.shop-hero h1 { font-family: 'Lora'; font-size: 3rem; color: var(--primary-red); margin: 0; }
 
+/* BUSCADOR Y FILTROS */
+.shop-search-container { max-width: 700px; margin: 0 auto 25px; }
 #searchInput {
-    width: 100%; padding: 15px 30px; border-radius: 60px; border: 2px solid #EEE;
-    font-family: 'Poppins'; font-size: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none;
+    width: 100%; padding: 15px 30px; border-radius: 60px;
+    border: 2px solid #EEE; font-family: 'Poppins'; font-size: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none;
 }
-
-/* CATEGORIAS UNA LINEA */
 .filter-container { 
-    display: flex; justify-content: center; gap: 8px; margin-bottom: 15px;
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 25px;
     flex-wrap: nowrap; overflow-x: auto; padding: 10px 5px; -webkit-overflow-scrolling: touch;
 }
 .filter-container::-webkit-scrollbar { display: none; }
 .filter-btn {
     background: var(--white); border: 1px solid #EEE; padding: 8px 16px;
-    border-radius: 50px; cursor: pointer; font-weight: 600; font-family: 'Poppins';
-    font-size: 0.8rem; color: var(--text-dark); white-space: nowrap;
+    border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.8rem; white-space: nowrap;
 }
 .filter-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
 
-/* LOGOS */
-.logo-scroller-container { width: 100%; overflow: hidden; background: white; padding: 20px 0; margin-bottom: 20px; border-radius: 20px; }
-.logo-scroller { display: flex; align-items: center; width: max-content; animation: scrollLogos 50s linear infinite; }
-.logo-scroller img { height: 32px; margin: 0 40px; filter: grayscale(1); opacity: 0.4; }
-@keyframes scrollLogos { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* PRODUCTOS: ALTURA UNIFORME */
+.shop-products { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 30px; 
+    align-items: stretch; /* Asegura que todas las cards de la fila midan lo mismo */
+}
 
-/* PRODUCTOS */
-.product-item { background: var(--white); border-radius: 24px; padding: 20px; box-shadow: var(--soft-shadow); display: flex; flex-direction: column; overflow: hidden; transition: 0.4s; }
+.product-item {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: var(--soft-shadow);
+    display: flex;
+    flex-direction: column; /* Organiza contenido verticalmente */
+    height: 100%; /* Ocupa todo el alto de la celda de la grilla */
+    transition: transform 0.3s ease;
+}
+
 .product-item:hover { transform: translateY(-8px); }
-.product-image { width: 100%; height: 180px; object-fit: contain; margin-bottom: 15px; cursor: pointer; transition: 0.8s; }
-.product-item:hover .product-image { transform: scale(1.08); }
-.product-price { color: var(--primary-red); font-weight: 800; font-size: 1.4rem; margin-bottom: 15px; }
 
-/* CANTIDAD */
-.product-controls { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+.product-image { 
+    width: 100%; 
+    height: 200px; 
+    object-fit: contain; 
+    margin-bottom: 20px; 
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Hace que esta sección crezca para ocupar el espacio */
+}
+
+.product-title { font-family: 'Lora'; font-size: 1.3rem; margin: 0 0 10px 0; color: var(--text-dark); }
+.product-description { font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px; flex-grow: 1; }
+
+.product-price { 
+    color: var(--primary-red); 
+    font-weight: 800; 
+    font-size: 1.5rem; 
+    margin-bottom: 15px; 
+    margin-top: auto; /* Alinea el precio y los controles al fondo */
+}
+
+.product-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .quantity-selector { display: flex; align-items: center; background: #F5F5F5; border-radius: 12px; padding: 4px; border: 1px solid #EEE; }
 .qty-btn { background: white; border: none; width: 30px; height: 30px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.qty-input { width: 30px; border: none; background: transparent; text-align: center; font-weight: 700; font-size: 0.9rem; outline: none; }
-.add-to-cart-btn { background: var(--accent-yellow); color: var(--text-dark); border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; flex: 1; font-size: 0.8rem; }
+.qty-input { width: 30px; border: none; background: transparent; text-align: center; font-weight: 700; outline: none; }
 
-/* MODALES PREMIUM */
+.add-to-cart-btn {
+    background: var(--accent-yellow);
+    color: var(--text-dark);
+    border: none;
+    padding: 14px;
+    border-radius: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    flex: 1;
+}
+
+/* ===================================================
+   MODALES (Carrito Corregido)
+   =================================================== */
 .cart-modal, .checkout-modal { position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; }
 .cart-modal-content, .checkout-modal-content { background: var(--bg-cream); width: 95%; max-width: 500px; border-radius: 35px; padding: 35px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.2); }
-.cart-header, .checkout-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EEE; padding-bottom: 15px; margin-bottom: 20px; }
-.cart-item-row { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid #EEE; }
-.cart-item-row img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+.cart-header { border-bottom: 1px solid #EEE; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+
+.cart-item-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    padding: 15px 0; 
+    border-bottom: 1px solid #EEE; 
+}
+.cart-item-row img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; background: white; }
+.cart-item-info { flex: 1; line-height: 1.3; }
+.cart-item-info b { display: block; font-size: 0.95rem; margin-bottom: 4px; color: var(--text-dark); }
+.cart-item-info span { color: var(--primary-red); font-weight: 700; }
+
+.remove-btn { background: #FEEBEB; color: var(--primary-red); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; line-height: 1; }
+
+.cart-total-box { margin-top: 25px; text-align: right; }
+.cart-total-box strong { font-size: 1.6rem; color: var(--text-dark); }
+
 .btn-primary { background: var(--primary-red); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 700; width: 100%; cursor: pointer; font-size: 1rem; margin-top: 15px; }
-.remove-btn { background: #FEEBEB; color: var(--primary-red); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; }
+
+/* Botón Vaciar Estilizado */
+.btn-vaciar {
+    background: transparent;
+    color: #999;
+    border: 2px solid #EEE;
+    padding: 10px;
+    border-radius: 50px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-vaciar:hover { border-color: var(--primary-red); color: var(--primary-red); }

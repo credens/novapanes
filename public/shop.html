@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestros Productos - NOVA Panes</title>
+    <title>Tienda Online - NOVA Panes</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,79 +21,69 @@
         </nav>
     </header>
 
-    <div class="shop-hero">
-        <h1>Nuestros Productos</h1>
-        <p>Frescura artesanal directo a tu puerta.</p>
-    </div>
+    <div class="shop-hero"><h1>Nuestros Productos</h1><p>Frescura artesanal directo a tu puerta.</p></div>
 
     <main class="shop-main">
-        <div class="shop-search-container">
-            <input type="search" id="searchInput" placeholder="¿Qué estás buscando?">
-        </div>
-
+        <div class="shop-search-container"><input type="search" id="searchInput" placeholder="¿Qué estás buscando?"></div>
         <div class="filter-container" id="filter-container"></div>
-        
-        <div class="logo-scroller-container">
-            <div class="logo-scroller" id="logo-scroller"></div>
-        </div>
-
+        <div class="logo-scroller-container"><div class="logo-scroller" id="logo-scroller"></div></div>
         <div id="shopProducts"></div>
     </main>
 
-    <!-- MODAL CARRITO -->
+    <!-- CARRITO -->
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
             <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart">&times;</span></div>
             <div id="cartItems"></div>
             <div class="cart-total-box">
-                <p style="font-size: 0.85rem; color: #999;">Costo envío: $8.000 (Gratis > $75k)</p>
+                <p style="color:#999; font-size:0.85rem;">Envío: $8.000 (Gratis > $75k)</p>
                 <strong>Total: $<span id="cartTotal">0</span></strong>
             </div>
-            <div id="minPurchaseMessage" style="color: var(--primary-red); font-size: 0.85rem; margin-top: 10px; text-align: center; font-weight: 600;"></div>
+            <div id="minPurchaseMessage" style="color:var(--primary-red); font-size:0.85rem; margin-top:10px; text-align:center; font-weight:600;"></div>
             <button id="checkout" class="btn-primary">FINALIZAR COMPRA</button>
-            <button id="clearCart" class="btn-secondary" style="background: none;">Vaciar carrito</button>
+            <button id="clearCart" class="btn-vaciar">Vaciar carrito</button>
         </div>
     </div>
 
-    <!-- MODAL CHECKOUT -->
+    <!-- CHECKOUT -->
     <div id="checkoutModal" class="checkout-modal">
         <div class="checkout-modal-content">
             <div class="checkout-header"><h2>Finalizar Compra</h2><span class="close-checkout">&times;</span></div>
-            <form id="checkoutForm" class="checkout-form">
+            <form id="checkoutForm">
                 <input type="text" name="nombre" placeholder="Nombre completo *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
                 <input type="email" name="email" placeholder="Email *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
                 <input type="tel" name="telefono" placeholder="WhatsApp (sin 0 ni 15) *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
                 
-                <div class="delivery-options" style="margin:20px 0; font-weight: 600; display:flex; justify-content:space-around; background:#F9F9F9; padding:15px; border-radius:15px;">
+                <div style="margin:20px 0; display:flex; justify-content:space-around; background:#F9F9F9; padding:15px; border-radius:15px;">
                     <label><input type="radio" name="metodoEntrega" value="Envío a Domicilio" checked> Envío</label>
                     <label><input type="radio" name="metodoEntrega" value="Retiro en Fábrica"> Retiro</label>
                 </div>
 
                 <div id="deliveryAddressContainer">
-                    <input type="text" name="direccion" placeholder="Dirección y Número *">
-                    <input type="text" name="ciudad" placeholder="Localidad / Ciudad *">
+                    <input type="text" name="direccion" placeholder="Dirección *" style="width:100%; margin:5px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
+                    <input type="text" name="ciudad" placeholder="Ciudad *" style="width:100%; margin:5px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
                     <select name="horarioEntrega" id="deliveryTimeSelect" style="width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
                         <option value="10 a 14 hs">Entrega: 10 a 14 hs</option>
                         <option value="14 a 18 hs">Entrega: 14 a 18 hs</option>
                     </select>
                 </div>
 
-                <select name="metodoPago" id="paymentMethodSelect" required style="width:100%; margin:10px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
+                <select name="metodoPago" id="paymentMethodSelect" required style="width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
                     <option value="">Método de pago *</option>
                     <option value="efectivo">Efectivo al recibir</option>
                     <option value="transferencia">Transferencia Bancaria</option>
                     <option value="mercadopago">Mercado Pago</option>
                 </select>
 
-                <div id="transferInfo" style="display:none;" class="payment-info">
-                    Alias: <strong>novapanes</strong><br>CUIT: <strong>20-33785913-6</strong>
+                <div id="transferInfo" style="display:none; background:#FFF8E1; padding:15px; border-radius:15px; font-size:0.9rem; margin: 10px 0; border: 1px solid #FFECB3;">
+                    Alias: <b>novapanes</b><br>CUIT: <b>20-33785913-6</b>
                 </div>
 
-                <div id="orderItems" style="background: #FAFAFA; padding: 15px; border-radius: 15px; margin-top: 20px; font-size: 0.9rem;"></div>
-                <div style="text-align:right; margin:15px 0; font-size: 1.4rem;"><strong>Total: $<span id="orderTotal">0</span></strong></div>
+                <div id="orderItems" style="background:#FAFAFA; padding:15px; border-radius:15px; margin-top:20px; font-size:0.9rem;"></div>
+                <div style="text-align:right; margin:15px 0; font-size:1.4rem;"><strong>Total: $<span id="orderTotal">0</span></strong></div>
 
                 <button type="submit" class="btn-primary">CONFIRMAR PEDIDO</button>
-                <button type="button" class="close-checkout-btn btn-secondary" style="background: none;">Cancelar</button>
+                <button type="button" class="close-checkout-btn btn-vaciar">Cancelar</button>
             </form>
         </div>
     </div>

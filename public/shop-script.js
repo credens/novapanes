@@ -1,3 +1,7 @@
+// ===================================================
+//      ARCHIVO shop-script.js (COMPLETO)
+// ===================================================
+
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
     let allCategories = [];
@@ -16,9 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const transferInfo = document.getElementById('transferInfo');
     const headerCartIcon = document.getElementById('headerCartIcon');
 
-    const direccionInput = document.querySelector('input[name="direccion"]');
-    const ciudadInput = document.querySelector('input[name="ciudad"]');
-
+    // 1. CARGA DE DATOS
     Promise.all([
         fetch('/products').then(res => res.json()),
         fetch('/data/categories.json').then(res => res.json()),
@@ -51,15 +53,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const filter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
         const search = searchInput.value.toLowerCase().trim();
         const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-        const final = search ? filtered.filter(p => p.name.toLowerCase().includes(search)) : filtered;
+        const finalProducts = search ? filtered.filter(p => p.name.toLowerCase().includes(search)) : filtered;
 
         shopProductsContainer.innerHTML = '';
-        if (final.length === 0) {
-            shopProductsContainer.innerHTML = '<p style="text-align: center; padding: 40px 0; color: #999;">No se encontraron productos.</p>';
-            return;
-        }
-
-        const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
+        const grouped = finalProducts.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
 
         allCategories.forEach(cat => {
             if (grouped[cat.id]) {
@@ -68,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div id="product-${p.id}" class="product-item">
                         <img src="/${p.image}" class="product-image" onclick="openProductModal('/${p.image}', '${p.name}')">
                         <div class="product-info">
-                            <h3 class="product-title" style="font-family:Lora; font-size:1.3rem;">${p.name}</h3>
-                            <p style="font-size:0.8rem; color:#666; margin-bottom:15px; flex-grow:1;">${p.description}</p>
+                            <h3 class="product-title">${p.name}</h3>
+                            <p class="product-description">${p.description}</p>
                             <div class="product-price">$${p.price.toLocaleString()}</div>
                             <div class="product-controls">
                                 <div class="quantity-selector">
@@ -93,13 +90,17 @@ document.addEventListener('DOMContentLoaded', function() {
         input.value = newVal;
     };
 
+    // 2. LOGICA DEL CARRITO (CON MINIATURAS PROLIJAS)
     function renderCartItems() {
         const el = document.getElementById('cartItems');
         if (cart.length === 0) { el.innerHTML = '<p style="text-align:center; padding:30px; color:#AAA;">Tu carrito está vacío</p>'; return; }
         el.innerHTML = cart.map(i => `
             <div class="cart-item-row">
                 <img src="${i.image}">
-                <div class="cart-item-info"><b>${i.name}</b><span>$${i.price.toLocaleString()} x ${i.quantity}</span></div>
+                <div class="cart-item-info">
+                    <b>${i.name}</b>
+                    <span>$${i.price.toLocaleString()} x ${i.quantity}</span>
+                </div>
                 <button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button>
             </div>`).join('');
     }
@@ -150,24 +151,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('checkout')?.addEventListener('click', () => { cartModal.style.display = 'none'; checkoutModal.style.display = 'flex'; renderOrderSummary(); });
         document.querySelector('.close-checkout')?.addEventListener('click', () => checkoutModal.style.display = 'none');
         document.querySelector('.close-checkout-btn')?.addEventListener('click', () => checkoutModal.style.display = 'none');
-        deliveryMethodRadios.forEach(radio => {
+        document.getElementById('clearCart')?.addEventListener('click', () => { if(confirm('¿Vaciar carrito?')) { cart = []; updateCartDisplay(); } });
+        document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
+
+        const deliveryRadios = document.querySelectorAll('input[name="metodoEntrega"]');
+        deliveryRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const isDelivery = e.target.value === 'Envío a Domicilio';
                 document.getElementById('deliveryAddressContainer').style.display = isDelivery ? 'block' : 'none';
-                if(direccionInput) direccionInput.required = isDelivery;
-                if(ciudadInput) ciudadInput.required = isDelivery;
+                document.querySelector('input[name="direccion"]').required = isDelivery;
+                document.querySelector('input[name="ciudad"]').required = isDelivery;
                 document.getElementById('deliveryTimeSelect').required = isDelivery;
             });
         });
         paymentMethodSelect?.addEventListener('change', e => {
             transferInfo.style.display = e.target.value === 'transferencia' ? 'block' : 'none';
         });
-        document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
     }
 
     function renderOrderSummary() {
         const el = document.getElementById('orderItems');
-        if (el) el.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between"><span>${i.name} x${i.quantity}</span><span>$${(i.price*i.quantity).toLocaleString()}</span></div>`).join('');
+        if (el) el.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between"><span>${i.name} x ${i.quantity}</span><span>$${(i.price*i.quantity).toLocaleString()}</span></div>`).join('');
     }
 
     async function handleCheckout(e) {
@@ -183,18 +187,19 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = pref.init_point;
         } else {
             await fetch('/api/submit-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
-            window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 PEDIDO NOVA PANES de ' + customerData.nombre + ' por $' + orderData.total.toLocaleString())}`, '_blank');
+            window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 PEDIDO de ' + customerData.nombre)}`, '_blank');
             cart = []; updateCartDisplay(); checkoutModal.style.display = 'none';
             alert('¡Pedido enviado! Te redirigimos a WhatsApp.');
         }
     }
 
     function updateCartDisplayFromStorage() { const saved = localStorage.getItem('novaPanesCart'); if (saved) { cart = JSON.parse(saved); updateCartDisplay(); } }
+
     window.openProductModal = (src, title) => {
         const m = document.createElement('div');
-        m.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(5px);";
+        m.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center; padding:20px; cursor:pointer;";
         m.onclick = () => m.remove();
-        m.innerHTML = `<div style="background:white; padding:30px; border-radius:35px; max-width:500px; width:100%; text-align:center;"><img src="${src}" style="width:100%; border-radius:20px;"><h3 style="font-family:Lora; margin-top:20px;">${title}</h3></div>`;
+        m.innerHTML = `<div style="background:white; padding:30px; border-radius:35px; max-width:500px; width:100%; text-align:center;"><img src="${src}" style="width:100%; border-radius:20px;"><h3 style="font-family:Lora; margin-top:20px; color:var(--primary-red);">${title}</h3></div>`;
         document.body.appendChild(m);
     };
 });
