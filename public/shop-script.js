@@ -1,7 +1,3 @@
-// ===================================================
-//      ARCHIVO shop-script.js (COMPLETO)
-// ===================================================
-
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
     let allCategories = [];
@@ -14,16 +10,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoScroller = document.getElementById('logo-scroller');
     const cartModal = document.getElementById('cartModal');
     const checkoutModal = document.getElementById('checkoutModal');
-    
+    const deliveryAddressContainer = document.getElementById('deliveryAddressContainer');
+    const deliveryTimeSelect = document.getElementById('deliveryTimeSelect');
     const deliveryMethodRadios = document.querySelectorAll('input[name="metodoEntrega"]');
     const paymentMethodSelect = document.getElementById('paymentMethodSelect');
     const transferInfo = document.getElementById('transferInfo');
     const headerCartIcon = document.getElementById('headerCartIcon');
-
     const direccionInput = document.querySelector('input[name="direccion"]');
     const ciudadInput = document.querySelector('input[name="ciudad"]');
 
-    // 1. CARGA DE DATOS
     Promise.all([
         fetch('/products').then(res => res.json()),
         fetch('/data/categories.json').then(res => res.json()),
@@ -36,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderProducts();
         setupEventListeners();
         updateCartDisplayFromStorage();
-    }).catch(err => console.error('Error:', err));
+    }).catch(err => console.error(err));
 
     function renderLogoScroller(logos) {
         if (!logoScroller || !Array.isArray(logos)) return;
@@ -56,19 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const filter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
         const search = searchInput.value.toLowerCase().trim();
         const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-        const finalProducts = search ? filtered.filter(p => p.name.toLowerCase().includes(search)) : filtered;
+        const final = search ? filtered.filter(p => p.name.toLowerCase().includes(search)) : filtered;
 
         shopProductsContainer.innerHTML = '';
-        if (finalProducts.length === 0) {
-            shopProductsContainer.innerHTML = '<p style="text-align: center; padding: 40px 0; color: #999;">No se encontraron productos.</p>';
-            return;
-        }
-
-        const grouped = finalProducts.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
+        const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
 
         allCategories.forEach(cat => {
             if (grouped[cat.id]) {
-                let html = `<div class="category-group"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
+                let html = `<div class="category-group reveal active"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
                 html += grouped[cat.id].map(p => `
                     <div id="product-${p.id}" class="product-item">
                         <img src="/${p.image}" class="product-image" onclick="openProductModal('/${p.image}', '${p.name}')">
@@ -97,17 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (newVal < 1) newVal = 1;
         input.value = newVal;
     };
-
-    function renderCartItems() {
-        const el = document.getElementById('cartItems');
-        if (cart.length === 0) { el.innerHTML = '<p style="text-align:center; padding:30px; color:#AAA;">Tu carrito está vacío</p>'; return; }
-        el.innerHTML = cart.map(i => `
-            <div class="cart-item-row">
-                <img src="${i.image}">
-                <div class="cart-item-info"><b>${i.name}</b><span>$${i.price.toLocaleString()} x ${i.quantity}</span></div>
-                <button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button>
-            </div>`).join('');
-    }
 
     window.addToCart = (event, id) => {
         const p = products.find(prod => prod.id === id);
@@ -139,14 +118,24 @@ document.addEventListener('DOMContentLoaded', function() {
         renderCartItems();
     }
 
+    function renderCartItems() {
+        const el = document.getElementById('cartItems');
+        if (cart.length === 0) { el.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">Tu carrito está vacío</p>'; return; }
+        el.innerHTML = cart.map(i => `
+            <div class="cart-item-row">
+                <img src="${i.image}">
+                <div class="cart-item-info"><b>${i.name}</b><span>$${i.price.toLocaleString()} x ${i.quantity}</span></div>
+                <button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button>
+            </div>`).join('');
+    }
+
     window.removeFromCart = (id) => { cart = cart.filter(i => i.id !== id); updateCartDisplay(); };
 
     function setupEventListeners() {
         filterContainer?.addEventListener('click', e => {
             if (e.target.classList.contains('filter-btn')) {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                renderProducts();
+                e.target.classList.add('active'); renderProducts();
             }
         });
         searchInput?.addEventListener('input', renderProducts);
@@ -161,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const isDelivery = e.target.value === 'Envío a Domicilio';
-                document.getElementById('deliveryAddressContainer').style.display = isDelivery ? 'block' : 'none';
+                deliveryAddressContainer.style.display = isDelivery ? 'block' : 'none';
                 if(direccionInput) direccionInput.required = isDelivery;
                 if(ciudadInput) ciudadInput.required = isDelivery;
                 document.getElementById('deliveryTimeSelect').required = isDelivery;
@@ -190,19 +179,18 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = pref.init_point;
         } else {
             await fetch('/api/submit-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
-            window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 PEDIDO de ' + customerData.nombre + ' por $' + orderData.total.toLocaleString())}`, '_blank');
+            window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 PEDIDO NOVA PANES de ' + customerData.nombre)}`, '_blank');
             cart = []; updateCartDisplay(); checkoutModal.style.display = 'none';
             alert('¡Pedido enviado! Te redirigimos a WhatsApp.');
         }
     }
 
     function updateCartDisplayFromStorage() { const saved = localStorage.getItem('novaPanesCart'); if (saved) { cart = JSON.parse(saved); updateCartDisplay(); } }
-    
     window.openProductModal = (src, title) => {
         const m = document.createElement('div');
         m.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(5px);";
         m.onclick = () => m.remove();
-        m.innerHTML = `<div style="background:white; padding:30px; border-radius:35px; max-width:500px; width:100%; text-align:center;"><img src="${src}" style="width:100%; border-radius:20px;"><h3 style="font-family:Lora; margin-top:20px; color:var(--primary-red);">${title}</h3></div>`;
+        m.innerHTML = `<div style="background:white; padding:30px; border-radius:35px; max-width:500px; width:100%; text-align:center;"><img src="${src}" style="width:100%; border-radius:20px;"><h3 style="font-family:Lora; margin-top:20px;">${title}</h3></div>`;
         document.body.appendChild(m);
     };
 });
