@@ -1,3 +1,7 @@
+// ===================================================
+//      ARCHIVO server.js (COMPLETO - VERSIÓN FINAL)
+// ===================================================
+
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -16,6 +20,7 @@ process.on('uncaughtException', (err) => {
 const port = process.env.PORT || 3000;
 const app = express();
 
+// CONFIGURACIÓN DE ALMACENAMIENTO DE IMÁGENES
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, path.join(__dirname, 'public', 'productos')),
     filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
@@ -23,14 +28,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 }
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
 });
 
+// CONFIGURACIÓN MERCADO PAGO
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 const client = new MercadoPagoConfig({
     accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN
 });
 
+// MIDDLEWARES
 app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -44,6 +51,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
+// RUTAS DE DATOS
 const DATA_DIR = path.join(__dirname, 'public', 'data');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
@@ -52,6 +60,7 @@ const CATEGORIES_FILE_PATH = path.join(DATA_DIR, 'categories.json');
 const ORDERS_FILE_PATH = path.join(DATA_DIR, 'orders.json');
 const VISITS_FILE_PATH = path.join(DATA_DIR, 'visits.json');
 
+// HELPERS DE LECTURA/ESCRITURA
 function readJsonFile(filePath) {
     try {
         if (!fs.existsSync(filePath)) { fs.writeFileSync(filePath, '[]'); return []; }
@@ -63,6 +72,7 @@ function writeJsonFile(filePath, data) {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
+// TRACK VISITS
 app.post('/api/track-visit', (req, res) => {
     try {
         const visits = readJsonFile(VISITS_FILE_PATH);
@@ -72,14 +82,16 @@ app.post('/api/track-visit', (req, res) => {
     } catch (e) { res.status(500).json({ success: false }); }
 });
 
+// ADMIN AUTH
 app.post('/api/admin/verify', async (req, res) => {
     const { password } = req.body;
     try {
         const match = await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH || "");
         res.json({ success: match });
-    } catch (error) { res.status(500).json({ success: false }); }
+    } catch (e) { res.status(500).json({ success: false }); }
 });
 
+// ADMIN ROUTES (CRUD PRODUCTOS/CATEGORIAS/PEDIDOS)
 const adminRouter = express.Router();
 adminRouter.use(async (req, res, next) => {
     const auth = req.headers['authorization'];
@@ -106,8 +118,10 @@ adminRouter.put('/orders/:id', (req, res) => {
     res.json({ success: true });
 });
 
+// PUBLIC API
 app.get('/products', (req, res) => res.json(readJsonFile(PRODUCTS_FILE_PATH)));
 
+// CONTACTO CON EMAIL
 app.post('/api/contact', async (req, res) => {
     const { nombre, email, telefono, mensaje } = req.body;
     const transporter = nodemailer.createTransport({
@@ -121,22 +135,37 @@ app.post('/api/contact', async (req, res) => {
     } catch (e) { res.status(500).json({ success: false }); }
 });
 
+// SUBMIT ORDER
 app.post('/api/submit-order', async (req, res) => {
+    const orderData = req.body;
     try {
         const orders = readJsonFile(ORDERS_FILE_PATH);
-        const newOrder = { id: `order_${Date.now()}`, ...req.body, date: new Date().toISOString(), status: 'pending' };
+        const newOrder = { id: `order_${Date.now()}`, ...orderData, date: new Date().toISOString(), status: 'pending' };
         orders.unshift(newOrder);
         writeJsonFile(ORDERS_FILE_PATH, orders);
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_APP_PASSWORD }
+        });
+        const itemsHtml = orderData.items.map(i => `<li>${i.name} x${i.quantity}: $${(i.price * i.quantity).toLocaleString()}</li>`).join('');
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: 'panes.nova@gmail.com',
+            subject: `🍞 Nuevo Pedido: ${orderData.customer.nombre}`,
+            html: `<h2>Detalle del pedido:</h2><ul>${itemsHtml}</ul><p><b>Total:</b> $${orderData.total.toLocaleString()}</p><p><b>Pago:</b> ${orderData.metodoPago}</p>`
+        });
         res.json({ success: true });
     } catch (e) { res.status(500).json({ success: false }); }
 });
 
+// MERCADO PAGO
 app.post('/create-preference', async (req, res) => {
     try {
         const preference = new Preference(client);
         const result = await preference.create({
             body: {
-                items: req.body.items.map(i => ({ title: i.title, quantity: i.quantity, unit_price: i.price, currency_id: 'ARS' })),
+                items: req.body.items.map(i => ({ title: i.title, quantity: i.quantity, unit_price: i.unit_price, currency_id: 'ARS' })),
                 payer: req.body.payer,
                 back_urls: { success: "https://novapanes.com.ar/shop.html?payment=success" },
                 auto_return: "approved"
@@ -146,4 +175,4 @@ app.post('/create-preference', async (req, res) => {
     } catch (e) { res.status(500).json({ message: e.message }); }
 });
 
-app.listen(port, () => console.log(`Servidor activo en puerto ${port}`));
+app.listen(port, () => console.log(`Servidor NOVA Panes activo en puerto ${port}`));
