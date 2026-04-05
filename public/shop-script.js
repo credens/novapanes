@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderCategoryFilters() {
         if (!filterContainer) return;
+        // Agregamos la clase filter-btn para que tome el estilo del CSS
         filterContainer.innerHTML = '<button class="filter-btn active" data-filter="all">Todos</button>';
         allCategories.forEach(c => {
             filterContainer.innerHTML += `<button class="filter-btn" data-filter="${c.id}">${c.name}</button>`;
@@ -50,13 +51,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             allCategories.forEach(cat => {
                 if (grouped[cat.id]) {
-                    let html = `<div class="category-group reveal"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
+                    let html = `<div class="category-group reveal active"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
                     html += grouped[cat.id].map(p => `
                         <div class="product-item">
                             <img src="/${p.image}" class="product-image" onclick="openProductModal('/${p.image}', '${p.name}')">
                             <div class="product-info">
                                 <h3 class="product-title">${p.name}</h3>
-                                <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">${p.description}</p>
+                                <p class="product-description">${p.description}</p>
                                 <div class="product-price">$${p.price.toLocaleString()}</div>
                                 <button class="add-to-cart-btn" onclick="addToCart(event, ${p.id})">AGREGAR AL CARRITO</button>
                             </div>
@@ -65,20 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     shopProductsContainer.innerHTML += html;
                 }
             });
-            initReveal();
         }
     }
 
-    function initReveal() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    }
-
-    // --- LOGICA DE CHECKOUT (RETIRO EN FÁBRICA FIX INCLUIDO) ---
     function setupEventListeners() {
         filterContainer?.addEventListener('click', e => {
             if (e.target.classList.contains('filter-btn')) {
@@ -157,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderOrderSummary() {
         const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
-        document.getElementById('orderItems').innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between"><span>${i.name} x ${i.quantity}</span><span>$${(i.price*i.quantity).toLocaleString()}</span></div>`).join('');
+        document.getElementById('orderItems').innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.name} x${i.quantity}</span><span>$${(i.price*i.quantity).toLocaleString()}</span></div>`).join('');
         document.getElementById('orderTotal').textContent = total.toLocaleString();
     }
 

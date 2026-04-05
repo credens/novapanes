@@ -28,7 +28,7 @@
 
     <main class="shop-main">
         <div class="shop-search-container">
-            <input type="search" id="searchInput" placeholder="¿Qué estás buscando?">
+            <input type="search" id="searchInput" placeholder="¿Qué pan buscás hoy?">
         </div>
 
         <div class="filter-container" id="filter-container"></div>
@@ -44,13 +44,12 @@
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
             <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart" style="cursor:pointer; font-size: 2rem;">&times;</span></div>
-            <div id="cartItems" class="cart-items"></div>
+            <div id="cartItems" style="margin: 20px 0;"></div>
             <div class="cart-footer">
                 <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">Costo envío: $8.000 (GBA Sur/CABA gratis > $75k)</p>
-                <div class="cart-total"><strong>Total: $<span id="cartTotal">0</span></strong></div>
-                <div id="minPurchaseMessage" style="color: var(--primary-red); font-size: 0.8rem; margin-bottom: 10px;"></div>
-                <button id="clearCart" class="btn-secondary" style="margin-bottom:10px">Vaciar Carrito</button>
+                <div class="cart-total" style="font-size: 1.4rem; margin-bottom: 20px;"><strong>Total: $<span id="cartTotal">0</span></strong></div>
                 <button id="checkout" class="btn-primary">Finalizar Compra</button>
+                <button id="clearCart" class="btn-secondary" style="margin-top:10px; background: none; color: #999;">Vaciar Carrito</button>
             </div>
         </div>
     </div>
@@ -60,9 +59,9 @@
         <div class="checkout-modal-content">
             <div class="checkout-header"><h2>Finalizar Compra</h2><span class="close-checkout" style="cursor:pointer; font-size: 2rem;">&times;</span></div>
             <form id="checkoutForm" style="margin-top: 20px;">
-                <input type="text" name="nombre" placeholder="Nombre completo *" required style="width:100%; margin:8px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                <input type="email" name="email" placeholder="Email *" required style="width:100%; margin:8px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                <input type="tel" name="telefono" placeholder="Teléfono *" required style="width:100%; margin:8px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
+                <input type="text" name="nombre" placeholder="Nombre completo *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
+                <input type="email" name="email" placeholder="Email *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
+                <input type="tel" name="telefono" placeholder="Teléfono *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
                 
                 <div style="margin:20px 0; font-weight: 600;">
                     <label><input type="radio" name="metodoEntrega" value="Envío a Domicilio" checked> Envío a Domicilio</label>
@@ -70,39 +69,35 @@
                 </div>
 
                 <div id="deliveryAddressContainer">
-                    <input type="text" name="direccion" placeholder="Dirección *" style="width:100%; margin:5px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                    <input type="text" name="ciudad" placeholder="Ciudad *" style="width:100%; margin:5px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                    <select name="horarioEntrega" id="deliveryTimeSelect" style="width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
+                    <input type="text" name="direccion" placeholder="Dirección *" style="width:100%; margin:5px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
+                    <input type="text" name="ciudad" placeholder="Ciudad *" style="width:100%; margin:5px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
+                    <select name="horarioEntrega" id="deliveryTimeSelect" style="width:100%; margin:10px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
                         <option value="10 a 14 hs">10 a 14 hs</option>
                         <option value="14 a 18 hs">14 a 18 hs</option>
                     </select>
                 </div>
 
-                <select name="metodoPago" id="paymentMethodSelect" required style="width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                    <option value="">Seleccionar método de pago *</option>
+                <select name="metodoPago" id="paymentMethodSelect" required style="width:100%; margin:10px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
                     <option value="efectivo">Efectivo</option>
                     <option value="transferencia">Transferencia Bancaria</option>
                     <option value="mercadopago">Mercado Pago</option>
                 </select>
 
-                <div id="transferInfo" style="display:none; background:#FFF8E1; padding:15px; border-radius:12px; font-size:0.9rem; margin: 10px 0; border: 1px solid #FFECB3;">
+                <div id="transferInfo" style="display:none; background:#FFF8E1; padding:15px; border-radius:15px; font-size:0.9rem; margin: 10px 0; border: 1px solid #FFECB3;">
                     Alias: <b>novapanes</b><br>CUIT: <b>20-33785913-6</b>
                 </div>
 
                 <div id="orderItems" style="margin-top:20px; border-top: 1px solid #EEE; padding-top: 15px;"></div>
                 <div style="text-align:right; margin:15px 0; font-size: 1.2rem;"><strong>Total: $<span id="orderTotal">0</span></strong></div>
 
-                <button type="button" class="close-checkout-btn btn-secondary" style="margin-bottom:10px">Cancelar</button>
                 <button type="submit" class="btn-primary">Confirmar Pedido</button>
+                <button type="button" class="close-checkout-btn btn-secondary" style="margin-top:10px; background: none; color: #999;">Cancelar</button>
             </form>
         </div>
     </div>
 
     <footer class="footer">
         <h2 style="color: white; margin-bottom: 20px;">NOVA Panes®</h2>
-        <div class="footer-links">
-            <a href="https://wa.me/5491164372200" class="footer-btn">📱 WHATSAPP</a>
-        </div>
         <p>Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8</p>
     </footer>
 
