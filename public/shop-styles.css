@@ -23,33 +23,59 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none; box-sizing: border-box;
 }
 
-/* CORRECCIÓN FILTROS: Scroll horizontal habilitado correctamente */
+/* FIX DEFINITIVO FILTROS: Alineación y Scroll */
 .filter-container { 
     display: flex; 
-    justify-content: flex-start; /* Cambiado de center a flex-start para evitar el corte de items */
+    justify-content: flex-start; /* Forzamos inicio a la izquierda siempre */
     gap: 12px; 
     margin-bottom: 25px;
-    flex-wrap: nowrap; 
+    padding: 15px 0; /* Padding arriba y abajo */
     overflow-x: auto; 
-    padding: 15px 20px; /* Aumentado padding lateral para que el primer item no pegue al borde */
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Ocultar en Firefox */
 }
 
-/* Centrado automático solo si el contenido cabe en la pantalla */
+/* Ocultar scrollbar en Chrome/Safari */
+.filter-container::-webkit-scrollbar { display: none; }
+
+/* Espaciadores invisibles para que el primer y último item no toquen el borde */
+.filter-container::before,
+.filter-container::after {
+    content: '';
+    min-width: 20px; /* Esto da el aire en los extremos al scrollear */
+}
+
+.filter-btn {
+    background: var(--white); 
+    border: 1px solid #E5E5E5; 
+    padding: 12px 24px;
+    border-radius: 50px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-family: 'Poppins';
+    font-size: 0.95rem; 
+    color: var(--text-dark); 
+    white-space: nowrap; 
+    transition: 0.3s;
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    flex-shrink: 0; /* Evita que los botones se achiquen */
+}
+
+/* Solo centramos en desktop si hay espacio de sobra */
 @media (min-width: 1024px) {
     .filter-container {
         justify-content: center;
     }
+    .filter-container::before,
+    .filter-container::after {
+        display: none; /* Quitamos los espaciadores en desktop si está centrado */
+    }
 }
 
-.filter-container::-webkit-scrollbar { display: none; }
-
-.filter-btn {
-    background: var(--white); border: 1px solid #E5E5E5; padding: 12px 24px;
-    border-radius: 50px; cursor: pointer; font-weight: 600; font-family: 'Poppins';
-    font-size: 0.95rem; color: var(--text-dark); white-space: nowrap; transition: 0.3s;
-    display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-}
 .filter-btn span { font-size: 1.2rem; }
 .filter-btn:hover { border-color: var(--primary-red); transform: translateY(-2px); }
 .filter-btn.active { 
