@@ -25,9 +25,16 @@
         </nav>
     </header>
 
-    <div class="shop-hero">
-        <h1>Nuestros Productos</h1>
-        <p>Frescura artesanal directo a tu puerta.</p>
+    <div class="shop-hero-premium">
+        <div class="hero-content">
+            <h1>Nuestros Productos</h1>
+            <p>Mucho más que un simple pan.</p>
+        </div>
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C58.47,105.15,142,100.1,210,87,255.42,78.23,285.55,63.1,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
     </div>
 
     <main class="shop-main">
@@ -37,8 +44,11 @@
 
         <div class="filter-container" id="filter-container"></div>
         
-        <div class="logo-scroller-container">
-            <div class="logo-scroller" id="logo-scroller"></div>
+        <div class="shop-brands-section">
+            <p class="brands-title">Marcas que confían en nosotros</p>
+            <div class="logo-scroller-container">
+                <div class="logo-scroller" id="shopLogoScroller"></div>
+            </div>
         </div>
 
         <div id="shopProducts"></div>
@@ -47,14 +57,25 @@
     <!-- MODAL CARRITO -->
     <div id="cartModal" class="cart-modal">
         <div class="cart-modal-content">
-            <div class="cart-header"><h2>Tu Carrito</h2><span class="close-cart">&times;</span></div>
+            <div class="cart-header">
+                <h2>Tu Carrito</h2>
+                <span class="close-cart">&times;</span>
+            </div>
+            
+            <div class="shipping-bar-container">
+                <div id="shippingMsg" class="shipping-bar-text">Calculando envío...</div>
+                <div class="shipping-bar-track">
+                    <div id="shippingFill" class="shipping-bar-fill"></div>
+                </div>
+            </div>
+
             <div id="cartItems"></div>
+            
             <div class="cart-total-box">
-                <p style="font-size: 0.85rem; color: #999;">Envío: $8.000 (Gratis > $75k)</p>
                 <strong>Total: $<span id="cartTotal">0</span></strong>
             </div>
-            <div id="minPurchaseMessage" style="color: var(--primary-red); font-size: 0.85rem; margin-top: 10px; text-align: center; font-weight: 600;"></div>
-            <button id="checkout" class="btn-primary">FINALIZAR COMPRA</button>
+            
+            <button id="goToCheckout" class="btn-primary">FINALIZAR COMPRA</button>
             <button id="clearCart" class="btn-vaciar">Vaciar carrito</button>
         </div>
     </div>
@@ -62,54 +83,69 @@
     <!-- MODAL CHECKOUT -->
     <div id="checkoutModal" class="checkout-modal">
         <div class="checkout-modal-content">
-            <div class="checkout-header"><h2>Finalizar Compra</h2><span class="close-checkout">&times;</span></div>
+            <div class="checkout-header">
+                <h2>Finalizar Compra</h2>
+                <span class="close-checkout">&times;</span>
+            </div>
             <form id="checkoutForm">
-                <input type="text" name="nombre" placeholder="Nombre completo *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
-                <input type="email" name="email" placeholder="Email *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
-                <input type="tel" name="telefono" placeholder="WhatsApp (sin 0 ni 15) *" required style="width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid #DDD;">
+                <input type="text" name="nombre" placeholder="Nombre completo *" required style="width:100%; margin-bottom:12px; padding:15px; border-radius:12px; border:1px solid #DDD;">
+                <input type="email" name="email" placeholder="Correo electrónico *" required style="width:100%; margin-bottom:12px; padding:15px; border-radius:12px; border:1px solid #DDD;">
+                <input type="tel" name="telefono" placeholder="WhatsApp *" required style="width:100%; margin-bottom:12px; padding:15px; border-radius:12px; border:1px solid #DDD;">
                 
                 <div style="margin:20px 0; display:flex; justify-content:space-around; background:#F9F9F9; padding:15px; border-radius:15px;">
-                    <label><input type="radio" name="metodoEntrega" value="Envío a Domicilio" checked> Envío</label>
-                    <label><input type="radio" name="metodoEntrega" value="Retiro en Fábrica"> Retiro</label>
+                    <label style="cursor:pointer;"><input type="radio" name="metodoEntrega" value="Envío a Domicilio" checked> Envío</label>
+                    <label style="cursor:pointer;"><input type="radio" name="metodoEntrega" value="Retiro en Fábrica"> Retiro</label>
                 </div>
 
                 <div id="deliveryAddressContainer">
-                    <input type="text" name="direccion" placeholder="Dirección *" style="width:100%; margin:5px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                    <input type="text" name="ciudad" placeholder="Ciudad *" style="width:100%; margin:5px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                    <select name="horarioEntrega" id="deliveryTimeSelect" style="width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                        <option value="10 a 14 hs">Entrega: 10 a 14 hs</option>
-                        <option value="14 a 18 hs">Entrega: 14 a 18 hs</option>
-                    </select>
+                    <input type="text" name="direccion" placeholder="Dirección y Altura *" style="width:100%; margin-bottom:12px; padding:15px; border-radius:12px; border:1px solid #DDD;">
+                    <input type="text" name="ciudad" placeholder="Localidad *" style="width:100%; margin-bottom:12px; padding:15px; border-radius:12px; border:1px solid #DDD;">
                 </div>
 
-                <select name="metodoPago" id="paymentMethodSelect" required style="width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #DDD;">
-                    <option value="">Método de pago *</option>
-                    <option value="efectivo">Efectivo al recibir</option>
+                <select name="metodoPago" id="paymentMethodSelect" required style="width:100%; margin:10px 0; padding:12px; border-radius:10px; border:1px solid #DDD;">
                     <option value="transferencia">Transferencia Bancaria</option>
                     <option value="mercadopago">Mercado Pago</option>
+                    <option value="efectivo">Efectivo (Solo Retiro)</option>
                 </select>
 
-                <div id="transferInfo" style="display:none; background:#FFF8E1; padding:15px; border-radius:15px; font-size:0.9rem; margin: 10px 0; border: 1px solid #FFECB3;">
-                    Alias: <b>novapanes</b><br>CUIT: <b>20-33785913-6</b>
+                <div id="orderItemsSummary" style="background:#F9F9F9; padding:20px; border-radius:20px; margin:15px 0; font-size:0.9rem;"></div>
+                
+                <div style="text-align:right; margin:20px 0;">
+                    <strong style="font-size: 1.8rem;">Total: $<span id="checkoutTotal">0</span></strong>
                 </div>
 
-                <div id="orderItems" style="background: #FAFAFA; padding: 15px; border-radius: 15px; margin-top: 20px; font-size: 0.9rem;"></div>
-                <div style="text-align:right; margin:15px 0; font-size: 1.4rem;"><strong>Total: $<span id="orderTotal">0</span></strong></div>
-
-                <button type="submit" class="btn-primary">CONFIRMAR PEDIDO</button>
-                <button type="button" class="close-checkout-btn btn-vaciar">Cancelar</button>
+                <button type="submit" class="btn-primary">CONFIRMAR PEDIDO POR WHATSAPP</button>
             </form>
         </div>
     </div>
 
     <footer class="footer">
-        <h2>NOVA Panes®</h2>
-        <div class="footer-links">
-            <a href="https://wa.me/5491164372200" class="footer-btn">📱 WHATSAPP</a>
-            <a href="https://instagram.com/nova.panes" class="footer-btn">📷 INSTAGRAM</a>
+        <div class="footer-grid">
+            <div>
+                <h2 style="color: white; margin-bottom: 20px;">NOVA Panes®</h2>
+                <p style="opacity:0.7;">Elevamos el estándar de tus hamburguesas con la frescura artesanal de nuestro pan de papa premium. Calidad internacional, sabor local.</p>
+            </div>
+            <div>
+                <h4>Categorías</h4>
+                <ul class="footer-links-list">
+                    <li><a href="shop.html?category=hamburguesas">Hamburguesas</a></li>
+                    <li><a href="shop.html?category=salchichas">Panchos</a></li>
+                    <li><a href="shop.html?category=panificados">Especiales</a></li>
+                    <li><a href="shop.html">Ver Todo</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contacto</h4>
+                <ul class="footer-links-list">
+                    <li><a href="https://wa.me/5491164372200">📱 WhatsApp: 11 6437-2200</a></li>
+                    <li><a href="https://instagram.com/nova.panes">📷 Instagram: @nova.panes</a></li>
+                    <li><a href="index.html#contacto">📍 Donde estamos</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-legal">
-            Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8
+        <div class="footer-bottom">
+            <div>© 2024 NOVA Panes. Todos los derechos reservados.</div>
+            <div>CUIT: 30-71821628-8</div>
         </div>
     </footer>
 

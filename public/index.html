@@ -7,11 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <div class="announcement-bar">
-        🚚 Envío GRATIS en pedidos superiores a $75.000 | Entregas a todo el país
-    </div>
-
+    <div class="announcement-bar">🚚 Envío GRATIS en pedidos superiores a $75.000 | Entregas a todo el país</div>
     <header>
         <div class="logo"><img src="logo.png" alt="NOVA Panes"></div>
         <nav class="main-nav">
@@ -23,111 +19,58 @@
     </header>
 
     <main style="padding: 20px 0;">
-
-        <!-- SECCIÓN HERO -->
+        <!-- HERO -->
         <section class="content-card hero-card reveal active">
-            <div class="grid-2-col hero-grid">
+            <div class="grid-2-col">
                 <div>
                     <h1 style="font-size: 5rem; color: var(--primary-red); line-height: 1; margin-bottom: 25px;">Mucho más que un simple pan.</h1>
-                    <p style="font-size: 1.3rem; color: var(--text-light); margin-bottom: 40px;">Artesanal, suave y con ese toque de papa que cambia todo. Elevá tus hamburguesas al estándar premium.</p>
+                    <p style="font-size: 1.3rem; color: var(--text-light); margin-bottom: 45px; font-weight: 500;">Artesanal, suave y con ese toque de papa que cambia todo. Elevá tus hamburguesas al estándar premium.</p>
                     <a href="shop.html" class="cta-button">HACER PEDIDO ONLINE</a>
                 </div>
-                <div style="text-align: center;">
-                    <img src="hero-images/hero-pan.png" alt="Pan Nova" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));">
-                </div>
+                <div style="text-align: center;"><img src="hero-images/hero-pan.png" alt="Pan Nova" style="width: 100%; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.15));"></div>
             </div>
         </section>
 
-        <!-- SECCIÓN VALOR: EL SECRETO NOVA -->
+        <!-- VALOR -->
         <section class="content-card reveal">
             <div class="grid-3-col">
-                <div class="value-item">
-                    <span class="value-icon">👨‍🍳</span>
-                    <h3>Artesanal</h3>
-                    <p style="color: var(--text-light); font-size: 0.9rem;">Horneado diariamente con procesos tradicionales para una textura inigualable.</p>
-                </div>
-                <div class="value-item">
-                    <span class="value-icon">🥔</span>
-                    <h3>Papa Seleccionada</h3>
-                    <p style="color: var(--text-light); font-size: 0.9rem;">Nuestra receta secreta usa solo las mejores papas para lograr esa humedad única.</p>
-                </div>
-                <div class="value-item">
-                    <span class="value-icon">🚀</span>
-                    <h3>Envíos Rápidos</h3>
-                    <p style="color: var(--text-light); font-size: 0.9rem;">Directo de nuestra fábrica a tu local o domicilio, garantizando frescura total.</p>
-                </div>
+                <div style="text-align:center;"><span style="font-size:3.5rem; display:block; margin-bottom:20px;">👨‍🍳</span><h3>Artesanal</h3><p style="font-size: 0.95rem; color: var(--text-light);">Horneado diariamente con procesos tradicionales.</p></div>
+                <div style="text-align:center;"><span style="font-size:3.5rem; display:block; margin-bottom:20px;">🥔</span><h3>25 Días de Frescura</h3><p style="font-size: 0.95rem; color: var(--text-light);">Nuestro pan se mantiene perfecto conservando su humedad.</p></div>
+                <div style="text-align:center;"><span style="font-size:3.5rem; display:block; margin-bottom:20px;">🚀</span><h3>Envío Directo</h3><p style="font-size: 0.95rem; color: var(--text-light);">De nuestra fábrica a tu puerta garantizando calidad.</p></div>
             </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="content-card reveal">
+            <h2 style="font-size: 2.8rem; text-align: center; margin-bottom: 50px;">Dudas Frecuentes</h2>
+            <div style="max-width: 850px; margin: 0 auto;">
+                <div class="faq-item"><div class="faq-question">¿Cuánto dura el pan fresco?</div><div class="faq-answer">Se mantiene fresco durante 25 días hasta su vencimiento.</div></div>
+                <div class="faq-item"><div class="faq-question">¿Se puede congelar?</div><div class="faq-answer">¡Sí! Podés congelarlo hasta por 3 meses.</div></div>
+            </div>
+        </section>
+
+        <!-- SOCIO GASTRONÓMICO (B2B) -->
+        <section class="content-card b2b-card reveal">
+            <h2>¿Sos un local gastronómico?</h2>
+            <p>Convertite en socio NOVA. Ofrecemos precios mayoristas, logística personalizada y la calidad que tu hamburguesería necesita para destacarse.</p>
+            <a href="#contacto" class="cta-button">SOLICITAR LISTA MAYORISTA</a>
         </section>
 
         <!-- LOS MÁS ELEGIDOS -->
-        <section class="content-card text-center reveal">
-            <h2 style="font-size: 3.5rem; margin-bottom: 40px;">Los Más Elegidos</h2>
-            <div class="grid-2-col" style="gap: 30px; align-items: stretch;">
-                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; border: 1px solid #F0F0F0;">
-                    <img src="productos/pan-de-papa-1.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Pan de papa Clásico</h3>
-                    <p style="color: var(--text-light); font-size: 1rem; margin-bottom: 25px;">El favorito de las hamburgueserías premium. Suave y esponjoso.</p>
+        <section class="content-card reveal">
+            <h2 style="font-size: 3rem; margin-bottom: 50px; text-align: center;">Los Más Elegidos</h2>
+            <div class="grid-2-col">
+                <div style="text-align: left; background: #FDFBF8; padding: 40px; border-radius: 40px; border: 1px solid rgba(0,0,0,0.03);">
+                    <img src="productos/pan-de-papa-1.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 25px;">
+                    <h3>Pan de papa Clásico</h3>
+                    <p style="color: var(--text-light); margin-bottom: 25px;">El favorito de las hamburgueserías premium.</p>
                     <a href="shop.html?category=panificados" class="cta-button" style="width: 100%; text-align: center; box-sizing: border-box;">COMPRAR AHORA</a>
                 </div>
-                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; border: 1px solid #F0F0F0;">
-                    <img src="productos/pancho-doble.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Pancho Doble XL</h3>
-                    <p style="color: var(--text-light); font-size: 1rem; margin-bottom: 25px;">Ideal para propuestas innovadoras y porciones generosas.</p>
+                <div style="text-align: left; background: #FDFBF8; padding: 40px; border-radius: 40px; border: 1px solid rgba(0,0,0,0.03);">
+                    <img src="productos/pancho-doble.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 25px;">
+                    <h3>Pancho Doble XL</h3>
+                    <p style="color: var(--text-light); margin-bottom: 25px;">La base perfecta para propuestas gourmet.</p>
                     <a href="shop.html?category=panificados" class="cta-button" style="width: 100%; text-align: center; box-sizing: border-box;">COMPRAR AHORA</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- VARIEDAD -->
-        <section class="content-card text-center reveal">
-            <h2 style="font-size: 3.5rem; margin-bottom: 50px;">Nuestra Variedad</h2>
-            <div class="range-grid">
-                <a href="shop.html?category=hamburguesas" class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-papa-1.png" alt="Hamburguesa"></div>
-                    <h3>Hamburguesa</h3>
-                </a>
-                <a href="shop.html?category=salchichas" class="range-item">
-                    <div class="circle-img"><img src="productos/pancho-1.png" alt="Panchos"></div>
-                    <h3>Panchos</h3>
-                </a>
-                <a href="shop.html?category=panificados" class="range-item">
-                    <div class="circle-img"><img src="productos/pan-de-molde-1.png" alt="Especiales"></div>
-                    <h3>Especiales</h3>
-                </a>
-                <a href="shop.html?category=all" class="range-item">
-                    <div class="circle-img"><img src="productos/pancho-doble.png" alt="Combos"></div>
-                    <h3>Combos</h3>
-                </a>
-            </div>
-        </section>
-
-        <!-- INSPIRACIÓN -->
-        <section class="content-card reveal" style="background: var(--text-dark); color: white;">
-            <div class="text-center">
-                <h2 style="font-size: 3.5rem; color: white; margin-bottom: 15px;">Inspiración</h2>
-                <p style="font-size: 1.1rem; color: #AAA; margin-bottom: 50px;">Mirá lo que podés crear con la base perfecta.</p>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-                <div style="border-radius: 24px; overflow: hidden; background: white; color: var(--text-dark);">
-                    <img src="hero-images/hero-pan-1.png" style="width: 100%; height: 250px; object-fit: cover;">
-                    <div style="padding: 25px; text-align: center;">
-                        <h3 style="margin-bottom: 5px; font-size: 1.4rem;">La Burger Clásica</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-light);">Doble carne, cheddar y nuestro pan de papa estrella.</p>
-                    </div>
-                </div>
-                <div style="border-radius: 24px; overflow: hidden; background: white; color: var(--text-dark);">
-                    <img src="productos/lomito-1.jpg" style="width: 100%; height: 250px; object-fit: cover;">
-                    <div style="padding: 25px; text-align: center;">
-                        <h3 style="margin-bottom: 5px; font-size: 1.4rem;">Lomito Premium</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-light);">Suave y resistente para sándwiches cargados.</p>
-                    </div>
-                </div>
-                <div style="border-radius: 24px; overflow: hidden; background: white; color: var(--text-dark);">
-                    <img src="productos/sesamo.jpg" style="width: 100%; height: 250px; object-fit: cover;">
-                    <div style="padding: 25px; text-align: center;">
-                        <h3 style="margin-bottom: 5px; font-size: 1.4rem;">Gourmet con Sésamo</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-light);">El toque crujiente que distingue tu producto.</p>
-                    </div>
                 </div>
             </div>
         </section>
@@ -141,82 +84,28 @@
                         <input type="text" name="nombre" placeholder="Nombre completo" required>
                         <input type="email" name="email" placeholder="Correo electrónico" required>
                         <input type="tel" name="telefono" placeholder="WhatsApp" required>
-                        <textarea name="mensaje" placeholder="¿Sos un local gastronómico? Escribí tu consulta..." rows="5" required></textarea>
+                        <textarea name="mensaje" placeholder="Dejanos tu consulta..." rows="5" required></textarea>
                         <button type="submit" class="cta-button">ENVIAR CONSULTA</button>
                     </form>
                 </div>
-                <div class="map-container" style="border-radius: 20px; overflow: hidden; height: 100%;">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa!5e0!3m2!1ses!2sar!4v1710000000000" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
+                <div style="border-radius: 40px; overflow: hidden; height: 100%; min-height: 450px; box-shadow: var(--soft-shadow);"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3277.5072069442663!2d-58.32628522371521!3d-34.768004566194065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32d9aa509b157%3A0xfb46fa1faf63823b!2sGrupo%20FeSa!5e0!3m2!1ses!2sar!4v1710000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe></div>
             </div>
         </section>
-
     </main>
 
     <footer class="footer">
         <div class="footer-grid">
-            <div>
-                <h2 style="color: white; margin-bottom: 15px;">NOVA Panes®</h2>
-                <p>Mucho más que un simple pan. Elevamos el estándar de tus hamburguesas con frescura artesanal y la mejor calidad en pan de papa.</p>
-            </div>
-            <div>
-                <h4>Categorías</h4>
-                <ul class="footer-links-list">
-                    <li><a href="shop.html?category=hamburguesas">Hamburguesas</a></li>
-                    <li><a href="shop.html?category=salchichas">Panchos</a></li>
-                    <li><a href="shop.html?category=panificados">Especiales</a></li>
-                    <li><a href="shop.html">Todos los productos</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Contacto</h4>
-                <ul class="footer-links-list">
-                    <li><a href="https://wa.me/5491164372200">📱 WhatsApp: 11 6437-2200</a></li>
-                    <li><a href="https://instagram.com/nova.panes">📷 Instagram @nova.panes</a></li>
-                    <li><a href="#contacto">📍 Donde estamos</a></li>
-                </ul>
-            </div>
+            <div><h2 style="color: white; margin-bottom: 20px;">NOVA Panes®</h2><p style="opacity:0.7;">Elevamos el estándar de tus hamburguesas.</p></div>
+            <div><h4>Categorías</h4><ul class="footer-links-list"><li><a href="shop.html?category=hamburguesas">Hamburguesas</a></li><li><a href="shop.html?category=salchichas">Panchos</a></li><li><a href="shop.html?category=panificados">Especiales</a></li><li><a href="shop.html">Ver Todo</a></li></ul></div>
+            <div><h4>Contacto</h4><ul class="footer-links-list"><li><a href="https://wa.me/5491164372200">📱 WhatsApp</a></li><li><a href="https://instagram.com/nova.panes">📷 Instagram</a></li></ul></div>
         </div>
-        <div class="footer-bottom">
-            <div>© 2024 NOVA Panes. Todos los derechos reservados.</div>
-            <div>Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8</div>
-        </div>
+        <div class="footer-bottom"><div>© 2024 NOVA Panes.</div><div>CUIT: 30-71821628-8</div></div>
     </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('active');
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-            const contactForm = document.getElementById('contactForm');
-            if (contactForm) {
-                contactForm.addEventListener('submit', async (e) => {
-                    e.preventDefault(); 
-                    const submitBtn = contactForm.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.textContent;
-                    submitBtn.textContent = 'ENVIANDO...';
-                    submitBtn.disabled = true;
-                    const formData = new FormData(contactForm);
-                    const data = Object.fromEntries(formData.entries());
-                    try {
-                        const response = await fetch('/api/contact', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(data)
-                        });
-                        const result = await response.json();
-                        if (result.success) {
-                            alert(result.message || '¡Gracias! Tu consulta ha sido enviada con éxito.');
-                            contactForm.reset(); 
-                        } else { alert('Hubo un error al enviar el mensaje.'); }
-                    } catch (error) { alert('Error de conexión.'); } 
-                    finally { submitBtn.textContent = originalText; submitBtn.disabled = false; }
-                });
-            }
+            const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+            document.querySelectorAll('.faq-item').forEach(item => { item.addEventListener('click', () => { item.classList.toggle('active'); }); });
         });
     </script>
 </body>
