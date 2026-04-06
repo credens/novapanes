@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
     let allCategories = [];
-    let cart =[];
+    let cart = [];
     const MINIMUM_PURCHASE = 15000;
 
     const shopProductsContainer = document.getElementById('shopProducts');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const direccionInput = document.querySelector('input[name="direccion"]');
     const ciudadInput = document.querySelector('input[name="ciudad"]');
 
-    // Mapeo de Emojis para que los filtros se vean como Bakers Delight
+    // Mapeo de Emojis para filtros (Inspiración Bakers Delight)
     const categoryIcons = {
         'panificados': '🍞',
         'hamburguesas': '🍔',
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'helados': '🍦'
     };
 
+    // Carga de datos inicial
     Promise.all([
         fetch('/products').then(res => res.json()),
         fetch('/data/categories.json').then(res => res.json()),
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderProducts();
         setupEventListeners();
         updateCartDisplayFromStorage();
-    }).catch(err => console.error(err));
+    }).catch(err => console.error("Error cargando la tienda:", err));
 
     function renderLogoScroller(logos) {
         if (!logoScroller || !Array.isArray(logos)) return;
@@ -59,29 +60,40 @@ document.addEventListener('DOMContentLoaded', function() {
         const isValidCat = urlCat && allCategories.some(c => c.id === urlCat);
         const initialCategory = isValidCat ? urlCat : 'all';
 
-        // Botón Todos con el emoji de destellos
+        // Botón Todos
         filterContainer.innerHTML = `<button class="filter-btn ${initialCategory === 'all' ? 'active' : ''}" data-filter="all"><span>✨</span> Todos</button>`;
         
-        // Botones dinámicos con iconos automáticos
+        // Botones de categorías con iconos
         allCategories.forEach(c => {
             const isActive = initialCategory === c.id ? 'active' : '';
-            const icon = categoryIcons[c.id] || '🥖'; // Icono por defecto
+            const icon = categoryIcons[c.id] || '🥖';
             filterContainer.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${c.id}"><span>${icon}</span> ${c.name}</button>`;
         });
     }
 
     function renderProducts() {
-        const filter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+        const activeBtn = document.querySelector('.filter-btn.active');
+        const filter = activeBtn ? activeBtn.dataset.filter : 'all';
         const search = searchInput.value.toLowerCase().trim();
+        
         const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
         const final = search ? filtered.filter(p => p.name.toLowerCase().includes(search)) : filtered;
 
         shopProductsContainer.innerHTML = '';
-        const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] ||[]).push(p); return acc; }, {});
+        
+        // Agrupar por categoría
+        const grouped = final.reduce((acc, p) => { 
+            (acc[p.category] = acc[p.category] || []).push(p); 
+            return acc; 
+        }, {});
 
         allCategories.forEach(cat => {
             if (grouped[cat.id]) {
-                let html = `<div class="category-group reveal active"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
+                let html = `
+                <div class="category-group reveal active">
+                    <h2 class="category-group-title">${cat.name}</h2>
+                    <div class="shop-products">`;
+                
                 html += grouped[cat.id].map(p => `
                     <div id="product-${p.id}" class="product-item">
                         <img src="/${p.image}" class="product-image" onclick="openProductModal('/${p.image}', '${p.name}')">
@@ -99,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                     </div>`).join('');
+                
                 shopProductsContainer.innerHTML += html + `</div></div>`;
             }
         });
@@ -115,46 +128,74 @@ document.addEventListener('DOMContentLoaded', function() {
         const p = products.find(prod => prod.id === id);
         const qty = parseInt(document.getElementById(`qty-input-${id}`).value);
         const price = (p.promo_price && p.promo_price < p.price) ? p.promo_price : p.price;
+        
         const item = cart.find(i => i.id === id);
-        if (item) item.quantity += qty; else cart.push({...p, price, quantity: qty});
+        if (item) {
+            item.quantity += qty;
+        } else {
+            cart.push({...p, price, quantity: qty});
+        }
+        
         updateCartDisplay();
         document.getElementById(`qty-input-${id}`).value = 1;
-        const btn = event.target; btn.textContent = '¡LISTO!'; 
-        setTimeout(() => btn.textContent = 'AGREGAR', 1000);
+        
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '¡LISTO!'; 
+        setTimeout(() => btn.textContent = originalText, 1000);
     };
 
     function updateCartDisplay() {
         const count = cart.reduce((s, i) => s + i.quantity, 0);
         const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+        
         document.getElementById('cartCount').textContent = count;
         document.getElementById('cartTotal').textContent = total.toLocaleString();
-        if(document.getElementById('orderTotal')) document.getElementById('orderTotal').textContent = total.toLocaleString();
+        if(document.getElementById('orderTotal')) {
+            document.getElementById('orderTotal').textContent = total.toLocaleString();
+        }
+
         const checkoutBtn = document.getElementById('checkout');
         const minMsg = document.getElementById('minPurchaseMessage');
+        
         if (total < MINIMUM_PURCHASE && cart.length > 0) {
             minMsg.textContent = `Monto mínimo: $${MINIMUM_PURCHASE.toLocaleString()}. Faltan $${(MINIMUM_PURCHASE - total).toLocaleString()}.`;
-            checkoutBtn.disabled = true; checkoutBtn.style.opacity = '0.5';
+            checkoutBtn.disabled = true; 
+            checkoutBtn.style.opacity = '0.5';
         } else {
-            minMsg.textContent = ''; checkoutBtn.disabled = false; checkoutBtn.style.opacity = '1';
+            minMsg.textContent = ''; 
+            checkoutBtn.disabled = false; 
+            checkoutBtn.style.opacity = '1';
         }
+        
         localStorage.setItem('novaPanesCart', JSON.stringify(cart));
         renderCartItems();
     }
 
     function renderCartItems() {
         const el = document.getElementById('cartItems');
-        if (cart.length === 0) { el.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">Tu carrito está vacío</p>'; return; }
+        if (cart.length === 0) { 
+            el.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">Tu carrito está vacío</p>'; 
+            return; 
+        }
         el.innerHTML = cart.map(i => `
             <div class="cart-item-row">
                 <img src="${i.image}">
-                <div class="cart-item-info"><b>${i.name}</b><span>$${i.price.toLocaleString()} x ${i.quantity}</span></div>
+                <div class="cart-item-info">
+                    <b>${i.name}</b>
+                    <span>$${i.price.toLocaleString()} x ${i.quantity}</span>
+                </div>
                 <button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button>
             </div>`).join('');
     }
 
-    window.removeFromCart = (id) => { cart = cart.filter(i => i.id !== id); updateCartDisplay(); };
+    window.removeFromCart = (id) => {
+        cart = cart.filter(i => i.id !== id);
+        updateCartDisplay();
+    };
 
     function setupEventListeners() {
+        // Filtros
         filterContainer?.addEventListener('click', e => {
             const btn = e.target.closest('.filter-btn');
             if (btn) {
@@ -164,29 +205,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderProducts();
             }
         });
+
         searchInput?.addEventListener('input', renderProducts);
-        headerCartIcon?.addEventListener('click', (e) => { e.preventDefault(); cartModal.style.display = 'flex'; });
-        document.querySelector('.close-cart')?.addEventListener('click', () => cartModal.style.display = 'none');
-        document.getElementById('checkout')?.addEventListener('click', () => { cartModal.style.display = 'none'; checkoutModal.style.display = 'flex'; renderOrderSummary(); });
-        document.querySelector('.close-checkout')?.addEventListener('click', () => checkoutModal.style.display = 'none');
-        document.querySelector('.close-checkout-btn')?.addEventListener('click', () => checkoutModal.style.display = 'none');
-        document.getElementById('clearCart')?.addEventListener('click', () => { if(confirm('¿Vaciar?')) { cart =[]; updateCartDisplay(); } });
+
+        // Modales
+        headerCartIcon?.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            cartModal.style.display = 'flex'; 
+        });
+
+        document.querySelector('.close-cart')?.addEventListener('click', () => {
+            cartModal.style.display = 'none';
+        });
+
+        document.getElementById('checkout')?.addEventListener('click', () => { 
+            cartModal.style.display = 'none'; 
+            checkoutModal.style.display = 'flex'; 
+            renderOrderSummary(); 
+        });
+
+        document.querySelectorAll('.close-checkout, .close-checkout-btn').forEach(btn => {
+            btn.addEventListener('click', () => checkoutModal.style.display = 'none');
+        });
+
+        document.getElementById('clearCart')?.addEventListener('click', () => { 
+            if(confirm('¿Vaciar carrito?')) { 
+                cart = []; 
+                updateCartDisplay(); 
+            } 
+        });
+
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
 
+        // Lógica de Pagos vs Entrega
         const efectivoOption = paymentMethodSelect?.querySelector('option[value="efectivo"]');
-        if (efectivoOption) {
-            efectivoOption.disabled = true; 
-            efectivoOption.textContent = "Efectivo (Solo para Retiro)";
-        }
-
+        
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const isDelivery = e.target.value === 'Envío a Domicilio';
-                
                 deliveryAddressContainer.style.display = isDelivery ? 'block' : 'none';
+                
                 if(direccionInput) direccionInput.required = isDelivery;
                 if(ciudadInput) ciudadInput.required = isDelivery;
-                document.getElementById('deliveryTimeSelect').required = isDelivery;
+                if(deliveryTimeSelect) deliveryTimeSelect.required = isDelivery;
 
                 if (efectivoOption) {
                     if (isDelivery) {
@@ -211,21 +272,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderOrderSummary() {
         const el = document.getElementById('orderItems');
-        if (el) el.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between"><span>${i.name} x${i.quantity}</span><span>$${(i.price*i.quantity).toLocaleString()}</span></div>`).join('');
+        if (el) {
+            el.innerHTML = cart.map(i => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>${i.name} x${i.quantity}</span>
+                    <span>$${(i.price * i.quantity).toLocaleString()}</span>
+                </div>`).join('');
+        }
     }
 
     async function handleCheckout(e) {
         e.preventDefault();
         const fData = new FormData(e.target);
         const pMethod = fData.get('metodoPago');
-        const customerData = { nombre: fData.get('nombre'), telefono: fData.get('telefono'), email: fData.get('email'), metodoEntrega: fData.get('metodoEntrega'), direccion: fData.get('direccion') || 'Retiro', ciudad: fData.get('ciudad') || '-', horarioEntrega: fData.get('horarioEntrega') || 'N/A' };
-        const orderData = { customer: customerData, metodoPago: pMethod, items: cart, total: cart.reduce((s, i) => s + (i.price * i.quantity), 0) };
+        
+        const customerData = { 
+            nombre: fData.get('nombre'), 
+            telefono: fData.get('telefono'), 
+            email: fData.get('email'), 
+            metodoEntrega: fData.get('metodoEntrega'), 
+            direccion: fData.get('direccion') || 'Retiro', 
+            ciudad: fData.get('ciudad') || '-', 
+            horarioEntrega: fData.get('horarioEntrega') || 'N/A' 
+        };
+
+        const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+        const orderData = { customer: customerData, metodoPago: pMethod, items: cart, total: total };
 
         if (pMethod === 'mercadopago') {
-            const res = await fetch('/create-preference', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart.map(i => ({ id: i.id, title: i.name, quantity: i.quantity, unit_price: i.price })), payer: { name: customerData.nombre, email: customerData.email } }) });
-            const pref = await res.json();
-            window.location.href = pref.init_point;
+            try {
+                const res = await fetch('/create-preference', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ 
+                        items: cart.map(i => ({ id: i.id, title: i.name, quantity: i.quantity, unit_price: i.price })), 
+                        payer: { name: customerData.nombre, email: customerData.email } 
+                    }) 
+                });
+                const pref = await res.json();
+                window.location.href = pref.init_point;
+            } catch (err) {
+                alert("Error con Mercado Pago. Intenta nuevamente.");
+            }
         } else {
-            await fetch('/api/submit-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
-            window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 PEDIDO NOVA PANES de ' + customerData.nombre)}`, '_blank');
-            cart =
+            try {
+                await fetch('/api/submit-order', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(orderData) 
+                });
+                window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 NUEVO PEDIDO NOVA PANES de ' + customerData.nombre)}`, '_blank');
+                cart = []; 
+                updateCartDisplay(); 
+                checkoutModal.style.display = 'none';
+                alert('¡Pedido enviado! Te redirigimos a WhatsApp.');
+            } catch (err) {
+                alert("Error al enviar el pedido. Intenta nuevamente.");
+            }
+        }
+    }
+
+    function updateCartDisplayFromStorage() { 
+        const saved = localStorage.getItem('novaPanesCart'); 
+        if (saved) { 
+            cart = JSON.parse(saved); 
+            updateCartDisplay(); 
+        } 
+    }
+    
+    window.openProductModal = (src, title) => {
+        const m = document.createElement('div');
+        m.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(5px);";
+        m.onclick = () => m.remove();
+        m.innerHTML = `<div style="background:white; padding:30px; border-radius:35px; max-width:500px; width:100%; text-align:center;"><img src="${src}" style="width:100%; border-radius:20px; object-fit:contain; max-height:300px;"><h3 style="font-family:Lora; margin-top:20px;">${title}</h3></div>`;
+        document.body.appendChild(m);
+    };
+});
