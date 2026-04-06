@@ -41,9 +41,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderCategoryFilters() {
         if (!filterContainer) return;
-        filterContainer.innerHTML = '<button class="filter-btn active" data-filter="all">Todos</button>';
+        
+        // NUEVA LÓGICA: Leer parámetro "category" de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlCat = urlParams.get('category');
+        
+        // Verificar si la categoría existe en el backend, sino por defecto 'all'
+        const isValidCat = urlCat && allCategories.some(c => c.id === urlCat);
+        const initialCategory = isValidCat ? urlCat : 'all';
+
+        // Botón "Todos"
+        filterContainer.innerHTML = `<button class="filter-btn ${initialCategory === 'all' ? 'active' : ''}" data-filter="all">Todos</button>`;
+        
+        // Botones dinámicos
         allCategories.forEach(c => {
-            filterContainer.innerHTML += `<button class="filter-btn" data-filter="${c.id}">${c.name}</button>`;
+            const isActive = initialCategory === c.id ? 'active' : '';
+            filterContainer.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${c.id}">${c.name}</button>`;
         });
     }
 
@@ -135,7 +148,12 @@ document.addEventListener('DOMContentLoaded', function() {
         filterContainer?.addEventListener('click', e => {
             if (e.target.classList.contains('filter-btn')) {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active'); renderProducts();
+                e.target.classList.add('active'); 
+                
+                // Limpiar la URL sin recargar la página para que quede limpia
+                window.history.replaceState({}, '', window.location.pathname);
+                
+                renderProducts();
             }
         });
         searchInput?.addEventListener('input', renderProducts);
@@ -147,10 +165,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('clearCart')?.addEventListener('click', () => { if(confirm('¿Vaciar?')) { cart = []; updateCartDisplay(); } });
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
 
-        // NUEVA LÓGICA: Control de método de pago vs método de entrega
         const efectivoOption = paymentMethodSelect?.querySelector('option[value="efectivo"]');
         if (efectivoOption) {
-            efectivoOption.disabled = true; // Por defecto arranca en "Envío", así que lo deshabilitamos
+            efectivoOption.disabled = true; 
             efectivoOption.textContent = "Efectivo (Solo para Retiro)";
         }
 
@@ -158,25 +175,20 @@ document.addEventListener('DOMContentLoaded', function() {
             radio.addEventListener('change', (e) => {
                 const isDelivery = e.target.value === 'Envío a Domicilio';
                 
-                // Mostrar/ocultar campos de dirección
                 deliveryAddressContainer.style.display = isDelivery ? 'block' : 'none';
                 if(direccionInput) direccionInput.required = isDelivery;
                 if(ciudadInput) ciudadInput.required = isDelivery;
                 document.getElementById('deliveryTimeSelect').required = isDelivery;
 
-                // Lógica de pago
                 if (efectivoOption) {
                     if (isDelivery) {
-                        // Si es envío, bloqueamos efectivo
                         efectivoOption.disabled = true;
                         efectivoOption.textContent = "Efectivo (Solo para Retiro)";
-                        // Si estaba seleccionado, lo des-seleccionamos
                         if (paymentMethodSelect.value === 'efectivo') {
                             paymentMethodSelect.value = '';
                             transferInfo.style.display = 'none';
                         }
                     } else {
-                        // Si es retiro, habilitamos efectivo
                         efectivoOption.disabled = false;
                         efectivoOption.textContent = "Efectivo al recibir";
                     }

@@ -20,7 +20,7 @@
 
     <main style="padding: 20px 0;">
 
-        <!-- 1. SECCIÓN HERO (TARJETA) -->
+        <!-- 1. SECCIÓN HERO -->
         <section class="content-card hero-card reveal active">
             <div class="grid-2-col hero-grid">
                 <div>
@@ -34,30 +34,30 @@
             </div>
         </section>
 
-        <!-- 2. SECCIÓN VARIEDAD (TARJETA) -->
+        <!-- 2. SECCIÓN VARIEDAD (AHORA SON ENLACES A CATEGORÍAS) -->
         <section class="content-card text-center reveal">
             <h2 style="font-size: 3.5rem; margin-bottom: 50px;">Nuestra Variedad</h2>
             <div class="range-grid">
-                <div class="range-item">
+                <a href="shop.html?category=hamburguesas" class="range-item">
                     <div class="circle-img"><img src="productos/pan-de-papa-1.png" alt="Hamburguesa"></div>
                     <h3>Hamburguesa</h3>
-                </div>
-                <div class="range-item">
+                </a>
+                <a href="shop.html?category=salchichas" class="range-item">
                     <div class="circle-img"><img src="productos/pancho-1.png" alt="Panchos"></div>
                     <h3>Panchos</h3>
-                </div>
-                <div class="range-item">
+                </a>
+                <a href="shop.html?category=panificados" class="range-item">
                     <div class="circle-img"><img src="productos/pan-de-molde-1.png" alt="Especiales"></div>
                     <h3>Especiales</h3>
-                </div>
-                <div class="range-item">
+                </a>
+                <a href="shop.html?category=all" class="range-item">
                     <div class="circle-img"><img src="productos/pancho-doble.png" alt="Combos"></div>
                     <h3>Combos</h3>
-                </div>
+                </a>
             </div>
         </section>
 
-        <!-- 3. SECCIÓN SPLIT (TARJETA) -->
+        <!-- 3. SECCIÓN SPLIT -->
         <div class="split-section reveal">
             <div class="split-content">
                 <h2 style="font-size: 3rem; color: var(--primary-red); margin-bottom: 20px;">La perfección empieza acá.</h2>
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <!-- 4. SECCIÓN CONTACTO (TARJETA) -->
+        <!-- 4. SECCIÓN CONTACTO -->
         <section id="contacto" class="content-card reveal">
             <div class="grid-2-col">
                 <div class="contact-form-container">
@@ -101,7 +101,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Animaciones Reveal
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) entry.target.classList.add('active');
@@ -109,7 +108,6 @@
             }, { threshold: 0.1 });
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-            // Funcionalidad de Envío del Formulario
             const contactForm = document.getElementById('contactForm');
             if (contactForm) {
                 contactForm.addEventListener('submit', async (e) => {
