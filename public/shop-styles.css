@@ -23,11 +23,25 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none; box-sizing: border-box;
 }
 
-/* PUNTO 4: FILTROS VISUALES PREMIUM */
+/* CORRECCIÓN FILTROS: Scroll horizontal habilitado correctamente */
 .filter-container { 
-    display: flex; justify-content: center; gap: 12px; margin-bottom: 25px;
-    flex-wrap: nowrap; overflow-x: auto; padding: 10px 5px; -webkit-overflow-scrolling: touch;
+    display: flex; 
+    justify-content: flex-start; /* Cambiado de center a flex-start para evitar el corte de items */
+    gap: 12px; 
+    margin-bottom: 25px;
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
+    padding: 15px 20px; /* Aumentado padding lateral para que el primer item no pegue al borde */
+    -webkit-overflow-scrolling: touch;
 }
+
+/* Centrado automático solo si el contenido cabe en la pantalla */
+@media (min-width: 1024px) {
+    .filter-container {
+        justify-content: center;
+    }
+}
+
 .filter-container::-webkit-scrollbar { display: none; }
 
 .filter-btn {
@@ -36,7 +50,7 @@
     font-size: 0.95rem; color: var(--text-dark); white-space: nowrap; transition: 0.3s;
     display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
 }
-.filter-btn span { font-size: 1.2rem; } /* Tamaño del Emoji/Icono */
+.filter-btn span { font-size: 1.2rem; }
 .filter-btn:hover { border-color: var(--primary-red); transform: translateY(-2px); }
 .filter-btn.active { 
     background: var(--primary-red); color: white; border-color: var(--primary-red); 
