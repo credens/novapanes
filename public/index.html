@@ -19,7 +19,7 @@
     </header>
 
     <main style="padding: 20px 0;">
-        <!-- HERO -->
+        <!-- 1. HERO -->
         <section class="content-card hero-card reveal active">
             <div class="grid-2-col">
                 <div>
@@ -31,7 +31,7 @@
             </div>
         </section>
 
-        <!-- VALOR -->
+        <!-- 2. VALOR -->
         <section class="content-card reveal">
             <div class="grid-3-col">
                 <div style="text-align:center;"><span style="font-size:3.5rem; display:block; margin-bottom:20px;">👨‍🍳</span><h3>Artesanal</h3><p style="font-size: 0.95rem; color: var(--text-light);">Horneado diariamente con procesos tradicionales.</p></div>
@@ -40,23 +40,23 @@
             </div>
         </section>
 
-        <!-- FAQ -->
+        <!-- 3. FAQ -->
         <section class="content-card reveal">
             <h2 style="font-size: 2.8rem; text-align: center; margin-bottom: 50px;">Dudas Frecuentes</h2>
             <div style="max-width: 850px; margin: 0 auto;">
                 <div class="faq-item"><div class="faq-question">¿Cuánto dura el pan fresco?</div><div class="faq-answer">Se mantiene fresco durante 25 días hasta su vencimiento.</div></div>
-                <div class="faq-item"><div class="faq-question">¿Se puede congelar?</div><div class="faq-answer">¡Sí! Podés congelarlo hasta por 3 meses.</div></div>
+                <div class="faq-item"><div class="faq-question">¿Se puede congelar?</div><div class="faq-answer">¡Sí! Podés congelarlo hasta por 3 meses. Recupera su textura ideal con un golpe de calor suave.</div></div>
             </div>
         </section>
 
-        <!-- SOCIO GASTRONÓMICO (B2B) -->
+        <!-- 4. SOCIO GASTRONÓMICO -->
         <section class="content-card b2b-card reveal">
             <h2>¿Sos un local gastronómico?</h2>
-            <p>Convertite en socio NOVA. Ofrecemos precios mayoristas, logística personalizada y la calidad que tu hamburguesería necesita para destacarse.</p>
+            <p>Convertite en socio NOVA. Ofrecemos precios mayoristas y logística personalizada para tu hamburguesería.</p>
             <a href="#contacto" class="cta-button">SOLICITAR LISTA MAYORISTA</a>
         </section>
 
-        <!-- LOS MÁS ELEGIDOS -->
+        <!-- 5. LOS MÁS ELEGIDOS -->
         <section class="content-card reveal">
             <h2 style="font-size: 3rem; margin-bottom: 50px; text-align: center;">Los Más Elegidos</h2>
             <div class="grid-2-col">
@@ -75,7 +75,7 @@
             </div>
         </section>
 
-        <!-- CONTACTO -->
+        <!-- 6. CONTACTO -->
         <section id="contacto" class="content-card reveal">
             <div class="grid-2-col">
                 <div class="contact-form-container">
@@ -99,13 +99,42 @@
             <div><h4>Categorías</h4><ul class="footer-links-list"><li><a href="shop.html?category=hamburguesas">Hamburguesas</a></li><li><a href="shop.html?category=salchichas">Panchos</a></li><li><a href="shop.html?category=panificados">Especiales</a></li><li><a href="shop.html">Ver Todo</a></li></ul></div>
             <div><h4>Contacto</h4><ul class="footer-links-list"><li><a href="https://wa.me/5491164372200">📱 WhatsApp</a></li><li><a href="https://instagram.com/nova.panes">📷 Instagram</a></li></ul></div>
         </div>
-        <div class="footer-bottom"><div>© 2024 NOVA Panes.</div><div>CUIT: 30-71821628-8</div></div>
+        <div class="footer-bottom"><div>© 2026 NOVA Panes.</div><div>CUIT: 30-71821628-8</div></div>
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.1 });
             document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
             document.querySelectorAll('.faq-item').forEach(item => { item.addEventListener('click', () => { item.classList.toggle('active'); }); });
+
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const btn = contactForm.querySelector('button[type="submit"]');
+                    btn.disabled = true;
+                    btn.textContent = 'ENVIANDO...';
+                    try {
+                        const data = Object.fromEntries(new FormData(contactForm));
+                        const res = await fetch('/api/contact', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await res.json();
+                        if (result.success) {
+                            alert('¡Gracias por tu consulta! Te contactaremos pronto.');
+                            contactForm.reset();
+                        } else {
+                            alert('Hubo un error al enviar. Intentá de nuevo.');
+                        }
+                    } catch (err) {
+                        alert('Error de conexión. Intentá de nuevo.');
+                    }
+                    btn.disabled = false;
+                    btn.textContent = 'ENVIAR CONSULTA';
+                });
+            }
         });
     </script>
 </body>

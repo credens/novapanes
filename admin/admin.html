@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - NOVA Panes</title>
+    <title>Panel de Administración | NOVA Panes</title>
+    <!-- SEO TÉCNICO -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Gestión interna de NOVA Panes.">
+    <link rel="icon" type="image/png" href="logo.png">
+    
     <link rel="stylesheet" href="admin-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,69 +17,82 @@
 
 <body>
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                NOVA Panes
-            </div>
+        <!-- SIDEBAR -->
+        <aside class="sidebar" aria-label="Navegación administrativa">
+            <header class="sidebar-header">
+                <h2>NOVA</h2>
+                <p>Pan de Papa Premium</p>
+            </header>
             <nav class="sidebar-nav">
-                <a href="#dashboard" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</a>
-                <a href="#products" class="nav-item"><i class="fas fa-bread-slice"></i> Productos</a>
-                <a href="#orders" class="nav-item"><i class="fas fa-box"></i> Pedidos</a>
-                <a href="#categories" class="nav-item"><i class="fas fa-tags"></i> Categorías</a>
+                <a href="#dashboard" class="nav-item active" id="nav-dashboard">
+                    <i class="fas fa-chart-pie" aria-hidden="true"></i> 
+                    <span>Dashboard</span>
+                </a>
+                <a href="#products" class="nav-item" id="nav-products">
+                    <i class="fas fa-bread-slice" aria-hidden="true"></i> 
+                    <span>Productos</span>
+                </a>
+                <a href="#orders" class="nav-item" id="nav-orders">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i> 
+                    <span>Pedidos</span>
+                </a>
+                <a href="#categories" class="nav-item" id="nav-categories">
+                    <i class="fas fa-tags" aria-hidden="true"></i> 
+                    <span>Categorías</span>
+                </a>
             </nav>
         </aside>
 
+        <!-- CONTENIDO PRINCIPAL -->
         <main class="main-content">
+            
+            <!-- SECTION: DASHBOARD -->
             <section id="dashboard">
-                <div class="main-header">
-                    <h1>Resumen General</h1>
-                </div>
+                <header class="main-header">
+                    <h1>Resumen del Negocio</h1>
+                </header>
+                
                 <div class="stats-grid">
-                    <a href="#products" class="stat-card-link nav-item">
-                        <div class="stat-card">
-                            <div class="card-icon"><i class="fas fa-bread-slice"></i></div>
-                            <div class="card-info">
-                                <span class="card-title">Total de Productos</span>
-                                <span class="card-value" id="totalProducts">-</span>
-                            </div>
+                    <div class="stat-card">
+                        <div class="card-icon"><i class="fas fa-bread-slice"></i></div>
+                        <div class="card-info">
+                            <span class="card-title">Productos</span>
+                            <span class="card-value" id="totalProducts">-</span>
                         </div>
-                    </a>
-                    <a href="#orders" class="stat-card-link nav-item">
-                        <div class="stat-card">
-                            <div class="card-icon"><i class="fas fa-box"></i></div>
-                            <div class="card-info">
-                                <span class="card-title">Pedidos Pendientes</span>
-                                <span class="card-value" id="pendingOrders">-</span>
-                            </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="card-icon"><i class="fas fa-box"></i></div>
+                        <div class="card-info">
+                            <span class="card-title">Pendientes</span>
+                            <span class="card-value" id="pendingOrders">-</span>
                         </div>
-                    </a>
+                    </div>
                 </div>
 
                 <div class="charts-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Ventas Mensuales (Año Actual)</h2>
-                        </div>
-                        <div class="card-body" style="padding: 20px; height: 350px;">
+                    <article class="admin-card">
+                        <div class="card-header"><h2>Ventas Mensuales</h2></div>
+                        <div style="padding: 30px; height: 350px;">
                             <canvas id="salesChart"></canvas>
                         </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Visitas a la Tienda (Año Actual)</h2>
-                        </div>
-                        <div class="card-body" style="padding: 20px; height: 350px;">
+                    </article>
+                    <article class="admin-card">
+                        <div class="card-header"><h2>Visitas a Tienda</h2></div>
+                        <div style="padding: 30px; height: 350px;">
                             <canvas id="visitsChart"></canvas>
                         </div>
-                    </div>
+                    </article>
                 </div>
             </section>
 
+            <!-- SECTION: PRODUCTOS -->
             <section id="products" style="display: none;">
-                <div class="card">
+                <div class="admin-card">
                     <div class="card-header">
-                        <h2>Gestión de Productos</h2>
-                        <button class="btn-primary" id="showAddProductModalBtn"><i class="fas fa-plus"></i> Agregar Producto</button>
+                        <h2>Gestión de Catálogo</h2>
+                        <button class="btn-primary" id="showAddProductModalBtn">
+                            <i class="fas fa-plus"></i> Agregar Producto
+                        </button>
                     </div>
                     <div class="table-container">
                         <table>
@@ -83,7 +101,7 @@
                                     <th>Imagen</th>
                                     <th>Nombre</th>
                                     <th>Precio</th>
-                                    <th>Stock</th>
+                                    <th>Etiqueta (Badge)</th>
                                     <th>Categoría</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -94,16 +112,15 @@
                 </div>
             </section>
 
+            <!-- SECTION: PEDIDOS -->
             <section id="orders" style="display: none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Historial de Pedidos</h2>
-                    </div>
+                <div class="admin-card">
+                    <div class="card-header"><h2>Historial de Pedidos</h2></div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Pedido ID</th>
+                                    <th>ID</th>
                                     <th>Cliente</th>
                                     <th>Total</th>
                                     <th>Fecha</th>
@@ -117,60 +134,76 @@
                 </div>
             </section>
 
+            <!-- SECTION: CATEGORÍAS -->
             <section id="categories" style="display: none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Gestión de Categorías</h2>
-                    </div>
-                    <div id="categoriesList"></div>
-                    <form id="categoryForm" class="category-form">
-                        <input type="text" id="newCategoryName" placeholder="Nombre de la nueva categoría" required>
-                        <button type="submit" class="btn-primary">Agregar</button>
+                <div class="admin-card">
+                    <div class="card-header"><h2>Categorías</h2></div>
+                    <div id="categoriesList" style="padding: 30px;"></div>
+                    <form id="categoryForm" class="category-form" style="padding: 30px; border-top: 1px solid #EEE; display: flex; gap: 15px;">
+                        <input type="text" id="newCategoryName" placeholder="Nueva categoría..." required style="flex:1; padding: 15px; border-radius: 15px; border: 1.5px solid #EEE;">
+                        <button type="submit" class="btn-primary">Añadir</button>
                     </form>
                 </div>
             </section>
         </main>
     </div>
 
+    <!-- MODAL AUTH -->
     <div id="passwordModal" class="modal" style="display: flex;">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h2>Acceso de Administrador</h2>
-            </div>
-            <div class="modal-body">
-                <form id="passwordForm">
-                    <div class="form-group full-width">
-                        <label for="adminPassword">Contraseña</label>
-                        <input type="password" id="adminPassword" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" form="passwordForm" class="btn-primary">Verificar</button>
-            </div>
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <h2 style="font-family: 'Lora'; margin-bottom: 10px;">Acceso Interno</h2>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 30px;">Ingresá la clave de administrador.</p>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <input type="password" id="adminPassword" placeholder="Contraseña" required style="text-align: center;">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Verificar</button>
+            </form>
         </div>
     </div>
 
+    <!-- MODAL PRODUCTO -->
     <div id="productModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Agregar Producto</h2>
-                <span class="close-modal-btn">&times;</span>
-            </div>
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 id="modalTitle" style="font-family: 'Lora'; margin: 0;">Producto</h2>
+                <span class="close-modal-btn" style="cursor: pointer; font-size: 2rem;">&times;</span>
+            </header>
             <form id="productForm">
-                <div class="modal-body">
-                    <input type="hidden" id="productId">
-                    <div class="form-grid">
-                        <div class="form-group full-width"><label for="productName">Nombre</label><input type="text" id="productName" name="name" required></div>
-                        <div class="form-group"><label for="productPrice">Precio</label><input type="number" id="productPrice" name="price" step="0.01" required></div>
-                        <div class="form-group"><label for="productPromoPrice">Precio Promocional (opcional)</label><input type="number" id="productPromoPrice" name="promo_price" step="0.01"></div>
-                        <div class="form-group"><label for="productStock">Stock</label><input type="number" id="productStock" name="stock" required></div>
-                        <div class="form-group"><label for="productCategory">Categoría</label><select id="productCategory" name="category" required></select></div>
-                        <div class="form-group full-width"><label for="productDescription">Descripción</label><textarea id="productDescription" name="description" rows="4"></textarea></div>
-                        <div class="form-group full-width"><label for="productImage">Imagen</label><input type="file" id="productImage" name="image" accept="image/*"></div>
+                <input type="hidden" id="productId">
+                <div class="form-group">
+                    <label>Nombre del Producto</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Precio ($)</label>
+                        <input type="number" name="price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Badge (Ej: NUEVO, OFERTA)</label>
+                        <input type="text" name="badge" placeholder="Opcional">
                     </div>
                 </div>
-                <div class="modal-footer"><button type="submit">Guardar Cambios</button></div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" name="stock" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select id="productCategory" name="category" required></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Imagen</label>
+                    <input type="file" name="image" accept="image/*" id="productImage">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">GUARDAR CAMBIOS</button>
             </form>
         </div>
     </div>

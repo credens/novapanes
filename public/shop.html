@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Online - NOVA Panes</title>
+    
+    <!-- SEO BÁSICO -->
+    <title>Tienda Online | Comprar Pan de Papa Premium - NOVA Panes</title>
+    <meta name="description" content="Pedí online el pan de papa artesanal más fresco. Pan de hamburguesas, panchos, quesos y combos. Envío a domicilio en CABA y GBA o retiro en fábrica.">
+    <meta name="keywords" content="pan de papa, tienda panificados, pan de hamburguesa, comprar pan artesanal, nova panes tienda, proveedor panchos">
+    <link rel="canonical" href="https://novapanes.com.ar/shop.html">
+    
+    <!-- OPEN GRAPH (Redes Sociales y WhatsApp) -->
+    <meta property="og:title" content="Tienda Online NOVA Panes - Calidad Premium">
+    <meta property="og:description" content="Llevamos el mejor pan de papa artesanal directo a tu puerta o local gastronómico.">
+    <meta property="og:image" content="https://novapanes.com.ar/hero-images/hero-pan-1.png">
+    <meta property="og:url" content="https://novapanes.com.ar/shop.html">
+    <meta property="og:type" content="website">
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="logo.png">
+
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,8 +33,10 @@
     </div>
 
     <header>
-        <div class="logo"><img src="logo.png" alt="NOVA Panes"></div>
-        <nav class="main-nav">
+        <div class="logo">
+            <img src="logo.png" alt="Logotipo Oficial NOVA Panes">
+        </div>
+        <nav class="main-nav" aria-label="Navegación principal">
             <a href="index.html">Inicio</a>
             <a href="shop.html" class="active">Tienda Online</a>
             <a href="#" id="headerCartIcon" class="header-cart-icon">🛒 Carrito (<span id="cartCount">0</span>)</a>
@@ -39,27 +57,29 @@
 
     <main class="shop-main">
         <div class="shop-search-container">
-            <input type="search" id="searchInput" placeholder="¿Qué estás buscando?">
+            <input type="search" id="searchInput" placeholder="¿Qué estás buscando?" aria-label="Buscar productos en la tienda">
         </div>
 
-        <div class="filter-container" id="filter-container"></div>
-        
+        <nav class="filter-container" id="filter-container" aria-label="Filtrar por categoría"></nav>
+
         <div class="shop-brands-section">
             <p class="brands-title">Marcas que confían en nosotros</p>
             <div class="logo-scroller-container">
                 <div class="logo-scroller" id="shopLogoScroller"></div>
             </div>
         </div>
-
-        <div id="shopProducts"></div>
+        
+        <div id="shopProducts">
+            <!-- Los productos se cargan dinámicamente -->
+        </div>
     </main>
 
     <!-- MODAL CARRITO -->
-    <div id="cartModal" class="cart-modal">
+    <div id="cartModal" class="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
         <div class="cart-modal-content">
             <div class="cart-header">
-                <h2>Tu Carrito</h2>
-                <span class="close-cart">&times;</span>
+                <h2 id="cartTitle">Tu Carrito</h2>
+                <span class="close-cart" aria-label="Cerrar carrito" style="cursor:pointer; font-size:2rem;">&times;</span>
             </div>
             
             <div class="shipping-bar-container">
@@ -81,11 +101,11 @@
     </div>
 
     <!-- MODAL CHECKOUT -->
-    <div id="checkoutModal" class="checkout-modal">
+    <div id="checkoutModal" class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
         <div class="checkout-modal-content">
             <div class="checkout-header">
-                <h2>Finalizar Compra</h2>
-                <span class="close-checkout">&times;</span>
+                <h2 id="checkoutTitle">Finalizar Compra</h2>
+                <span class="close-checkout" aria-label="Cerrar checkout" style="cursor:pointer; font-size:2rem;" onclick="this.parentElement.parentElement.style.display='none'">&times;</span>
             </div>
             <form id="checkoutForm">
                 <input type="text" name="nombre" placeholder="Nombre completo *" required style="width:100%; margin-bottom:12px; padding:15px; border-radius:12px; border:1px solid #DDD;">
@@ -108,9 +128,9 @@
                     <option value="efectivo">Efectivo (Solo Retiro)</option>
                 </select>
 
-                <div id="orderItemsSummary" style="background:#F9F9F9; padding:20px; border-radius:20px; margin:15px 0; font-size:0.9rem;"></div>
+                <div id="orderItemsSummary" style="background:#F9F9F9; padding:15px; border-radius:15px; margin:10px 0; font-size:0.9rem;"></div>
                 
-                <div style="text-align:right; margin:20px 0;">
+                <div style="text-align:right; margin:15px 0;">
                     <strong style="font-size: 1.8rem;">Total: $<span id="checkoutTotal">0</span></strong>
                 </div>
 
@@ -144,7 +164,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <div>© 2024 NOVA Panes. Todos los derechos reservados.</div>
+            <div>© 2026 NOVA Panes. Todos los derechos reservados.</div>
             <div>CUIT: 30-71821628-8</div>
         </div>
     </footer>
