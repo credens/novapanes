@@ -23,59 +23,28 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.03); outline: none; box-sizing: border-box;
 }
 
-/* FIX DEFINITIVO FILTROS: Alineación y Scroll */
+/* FILTROS: Lógica de Scroll Infinito */
 .filter-container { 
     display: flex; 
-    justify-content: flex-start; /* Forzamos inicio a la izquierda siempre */
+    justify-content: flex-start; 
     gap: 12px; 
     margin-bottom: 25px;
-    padding: 15px 0; /* Padding arriba y abajo */
+    padding: 15px 0; 
     overflow-x: auto; 
+    scrollbar-width: none; /* Firefox */
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Ocultar en Firefox */
+    white-space: nowrap;
 }
 
-/* Ocultar scrollbar en Chrome/Safari */
-.filter-container::-webkit-scrollbar { display: none; }
-
-/* Espaciadores invisibles para que el primer y último item no toquen el borde */
-.filter-container::before,
-.filter-container::after {
-    content: '';
-    min-width: 20px; /* Esto da el aire en los extremos al scrollear */
-}
+.filter-container::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
 .filter-btn {
-    background: var(--white); 
-    border: 1px solid #E5E5E5; 
-    padding: 12px 24px;
-    border-radius: 50px; 
-    cursor: pointer; 
-    font-weight: 600; 
-    font-family: 'Poppins';
-    font-size: 0.95rem; 
-    color: var(--text-dark); 
-    white-space: nowrap; 
-    transition: 0.3s;
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-    flex-shrink: 0; /* Evita que los botones se achiquen */
+    background: var(--white); border: 1px solid #E5E5E5; padding: 12px 24px;
+    border-radius: 50px; cursor: pointer; font-weight: 600; font-family: 'Poppins';
+    font-size: 0.95rem; color: var(--text-dark); white-space: nowrap; transition: 0.3s;
+    display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    flex-shrink: 0; /* Vital para que no se aplasten */
 }
-
-/* Solo centramos en desktop si hay espacio de sobra */
-@media (min-width: 1024px) {
-    .filter-container {
-        justify-content: center;
-    }
-    .filter-container::before,
-    .filter-container::after {
-        display: none; /* Quitamos los espaciadores en desktop si está centrado */
-    }
-}
-
 .filter-btn span { font-size: 1.2rem; }
 .filter-btn:hover { border-color: var(--primary-red); transform: translateY(-2px); }
 .filter-btn.active { 
