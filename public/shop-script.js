@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderProducts();
         setupEventListeners();
         updateCartDisplayFromStorage();
-        initInfiniteScrollFilters(); // Iniciar scroll infinito
+        initInfiniteScrollFilters();
     }).catch(err => console.error("Error cargando la tienda:", err));
 
     function renderLogoScroller(logos) {
@@ -53,42 +53,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderCategoryFilters() {
         if (!filterContainer) return;
-        
         const urlParams = new URLSearchParams(window.location.search);
         const urlCat = urlParams.get('category');
         const isValidCat = urlCat && allCategories.some(c => c.id === urlCat);
         const initialCategory = isValidCat ? urlCat : 'all';
-
         let html = `<button class="filter-btn ${initialCategory === 'all' ? 'active' : ''}" data-filter="all"><span>✨</span> Todos</button>`;
-        
         allCategories.forEach(c => {
             const isActive = initialCategory === c.id ? 'active' : '';
             const icon = categoryIcons[c.id] || '🥖';
             html += `<button class="filter-btn ${isActive}" data-filter="${c.id}"><span>${icon}</span> ${c.name}</button>`;
         });
-
         filterContainer.innerHTML = html;
     }
 
-    // LÓGICA DE SCROLL INFINITO PARA FILTROS
     function initInfiniteScrollFilters() {
         if (!filterContainer) return;
-
-        // Clonar los items para crear el efecto infinito
         const items = [...filterContainer.children];
-        items.forEach(item => {
-            const clone = item.cloneNode(true);
-            filterContainer.appendChild(clone);
-        });
-
-        // Al hacer scroll, si llegamos a la mitad (donde empiezan los clones), volvemos al inicio sin que se note
+        items.forEach(item => { filterContainer.appendChild(item.cloneNode(true)); });
         filterContainer.addEventListener('scroll', () => {
             const maxScroll = filterContainer.scrollWidth / 2;
-            if (filterContainer.scrollLeft >= maxScroll) {
-                filterContainer.scrollLeft = 1; // Un pequeño offset para evitar trabas
-            } else if (filterContainer.scrollLeft <= 0) {
-                filterContainer.scrollLeft = maxScroll - 1;
-            }
+            if (filterContainer.scrollLeft >= maxScroll) filterContainer.scrollLeft = 1;
+            else if (filterContainer.scrollLeft <= 0) filterContainer.scrollLeft = maxScroll - 1;
         });
     }
 
@@ -96,18 +81,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const activeBtn = document.querySelector('.filter-btn.active');
         const filter = activeBtn ? activeBtn.dataset.filter : 'all';
         const search = searchInput.value.toLowerCase().trim();
-        
         const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
         const final = search ? filtered.filter(p => p.name.toLowerCase().includes(search)) : filtered;
-
         shopProductsContainer.innerHTML = '';
         const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
-
         allCategories.forEach(cat => {
             if (grouped[cat.id]) {
                 let html = `<div class="category-group reveal active"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
-                html += grouped[cat.id].map(p => `
+                html += grouped[cat.id].map(p => {
+                    const badgeHtml = p.badge ? `<div class="product-badge">${p.badge}</div>` : '';
+                    return `
                     <div id="product-${p.id}" class="product-item">
+                        ${badgeHtml}
                         <img src="/${p.image}" class="product-image" onclick="openProductModal('/${p.image}', '${p.name}')">
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
@@ -122,7 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <button class="add-to-cart-btn" onclick="addToCart(event, ${p.id})">AGREGAR</button>
                             </div>
                         </div>
-                    </div>`).join('');
+                    </div>`;
+                }).join('');
                 shopProductsContainer.innerHTML += html + `</div></div>`;
             }
         });
@@ -170,19 +156,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCartItems() {
         const el = document.getElementById('cartItems');
         if (cart.length === 0) { el.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">Tu carrito está vacío</p>'; return; }
-        el.innerHTML = cart.map(i => `
-            <div class="cart-item-row"><img src="${i.image}"><div class="cart-item-info"><b>${i.name}</b><span>$${i.price.toLocaleString()} x ${i.quantity}</span></div><button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button></div>`).join('');
+        el.innerHTML = cart.map(i => `<div class="cart-item-row"><img src="${i.image}"><div class="cart-item-info"><b>${i.name}</b><span>$${i.price.toLocaleString()} x ${i.quantity}</span></div><button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button></div>`).join('');
     }
 
     window.removeFromCart = (id) => { cart = cart.filter(i => i.id !== id); updateCartDisplay(); };
 
     function setupEventListeners() {
-        // Evento Delegado para Filtros (necesario por los clones)
         filterContainer?.addEventListener('click', e => {
             const btn = e.target.closest('.filter-btn');
             if (btn) {
                 const selectedFilter = btn.dataset.filter;
-                // Sincronizar clase activa en todos los clones que tengan el mismo filtro
                 document.querySelectorAll('.filter-btn').forEach(b => {
                     if(b.dataset.filter === selectedFilter) b.classList.add('active');
                     else b.classList.remove('active');
@@ -191,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderProducts();
             }
         });
-
         searchInput?.addEventListener('input', renderProducts);
         headerCartIcon?.addEventListener('click', (e) => { e.preventDefault(); cartModal.style.display = 'flex'; });
         document.querySelector('.close-cart')?.addEventListener('click', () => cartModal.style.display = 'none');
@@ -199,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.close-checkout, .close-checkout-btn').forEach(btn => { btn.addEventListener('click', () => checkoutModal.style.display = 'none'); });
         document.getElementById('clearCart')?.addEventListener('click', () => { if(confirm('¿Vaciar?')) { cart = []; updateCartDisplay(); } });
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
-
         const efectivoOption = paymentMethodSelect?.querySelector('option[value="efectivo"]');
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
@@ -231,15 +212,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const customerData = { nombre: fData.get('nombre'), telefono: fData.get('telefono'), email: fData.get('email'), metodoEntrega: fData.get('metodoEntrega'), direccion: fData.get('direccion') || 'Retiro', ciudad: fData.get('ciudad') || '-', horarioEntrega: fData.get('horarioEntrega') || 'N/A' };
         const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
         const orderData = { customer: customerData, metodoPago: pMethod, items: cart, total: total };
-
         if (pMethod === 'mercadopago') {
-            const res = await fetch('/create-preference', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart.map(i => ({ id: i.id, title: i.name, quantity: i.quantity, unit_price: i.price })), payer: { name: customerData.nombre, email: customerData.email } }) });
-            const pref = await res.json();
-            window.location.href = pref.init_point;
+            try {
+                const res = await fetch('/create-preference', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart.map(i => ({ id: i.id, title: i.name, quantity: i.quantity, unit_price: i.price })), payer: { name: customerData.nombre, email: customerData.email } }) });
+                const pref = await res.json();
+                window.location.href = pref.init_point;
+            } catch (err) { alert("Error con Mercado Pago."); }
         } else {
-            await fetch('/api/submit-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
-            window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 NUEVO PEDIDO NOVA PANES de ' + customerData.nombre)}`, '_blank');
-            cart = []; updateCartDisplay(); checkoutModal.style.display = 'none'; alert('¡Pedido enviado! Te redirigimos a WhatsApp.');
+            try {
+                await fetch('/api/submit-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
+                window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 NUEVO PEDIDO NOVA PANES de ' + customerData.nombre)}`, '_blank');
+                cart = []; updateCartDisplay(); checkoutModal.style.display = 'none'; alert('¡Pedido enviado!');
+            } catch (err) { alert("Error al enviar el pedido."); }
         }
     }
 

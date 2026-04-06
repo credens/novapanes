@@ -22,7 +22,6 @@ body {
 
 h1, h2, h3 { font-family: 'Lora', serif; font-weight: 700; margin: 0; }
 
-/* --- ANIMACIONES REVEAL --- */
 .reveal {
     opacity: 0;
     transform: translateY(30px);
@@ -30,7 +29,6 @@ h1, h2, h3 { font-family: 'Lora', serif; font-weight: 700; margin: 0; }
 }
 .reveal.active { opacity: 1; transform: translateY(0); }
 
-/* --- BARRA DE ANUNCIOS (NUEVO) --- */
 .announcement-bar {
     background-color: var(--primary-red);
     color: white;
@@ -43,7 +41,6 @@ h1, h2, h3 { font-family: 'Lora', serif; font-weight: 700; margin: 0; }
     z-index: 1001;
 }
 
-/* --- HEADER --- */
 header {
     background-color: var(--white);
     padding: 0 50px;
@@ -74,7 +71,6 @@ header {
     color: var(--text-dark) !important;
 }
 
-/* --- BOTÓN PREMIUM --- */
 .cta-button, .btn-premium {
     background: var(--primary-red);
     color: white;
@@ -92,7 +88,6 @@ header {
 }
 .cta-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(211, 47, 47, 0.4); }
 
-/* --- CONTENEDORES ESTILO TARJETA (ISLAS) --- */
 .content-card {
     background: var(--white);
     max-width: 1200px;
@@ -108,23 +103,15 @@ header {
     margin-top: 40px; 
 }
 
-/* --- SISTEMA DE GRILLAS LIMPIO --- */
-.grid-2-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-}
-.hero-grid {
-    grid-template-columns: 1fr 1.2fr;
-}
+.grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.grid-3-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
 
-/* --- VARIETY CIRCLES --- */
+/* SECCIÓN VALOR (NUEVA) */
+.value-item { text-align: center; padding: 20px; }
+.value-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
+
 .range-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 50px; }
-.range-item { 
-    text-align: center; transition: 0.3s; cursor: pointer;
-    text-decoration: none; color: inherit; display: block; 
-}
+.range-item { text-align: center; transition: 0.3s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
 .circle-img {
     width: 200px; height: 200px; border-radius: 50%; background: white;
     margin: 0 auto 20px; box-shadow: var(--soft-shadow);
@@ -135,50 +122,42 @@ header {
 .circle-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
 .range-item:hover .circle-img { transform: scale(1.05); }
 
-/* --- SPLIT SECTION --- */
-.split-section {
-    display: flex; align-items: center; gap: 80px; background: white;
-    max-width: 1200px; border-radius: 60px; margin: 60px auto;
-    overflow: hidden; box-shadow: var(--soft-shadow);
-}
-.split-content { flex: 1; padding: 60px; }
-.split-image { flex: 1.2; overflow: hidden; line-height: 0; }
-.split-image img { width: 100%; height: 500px; object-fit: cover; }
-
-/* --- CONTACTO --- */
-.contact-form-container input, .contact-form-container textarea {
-    width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px;
-    border: 1px solid #DDD; font-family: inherit; box-sizing: border-box;
-}
-
-/* --- FOOTER UNIFICADO --- */
+/* FOOTER PROFESIONAL */
 .footer { 
     background-color: var(--text-dark); 
     color: var(--white); 
-    padding: 40px 20px;
-    text-align: center; 
+    padding: 80px 20px 40px;
+    text-align: left; 
 }
-.footer h2 { color: white; font-size: 1.8rem; margin-bottom: 15px; }
-.footer-links { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
-.footer-btn { 
-    border: 1px solid rgba(255,255,255,0.2); 
-    padding: 8px 20px; 
-    border-radius: 50px; 
-    color: white; 
-    text-decoration: none; 
-    font-weight: 600; 
-    font-size: 0.85rem;
-    transition: 0.3s;
+.footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 60px;
 }
-.footer-btn:hover { background: var(--primary-red); border-color: var(--primary-red); }
-.footer-legal { opacity: 0.5; font-size: 0.75rem; margin-top: 15px; }
+.footer h4 { color: var(--accent-yellow); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+.footer p { font-size: 0.9rem; opacity: 0.8; }
+.footer-links-list { list-style: none; padding: 0; margin: 0; }
+.footer-links-list li { margin-bottom: 12px; }
+.footer-links-list a { color: white; text-decoration: none; opacity: 0.7; transition: 0.3s; font-size: 0.9rem; }
+.footer-links-list a:hover { opacity: 1; color: var(--accent-yellow); }
 
-/* --- RESPONSIVE MOBILE --- */
+.footer-bottom {
+    max-width: 1200px;
+    margin: 60px auto 0;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
 @media (max-width: 768px) {
     header { padding: 0 20px; flex-direction: column; height: auto; padding-bottom: 15px; }
     .content-card { padding: 40px 20px; border-radius: 40px; margin: 30px 20px; }
-    .grid-2-col { grid-template-columns: 1fr; text-align: center; gap: 40px; }
-    .hero-grid { grid-template-columns: 1fr; }
-    .split-section { flex-direction: column; margin: 30px 20px; border-radius: 40px; gap: 0; }
-    .split-content { padding: 40px 20px; text-align: center; }
+    .grid-2-col, .grid-3-col, .footer-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+    .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
 }

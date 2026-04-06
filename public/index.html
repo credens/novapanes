@@ -8,7 +8,6 @@
 </head>
 <body>
 
-    <!-- PUNTO 1: ANNOUNCEMENT BAR -->
     <div class="announcement-bar">
         🚚 Envío GRATIS en pedidos superiores a $75.000 | Entregas a todo el país
     </div>
@@ -39,17 +38,38 @@
             </div>
         </section>
 
-        <!-- SECCIÓN LOS MÁS ELEGIDOS (Actualizada a categoría panificados) -->
+        <!-- SECCIÓN VALOR: EL SECRETO NOVA -->
+        <section class="content-card reveal">
+            <div class="grid-3-col">
+                <div class="value-item">
+                    <span class="value-icon">👨‍🍳</span>
+                    <h3>Artesanal</h3>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">Horneado diariamente con procesos tradicionales para una textura inigualable.</p>
+                </div>
+                <div class="value-item">
+                    <span class="value-icon">🥔</span>
+                    <h3>Papa Seleccionada</h3>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">Nuestra receta secreta usa solo las mejores papas para lograr esa humedad única.</p>
+                </div>
+                <div class="value-item">
+                    <span class="value-icon">🚀</span>
+                    <h3>Envíos Rápidos</h3>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">Directo de nuestra fábrica a tu local o domicilio, garantizando frescura total.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOS MÁS ELEGIDOS -->
         <section class="content-card text-center reveal">
             <h2 style="font-size: 3.5rem; margin-bottom: 40px;">Los Más Elegidos</h2>
             <div class="grid-2-col" style="gap: 30px; align-items: stretch;">
-                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); border: 1px solid #F0F0F0;">
+                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; border: 1px solid #F0F0F0;">
                     <img src="productos/pan-de-papa-1.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 20px;">
                     <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Pan de papa Clásico</h3>
                     <p style="color: var(--text-light); font-size: 1rem; margin-bottom: 25px;">El favorito de las hamburgueserías premium. Suave y esponjoso.</p>
                     <a href="shop.html?category=panificados" class="cta-button" style="width: 100%; text-align: center; box-sizing: border-box;">COMPRAR AHORA</a>
                 </div>
-                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); border: 1px solid #F0F0F0;">
+                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; border: 1px solid #F0F0F0;">
                     <img src="productos/pancho-doble.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 20px;">
                     <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Pancho Doble XL</h3>
                     <p style="color: var(--text-light); font-size: 1rem; margin-bottom: 25px;">Ideal para propuestas innovadoras y porciones generosas.</p>
@@ -58,7 +78,7 @@
             </div>
         </section>
 
-        <!-- SECCIÓN VARIEDAD -->
+        <!-- VARIEDAD -->
         <section class="content-card text-center reveal">
             <h2 style="font-size: 3.5rem; margin-bottom: 50px;">Nuestra Variedad</h2>
             <div class="range-grid">
@@ -81,7 +101,7 @@
             </div>
         </section>
 
-        <!-- SECCIÓN INSPIRACIÓN -->
+        <!-- INSPIRACIÓN -->
         <section class="content-card reveal" style="background: var(--text-dark); color: white;">
             <div class="text-center">
                 <h2 style="font-size: 3.5rem; color: white; margin-bottom: 15px;">Inspiración</h2>
@@ -112,7 +132,7 @@
             </div>
         </section>
 
-        <!-- SECCIÓN CONTACTO -->
+        <!-- CONTACTO -->
         <section id="contacto" class="content-card reveal">
             <div class="grid-2-col">
                 <div class="contact-form-container">
@@ -134,12 +154,33 @@
     </main>
 
     <footer class="footer">
-        <h2 style="color: white; font-size: 2.5rem; margin-bottom: 20px;">NOVA Panes®</h2>
-        <div class="footer-links">
-            <a href="https://wa.me/5491164372200" class="footer-btn">📱 WHATSAPP</a>
-            <a href="https://instagram.com/nova.panes" class="footer-btn">📷 INSTAGRAM</a>
+        <div class="footer-grid">
+            <div>
+                <h2 style="color: white; margin-bottom: 15px;">NOVA Panes®</h2>
+                <p>Mucho más que un simple pan. Elevamos el estándar de tus hamburguesas con frescura artesanal y la mejor calidad en pan de papa.</p>
+            </div>
+            <div>
+                <h4>Categorías</h4>
+                <ul class="footer-links-list">
+                    <li><a href="shop.html?category=hamburguesas">Hamburguesas</a></li>
+                    <li><a href="shop.html?category=salchichas">Panchos</a></li>
+                    <li><a href="shop.html?category=panificados">Especiales</a></li>
+                    <li><a href="shop.html">Todos los productos</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contacto</h4>
+                <ul class="footer-links-list">
+                    <li><a href="https://wa.me/5491164372200">📱 WhatsApp: 11 6437-2200</a></li>
+                    <li><a href="https://instagram.com/nova.panes">📷 Instagram @nova.panes</a></li>
+                    <li><a href="#contacto">📍 Donde estamos</a></li>
+                </ul>
+            </div>
         </div>
-        <p>Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8</p>
+        <div class="footer-bottom">
+            <div>© 2024 NOVA Panes. Todos los derechos reservados.</div>
+            <div>Razón Social: GRUPO FESA S. CAP I SECC IV | CUIT: 30-71821628-8</div>
+        </div>
     </footer>
 
     <script>
@@ -157,34 +198,23 @@
                     e.preventDefault(); 
                     const submitBtn = contactForm.querySelector('button[type="submit"]');
                     const originalText = submitBtn.textContent;
-                    
                     submitBtn.textContent = 'ENVIANDO...';
                     submitBtn.disabled = true;
-
                     const formData = new FormData(contactForm);
                     const data = Object.fromEntries(formData.entries());
-
                     try {
                         const response = await fetch('/api/contact', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(data)
                         });
-
                         const result = await response.json();
                         if (result.success) {
                             alert(result.message || '¡Gracias! Tu consulta ha sido enviada con éxito.');
                             contactForm.reset(); 
-                        } else {
-                            alert('Hubo un error al enviar el mensaje. Por favor intenta nuevamente.');
-                        }
-                    } catch (error) {
-                        console.error('Error enviando el formulario:', error);
-                        alert('Error de conexión. Intenta nuevamente más tarde.');
-                    } finally {
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
-                    }
+                        } else { alert('Hubo un error al enviar el mensaje.'); }
+                    } catch (error) { alert('Error de conexión.'); } 
+                    finally { submitBtn.textContent = originalText; submitBtn.disabled = false; }
                 });
             }
         });

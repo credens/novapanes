@@ -4,7 +4,7 @@
         "name": "Pan de papa con parmesano",
         "description": "Suave pan de papa con un toque de parmesano que le da un sabor único. Diametro 10cm, peso unitario 90g",
         "price": 1500,
-        "promo_price": 1250,
+        "badge": "MÁS VENDIDO",
         "image": "productos/pan-de-papa-1.png",
         "category": "panificados",
         "stock": 20
@@ -12,8 +12,9 @@
     {
         "id": 2,
         "name": "Pan de lomito",
-        "description": "Perfecto para lomitos y sandwiches. Suave y resistente.",
+        "description": "Perfecto para lomitos y sándwiches. Suave y resistente.",
         "price": 1800,
+        "badge": "NUEVO",
         "image": "productos/lomito-1.jpg",
         "category": "hamburguesas",
         "stock": 15
@@ -32,6 +33,7 @@
         "name": "Pan de panchos",
         "description": "Ideal para hot dogs y panchos. Suave y esponjoso.",
         "price": 1200,
+        "badge": "OFERTA",
         "image": "productos/pancho-1.png",
         "category": "salchichas",
         "stock": 25
@@ -48,7 +50,7 @@
     {
         "id": 6,
         "name": "Pan de molde",
-        "description": "Pan de molde ideal para tostadas y sandwiches.",
+        "description": "Pan de molde ideal para tostadas y sándwiches.",
         "price": 2000,
         "image": "productos/pan-de-molde-1.png",
         "category": "panificados",
