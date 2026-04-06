@@ -79,6 +79,33 @@ header {
 }
 .cta-button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(211, 47, 47, 0.4); }
 
+/* --- CONTENEDORES ESTILO TARJETA (ISLAS) --- */
+.content-card {
+    background: var(--white);
+    max-width: 1200px;
+    border-radius: 60px;
+    margin: 60px auto;
+    padding: 60px;
+    box-shadow: var(--soft-shadow);
+    box-sizing: border-box;
+}
+
+.hero-card {
+    background: linear-gradient(135deg, #FFECB3 0%, var(--white) 100%);
+    margin-top: 40px; /* Separación del header */
+}
+
+/* --- SISTEMA DE GRILLAS LIMPIO --- */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+.hero-grid {
+    grid-template-columns: 1fr 1.2fr; /* Imagen del pan un poco más grande */
+}
+
 /* --- VARIETY CIRCLES --- */
 .range-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 50px; }
 .range-item { text-align: center; transition: 0.3s; cursor: pointer; }
@@ -95,7 +122,7 @@ header {
 /* --- SPLIT SECTION --- */
 .split-section {
     display: flex; align-items: center; gap: 80px; background: white;
-    max-width: 1200px; border-radius: 60px; margin: 80px auto;
+    max-width: 1200px; border-radius: 60px; margin: 60px auto; /* Alineado con los otros cards */
     overflow: hidden; box-shadow: var(--soft-shadow);
 }
 .split-content { flex: 1; padding: 60px; }
@@ -103,25 +130,16 @@ header {
 .split-image img { width: 100%; height: 500px; object-fit: cover; }
 
 /* --- CONTACTO --- */
-.bottom-section { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 50px; 
-    max-width: 1200px; 
-    margin: 80px auto 120px; /* Margen inferior de 120px para separar del footer */
-    padding: 0 50px; 
-}
-
 .contact-form-container input, .contact-form-container textarea {
     width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px;
     border: 1px solid #DDD; font-family: inherit; box-sizing: border-box;
 }
 
-/* --- FOOTER UNIFICADO (ALTURA CORTADA A LA MITAD) --- */
+/* --- FOOTER UNIFICADO --- */
 .footer { 
     background-color: var(--text-dark); 
     color: var(--white); 
-    padding: 40px 20px; /* Padding reducido de 80px a 40px */
+    padding: 40px 20px;
     text-align: center; 
 }
 .footer h2 { color: white; font-size: 1.8rem; margin-bottom: 15px; }
@@ -139,8 +157,16 @@ header {
 .footer-btn:hover { background: var(--primary-red); border-color: var(--primary-red); }
 .footer-legal { opacity: 0.5; font-size: 0.75rem; margin-top: 15px; }
 
+/* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
     header { padding: 0 20px; flex-direction: column; height: auto; padding-bottom: 15px; }
-    .split-section { flex-direction: column; }
-    .bottom-section { grid-template-columns: 1fr; margin-bottom: 60px; }
+    
+    /* Adaptación de tarjetas para celular */
+    .content-card { padding: 40px 20px; border-radius: 40px; margin: 30px 20px; }
+    .grid-2-col { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+    .hero-grid { grid-template-columns: 1fr; }
+    
+    /* Adaptación split section */
+    .split-section { flex-direction: column; margin: 30px 20px; border-radius: 40px; gap: 0; }
+    .split-content { padding: 40px 20px; text-align: center; }
 }
