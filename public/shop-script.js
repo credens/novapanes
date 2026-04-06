@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     let products = [];
     let allCategories = [];
-    let cart = [];
+    let cart =[];
     const MINIMUM_PURCHASE = 15000;
 
     const shopProductsContainer = document.getElementById('shopProducts');
@@ -18,6 +18,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerCartIcon = document.getElementById('headerCartIcon');
     const direccionInput = document.querySelector('input[name="direccion"]');
     const ciudadInput = document.querySelector('input[name="ciudad"]');
+
+    // Mapeo de Emojis para que los filtros se vean como Bakers Delight
+    const categoryIcons = {
+        'panificados': '🍞',
+        'hamburguesas': '🍔',
+        'salsas': '🥫',
+        'papas': '🍟',
+        'papelera': '📦',
+        'congelados': '❄️',
+        'salchichas': '🌭',
+        'helados': '🍦'
+    };
 
     Promise.all([
         fetch('/products').then(res => res.json()),
@@ -42,21 +54,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCategoryFilters() {
         if (!filterContainer) return;
         
-        // NUEVA LÓGICA: Leer parámetro "category" de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const urlCat = urlParams.get('category');
-        
-        // Verificar si la categoría existe en el backend, sino por defecto 'all'
         const isValidCat = urlCat && allCategories.some(c => c.id === urlCat);
         const initialCategory = isValidCat ? urlCat : 'all';
 
-        // Botón "Todos"
-        filterContainer.innerHTML = `<button class="filter-btn ${initialCategory === 'all' ? 'active' : ''}" data-filter="all">Todos</button>`;
+        // Botón Todos con el emoji de destellos
+        filterContainer.innerHTML = `<button class="filter-btn ${initialCategory === 'all' ? 'active' : ''}" data-filter="all"><span>✨</span> Todos</button>`;
         
-        // Botones dinámicos
+        // Botones dinámicos con iconos automáticos
         allCategories.forEach(c => {
             const isActive = initialCategory === c.id ? 'active' : '';
-            filterContainer.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${c.id}">${c.name}</button>`;
+            const icon = categoryIcons[c.id] || '🥖'; // Icono por defecto
+            filterContainer.innerHTML += `<button class="filter-btn ${isActive}" data-filter="${c.id}"><span>${icon}</span> ${c.name}</button>`;
         });
     }
 
@@ -67,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const final = search ? filtered.filter(p => p.name.toLowerCase().includes(search)) : filtered;
 
         shopProductsContainer.innerHTML = '';
-        const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
+        const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] ||[]).push(p); return acc; }, {});
 
         allCategories.forEach(cat => {
             if (grouped[cat.id]) {
@@ -146,13 +156,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setupEventListeners() {
         filterContainer?.addEventListener('click', e => {
-            if (e.target.classList.contains('filter-btn')) {
+            const btn = e.target.closest('.filter-btn');
+            if (btn) {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active'); 
-                
-                // Limpiar la URL sin recargar la página para que quede limpia
+                btn.classList.add('active'); 
                 window.history.replaceState({}, '', window.location.pathname);
-                
                 renderProducts();
             }
         });
@@ -162,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('checkout')?.addEventListener('click', () => { cartModal.style.display = 'none'; checkoutModal.style.display = 'flex'; renderOrderSummary(); });
         document.querySelector('.close-checkout')?.addEventListener('click', () => checkoutModal.style.display = 'none');
         document.querySelector('.close-checkout-btn')?.addEventListener('click', () => checkoutModal.style.display = 'none');
-        document.getElementById('clearCart')?.addEventListener('click', () => { if(confirm('¿Vaciar?')) { cart = []; updateCartDisplay(); } });
+        document.getElementById('clearCart')?.addEventListener('click', () => { if(confirm('¿Vaciar?')) { cart =[]; updateCartDisplay(); } });
         document.getElementById('checkoutForm')?.addEventListener('submit', handleCheckout);
 
         const efectivoOption = paymentMethodSelect?.querySelector('option[value="efectivo"]');
@@ -220,18 +228,4 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             await fetch('/api/submit-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
             window.open(`https://wa.me/5491140882236?text=${encodeURIComponent('🍞 PEDIDO NOVA PANES de ' + customerData.nombre)}`, '_blank');
-            cart = []; updateCartDisplay(); checkoutModal.style.display = 'none';
-            alert('¡Pedido enviado! Te redirigimos a WhatsApp.');
-        }
-    }
-
-    function updateCartDisplayFromStorage() { const saved = localStorage.getItem('novaPanesCart'); if (saved) { cart = JSON.parse(saved); updateCartDisplay(); } }
-    
-    window.openProductModal = (src, title) => {
-        const m = document.createElement('div');
-        m.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(5px);";
-        m.onclick = () => m.remove();
-        m.innerHTML = `<div style="background:white; padding:30px; border-radius:35px; max-width:500px; width:100%; text-align:center;"><img src="${src}" style="width:100%; border-radius:20px;"><h3 style="font-family:Lora; margin-top:20px;">${title}</h3></div>`;
-        document.body.appendChild(m);
-    };
-});
+            cart =

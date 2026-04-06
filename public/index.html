@@ -8,6 +8,11 @@
 </head>
 <body>
 
+    <!-- PUNTO 1: ANNOUNCEMENT BAR -->
+    <div class="announcement-bar">
+        🚚 Envío GRATIS en pedidos superiores a $75.000 | Entregas a todo el país
+    </div>
+
     <header>
         <div class="logo"><img src="logo.png" alt="NOVA Panes"></div>
         <nav class="main-nav">
@@ -20,7 +25,7 @@
 
     <main style="padding: 20px 0;">
 
-        <!-- 1. SECCIÓN HERO -->
+        <!-- SECCIÓN HERO -->
         <section class="content-card hero-card reveal active">
             <div class="grid-2-col hero-grid">
                 <div>
@@ -34,7 +39,26 @@
             </div>
         </section>
 
-        <!-- 2. SECCIÓN VARIEDAD (AHORA SON ENLACES A CATEGORÍAS) -->
+        <!-- PUNTO 3: LOS MÁS ELEGIDOS (TOP PICKS) -->
+        <section class="content-card text-center reveal">
+            <h2 style="font-size: 3.5rem; margin-bottom: 40px;">Los Más Elegidos</h2>
+            <div class="grid-2-col" style="gap: 30px; align-items: stretch;">
+                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); border: 1px solid #F0F0F0;">
+                    <img src="productos/pan-de-papa-1.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 20px;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Pan de papa Clásico</h3>
+                    <p style="color: var(--text-light); font-size: 1rem; margin-bottom: 25px;">El favorito de las hamburgueserías premium. Suave y esponjoso.</p>
+                    <a href="shop.html?category=hamburguesas" class="cta-button" style="width: 100%; text-align: center; box-sizing: border-box;">COMPRAR AHORA</a>
+                </div>
+                <div style="text-align: left; background: #FFFDF9; padding: 35px; border-radius: 35px; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); border: 1px solid #F0F0F0;">
+                    <img src="productos/pancho-doble.png" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 20px;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Pancho Doble XL</h3>
+                    <p style="color: var(--text-light); font-size: 1rem; margin-bottom: 25px;">Ideal para propuestas innovadoras y porciones generosas.</p>
+                    <a href="shop.html?category=salchichas" class="cta-button" style="width: 100%; text-align: center; box-sizing: border-box;">COMPRAR AHORA</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN VARIEDAD -->
         <section class="content-card text-center reveal">
             <h2 style="font-size: 3.5rem; margin-bottom: 50px;">Nuestra Variedad</h2>
             <div class="range-grid">
@@ -57,19 +81,38 @@
             </div>
         </section>
 
-        <!-- 3. SECCIÓN SPLIT -->
-        <div class="split-section reveal">
-            <div class="split-content">
-                <h2 style="font-size: 3rem; color: var(--primary-red); margin-bottom: 20px;">La perfección empieza acá.</h2>
-                <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 35px;">Nuestro pan de papa artesanal es el soporte ideal para resaltar tus mejores ingredientes.</p>
-                <a href="shop.html" style="color: var(--primary-red); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--primary-red);">VER TODOS LOS PRODUCTOS</a>
+        <!-- PUNTO 2: INSPIRACIÓN -->
+        <section class="content-card reveal" style="background: var(--text-dark); color: white;">
+            <div class="text-center">
+                <h2 style="font-size: 3.5rem; color: white; margin-bottom: 15px;">Inspiración</h2>
+                <p style="font-size: 1.1rem; color: #AAA; margin-bottom: 50px;">Mirá lo que podés crear con la base perfecta.</p>
             </div>
-            <div class="split-image">
-                <img src="hero-images/hero-pan-1.png" alt="Detalle Pan">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="border-radius: 24px; overflow: hidden; background: white; color: var(--text-dark);">
+                    <img src="hero-images/hero-pan-1.png" style="width: 100%; height: 250px; object-fit: cover;">
+                    <div style="padding: 25px; text-align: center;">
+                        <h3 style="margin-bottom: 5px; font-size: 1.4rem;">La Burger Clásica</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">Doble carne, cheddar y nuestro pan de papa estrella.</p>
+                    </div>
+                </div>
+                <div style="border-radius: 24px; overflow: hidden; background: white; color: var(--text-dark);">
+                    <img src="productos/lomito-1.jpg" style="width: 100%; height: 250px; object-fit: cover;">
+                    <div style="padding: 25px; text-align: center;">
+                        <h3 style="margin-bottom: 5px; font-size: 1.4rem;">Lomito Premium</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">Suave y resistente para sándwiches cargados.</p>
+                    </div>
+                </div>
+                <div style="border-radius: 24px; overflow: hidden; background: white; color: var(--text-dark);">
+                    <img src="productos/sesamo.jpg" style="width: 100%; height: 250px; object-fit: cover;">
+                    <div style="padding: 25px; text-align: center;">
+                        <h3 style="margin-bottom: 5px; font-size: 1.4rem;">Gourmet con Sésamo</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">El toque crujiente que distingue tu producto.</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- 4. SECCIÓN CONTACTO -->
+        <!-- SECCIÓN CONTACTO -->
         <section id="contacto" class="content-card reveal">
             <div class="grid-2-col">
                 <div class="contact-form-container">
