@@ -111,7 +111,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateCartDisplay() {
         const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
-        document.getElementById('cartCount').textContent = cart.reduce((s, i) => s + i.quantity, 0);
+        const count = cart.reduce((s, i) => s + i.quantity, 0);
+        document.getElementById('cartCount').textContent = count;
         document.getElementById('cartTotal').textContent = total.toLocaleString();
         if(document.getElementById('checkoutTotal')) document.getElementById('checkoutTotal').textContent = total.toLocaleString();
         const fill = document.getElementById('shippingFill');
@@ -122,18 +123,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         localStorage.setItem('novaPanesCart', JSON.stringify(cart));
         renderCartItems();
+        updateMobileBar(count, total);
     }
 
+    // --- STICKY BAR MOBILE ---
+    function updateMobileBar(count, total) {
+        const bar = document.getElementById('mobileCartBar');
+        if (!bar) return;
+        const mCount = document.getElementById('mobileCartCount');
+        const mTotal = document.getElementById('mobileCartTotal');
+        if (mCount) mCount.textContent = count;
+        if (mTotal) mTotal.textContent = total.toLocaleString();
+        if (count > 0) {
+            bar.classList.add('visible');
+            document.body.classList.add('has-cart-items');
+        } else {
+            bar.classList.remove('visible');
+            document.body.classList.remove('has-cart-items');
+        }
+    }
+
+    // --- UP-SELLING INTELIGENTE ---
+    const upsellRules = [
+        { if: 'panificados', suggest: 'queso', msg: '¿Te faltó el queso para las burgers? 🧀' },
+        { if: 'hamburguesas', suggest: 'panificados', msg: '¿Sumamos el pan artesanal? 🍞' },
+        { if: 'panificados', suggest: 'salsas', msg: '¿Una salsa para completar? 🥫' },
+        { if: 'hamburguesas', suggest: 'salsas', msg: '¿Una salsa para tus burgers? 🥫' },
+        { if: null, suggest: 'combos', msg: '¡Ahorrá con un combo! 🎁' }
+    ];
+
     function renderUpsell() {
-        const hasPan = cart.some(i => i.category === 'panificados');
-        const hasQueso = cart.some(i => i.category === 'quesos');
         const upsellDiv = document.getElementById('upsellSection');
-        if(!upsellDiv) return;
-        if (hasPan && !hasQueso) {
-            const q = products.find(p => p.category === 'quesos' && p.stock > 0);
-            if(q) {
-                upsellDiv.innerHTML = `<div class="upsell-card"><p>¿Te faltó el queso para las burgers? 🧀</p><button class="btn-upsell" onclick="addToCart(null,${q.id})">Sumar Cheddar</button></div>`;
-                return;
+        if (!upsellDiv || cart.length === 0) { if (upsellDiv) upsellDiv.innerHTML = ''; return; }
+
+        const cartCategories = new Set(cart.map(i => i.category));
+
+        for (const rule of upsellRules) {
+            const matches = rule.if === null || cartCategories.has(rule.if);
+            const alreadyHas = cartCategories.has(rule.suggest);
+            if (matches && !alreadyHas) {
+                const suggested = products.find(p => p.category === rule.suggest && p.stock > 0);
+                if (suggested) {
+                    upsellDiv.innerHTML = `
+                        <div class="upsell-card">
+                            <img src="/${suggested.image}" alt="${suggested.name}" class="upsell-img">
+                            <div class="upsell-text">
+                                <p>${rule.msg}</p>
+                                <span class="upsell-product-name">${suggested.name} — $${suggested.price.toLocaleString()}</span>
+                            </div>
+                            <button class="btn-upsell" onclick="addToCart(null,${suggested.id})">+ Sumar</button>
+                        </div>`;
+                    return;
+                }
             }
         }
         upsellDiv.innerHTML = '';
@@ -154,8 +195,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (btn) { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderProducts(); }
         });
         searchInput?.addEventListener('input', renderProducts);
-        document.getElementById('headerCartIcon').addEventListener('click', (e) => { e.preventDefault(); cartModal.style.display='flex'; setTimeout(() => cartModal.classList.add('active'), 10); });
-        document.querySelector('.close-cart').addEventListener('click', () => { cartModal.classList.remove('active'); setTimeout(() => cartModal.style.display='none', 400); });
+        document.getElementById('headerCartIcon').addEventListener('click', (e) => { e.preventDefault(); cartModal.style.display='flex'; setTimeout(() => cartModal.classList.add('active'), 10); document.getElementById('mobileCartBar')?.classList.remove('visible'); });
+        document.getElementById('mobileCheckoutBtn')?.addEventListener('click', () => { cartModal.style.display='flex'; setTimeout(() => cartModal.classList.add('active'), 10); document.getElementById('mobileCartBar')?.classList.remove('visible'); });
+        document.querySelector('.close-cart').addEventListener('click', () => { cartModal.classList.remove('active'); setTimeout(() => cartModal.style.display='none', 400); if (cart.length > 0) document.getElementById('mobileCartBar')?.classList.add('visible'); });
         document.querySelector('.close-checkout').addEventListener('click', () => { checkoutModal.classList.remove('active'); setTimeout(() => checkoutModal.style.display='none', 400); });
         document.getElementById('goToCheckout').addEventListener('click', () => {
             cartModal.classList.remove('active'); setTimeout(() => { cartModal.style.display = 'none'; checkoutModal.style.display = 'flex'; setTimeout(() => checkoutModal.classList.add('active'), 10); }, 400);
