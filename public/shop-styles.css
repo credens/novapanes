@@ -594,6 +594,31 @@
     .mobile-cart-bar { display: none !important; }
 }
 
+/* --- BLOQUE SEO --- */
+.seo-block {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 50px 40px;
+    background: var(--white);
+    border-radius: 40px;
+    border: 1px solid rgba(141, 110, 99, 0.1);
+    box-shadow: var(--soft-shadow);
+}
+
+.seo-block h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.seo-block p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
 @media (max-width: 768px) {
     body.has-cart-items { padding-bottom: 75px; }
     body.has-cart-items .wa-floating-btn { bottom: 85px; }
@@ -601,4 +626,7 @@
     .shop-hero-premium { height: 300px; padding: 0 20px; }
     .shop-hero-premium .hero-content h1 { font-size: 2.5rem; letter-spacing: -1px; }
     .shop-hero-premium .hero-content p { font-size: 1rem; }
+
+    .seo-block { padding: 30px 25px; margin: 0 20px 40px; }
+    .seo-block h2 { font-size: 1.4rem; }
 }
