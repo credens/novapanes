@@ -383,10 +383,12 @@
     transition: opacity 0.4s ease; 
 }
 
-.cart-modal.active, .checkout-modal.active { 
-    display: flex; 
-    opacity: 1; 
+.cart-modal.active, .checkout-modal.active {
+    display: flex;
+    opacity: 1;
 }
+
+.wa-floating-btn.hidden { display: none; }
 
 .cart-modal-content, .checkout-modal-content { 
     background: var(--white); 
