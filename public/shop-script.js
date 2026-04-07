@@ -183,9 +183,28 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCartItems() {
         const el = document.getElementById('cartItems');
         if (cart.length === 0) el.innerHTML = '<p style="text-align:center;">Tu carrito está vacío</p>';
-        else el.innerHTML = cart.map(i => `<div class="cart-item-row"><img src="${i.image}" alt="${i.name}"><div><b>${i.name}</b><br>$${i.price.toLocaleString()} x ${i.quantity}</div><button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button></div>`).join('');
+        else el.innerHTML = cart.map(i => `
+            <div class="cart-item-row">
+                <img src="${i.image}" alt="${i.name}">
+                <div style="flex:1"><b>${i.name}</b><br>$${i.price.toLocaleString()}</div>
+                <div class="cart-qty-selector">
+                    <button onclick="cartQtyChange(${i.id},-1)">-</button>
+                    <span>${i.quantity}</span>
+                    <button onclick="cartQtyChange(${i.id},1)">+</button>
+                </div>
+                <button class="remove-btn" onclick="removeFromCart(${i.id})">&times;</button>
+            </div>`).join('');
         renderUpsell();
     }
+
+    window.cartQtyChange = (id, delta) => {
+        const item = cart.find(i => i.id === id);
+        if (!item) return;
+        const newQty = item.quantity + delta;
+        if (newQty < 1) return;
+        item.quantity = newQty;
+        updateCartDisplay();
+    };
 
     window.removeFromCart = (id) => { cart = cart.filter(i => i.id !== id); updateCartDisplay(); };
 

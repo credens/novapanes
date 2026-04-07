@@ -114,10 +114,14 @@
     transition: 0.4s; 
 }
 
-.logo-scroller img:hover { 
-    filter: grayscale(0); 
-    opacity: 1; 
-    transform: scale(1.1); 
+.logo-scroller img:hover {
+    filter: grayscale(0);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.logo-scroller-container:hover .logo-scroller {
+    animation-play-state: paused;
 }
 
 @keyframes scrollLogos { 
@@ -473,7 +477,36 @@
     border-radius: 18px; 
 }
 
-.remove-btn { 
+/* CONTROLES CANTIDAD EN CARRITO */
+.cart-qty-selector {
+    display: flex;
+    align-items: center;
+    background: #F5F1EE;
+    border-radius: 12px;
+    border: 1px solid #EAE2D7;
+    flex-shrink: 0;
+}
+
+.cart-qty-selector button {
+    background: none;
+    border: none;
+    width: 30px;
+    height: 32px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #5D4037;
+}
+
+.cart-qty-selector span {
+    width: 28px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #3E2723;
+}
+
+.remove-btn {
     background: #FEEBEB; 
     color: var(--primary-red); 
     border: none; 
