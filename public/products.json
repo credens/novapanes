@@ -7,7 +7,8 @@
     "promo_price": null,
     "image": "productos/pan-de-papa-1.png",
     "category": "panificados",
-    "stock": 2000
+    "stock": 2000,
+    "badge": "OFERTA"
   },
   {
     "id": 2,

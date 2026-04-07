@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderLogoScroller(logos) {
         const s = document.getElementById('shopLogoScroller');
-        if(s && logos) s.innerHTML = [...logos, ...logos, ...logos].map(l => `<img src="/logos/${l}" alt="Proveedor">`).join('');
+        if(s && logos) s.innerHTML = [...logos, ...logos, ...logos].map(l => `<img src="/logos/${l}" alt="Marca">`).join('');
     }
 
     function renderCategoryFilters() {
@@ -62,18 +62,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
         allCategories.forEach(cat => {
             if (grouped[cat.id]) {
-                let html = `<section class="category-group"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
+                let html = `<section class="category-group reveal active"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
                 html += grouped[cat.id].map(p => {
                     const out = p.stock <= 0;
-                    return `<article class="product-item" style="${out?'opacity:0.8;':''}">
+                    // Lógica Opción 1: Detección de combos para clase CSS especial
+                    const comboClass = p.category === 'combos' ? 'is-combo' : '';
+                    
+                    return `<article class="product-item ${comboClass}" style="${out?'opacity: 0.8;':''}">
                         ${p.badge?`<div class="product-badge">${p.badge}</div>`:''}
-                        <img src="/${p.image}" class="product-image" onclick="${out?'':`openQuickView(${p.id})`}" alt="${p.name} artesanal" style="${out?'filter:grayscale(1);':''}">
+                        <img src="/${p.image}" class="product-image" onclick="${out?'':`openQuickView(${p.id})`}" alt="${p.name} artesanal" style="${out?'filter: grayscale(1);':''}">
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
                             <p class="product-description">${p.description}</p>
                             <div class="premium-price"><small>$</small>${p.price.toLocaleString()}</div>
                             <div class="product-controls">
-                                <div class="quantity-selector" style="${out?'opacity:0.5;pointer-events:none;':''}">
+                                <div class="quantity-selector" style="${out?'opacity: 0.5;pointer-events: none;':''}">
                                     <button class="qty-btn" onclick="changeQty(${p.id},-1)">-</button>
                                     <input type="number" id="qty-input-${p.id}" class="qty-input" value="1" readonly>
                                     <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
@@ -161,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const ef = paymentMethodSelect?.querySelector('option[value="efectivo"]');
             if (ef && isEnvio) { ef.disabled = true; if (paymentMethodSelect.value === 'efectivo') paymentMethodSelect.value = 'transferencia'; }
         });
-        document.getElementById('clearCart').addEventListener('click', () => { if(confirm('¿Vaciar?')) { cart=[]; updateCartDisplay(); } });
+        document.getElementById('clearCart').addEventListener('click', () => { if(confirm('¿Vaciar carrito?')) { cart=[]; updateCartDisplay(); } });
         deliveryMethodRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const isEnvio = e.target.value === 'Envío a Domicilio';
@@ -176,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cart.forEach(i => msg += `• ${i.name} (x${i.quantity})\n`);
             msg += `----------\n*TOTAL: $${total.toLocaleString()}*`;
             window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(msg)}`, '_blank');
-            cart = []; updateCartDisplay(); checkoutModal.classList.remove('active'); setTimeout(() => checkoutModal.style.display='none', 400);
+            cart = []; updateCartDisplay(); checkoutModal.style.display = 'none';
         });
         window.onclick = (event) => { if (event.target == cartModal) { cartModal.classList.remove('active'); setTimeout(() => cartModal.style.display="none", 400); } if (event.target == checkoutModal) { checkoutModal.classList.remove('active'); setTimeout(() => checkoutModal.style.display="none", 400); } }
     }

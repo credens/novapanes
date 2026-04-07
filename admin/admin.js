@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // NUEVA FUNCIÓN PARA TOGGLE DE STOCK
     window.toggleStock = async (id, isCurrentlyOut) => {
         const p = allProducts.find(prod => prod.id == id);
-        const newStock = isCurrentlyOut ? 99 : 0; // Si no hay, ponemos 99. Si hay, ponemos 0.
+        const newStock = isCurrentlyOut ? 99 : 0; 
         
         const formData = new FormData();
         formData.append('stock', newStock);
