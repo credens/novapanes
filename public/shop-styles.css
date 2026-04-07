@@ -594,4 +594,9 @@
 
 @media (max-width: 768px) {
     body.has-cart-items { padding-bottom: 75px; }
+    body.has-cart-items .wa-floating-btn { bottom: 85px; }
+
+    .shop-hero-premium { height: 300px; padding: 0 20px; }
+    .shop-hero-premium .hero-content h1 { font-size: 2.5rem; letter-spacing: -1px; }
+    .shop-hero-premium .hero-content p { font-size: 1rem; }
 }
