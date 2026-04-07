@@ -120,11 +120,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${p.badge ? `<span class="status status-pending">${p.badge}</span>` : '-'}</td>
                     <td>${catName}</td>
                     <td>
-                        <button class="btn-edit" onclick="editProduct(${p.id})" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button class="btn-edit" onclick="toggleStock(${p.id}, ${isOutOfStock})" title="${isOutOfStock ? 'Habilitar Stock' : 'Marcar Sin Stock'}" style="background: ${isOutOfStock ? '#4CAF50' : '#FF9800'}; color: white;">
-                            <i class="fas ${isOutOfStock ? 'fa-eye' : 'fa-eye-slash'}"></i>
-                        </button>
-                        <button class="btn-delete" onclick="deleteProduct(${p.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        <div class="actions-row">
+                            <button class="btn-edit" onclick="animateBtn(this); editProduct(${p.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button class="btn-edit" onclick="animateBtn(this); toggleStock(${p.id}, ${isOutOfStock})" title="${isOutOfStock ? 'Habilitar Stock' : 'Marcar Sin Stock'}" style="background: ${isOutOfStock ? '#4CAF50' : '#FF9800'}; color: white;">
+                                <i class="fas ${isOutOfStock ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                            </button>
+                            <button class="btn-delete" onclick="animateBtn(this); deleteProduct(${p.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        </div>
                     </td>
                 </tr>
             `;
@@ -153,21 +155,73 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderOrders() {
         const tbody = document.getElementById('ordersTableBody');
         tbody.innerHTML = allOrders.map(o => `
-            <tr>
+            <tr style="cursor:pointer;" onclick="viewOrder('${o.id}')">
                 <td>#${o.id.slice(-4)}</td>
-                <td>${o.customer.nombre}</td>
-                <td>$${o.total.toLocaleString()}</td>
+                <td>${o.customer?.nombre || '-'}</td>
+                <td>$${o.total?.toLocaleString() || 0}</td>
                 <td>${new Date(o.date).toLocaleDateString()}</td>
-                <td><span class="status ${o.status === 'pending' ? 'status-pending' : 'status-delivered'}">${o.status}</span></td>
+                <td><span class="status ${o.status === 'pending' ? 'status-pending' : 'status-delivered'}">${o.status === 'pending' ? 'Pendiente' : 'Entregado'}</span></td>
                 <td>
-                    <select class="status-select" onchange="updateOrderStatus('${o.id}', this.value)" style="padding:5px; border-radius:10px; border:1px solid #EEE;">
-                        <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
-                        <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregado</option>
-                    </select>
+                    <div class="actions-row" onclick="event.stopPropagation()">
+                        <button class="btn-edit" onclick="animateBtn(this); viewOrder('${o.id}')" title="Ver detalle"><i class="fas fa-eye"></i></button>
+                        <select class="status-select" onchange="updateOrderStatus('${o.id}', this.value)" style="padding:8px 12px; border-radius:10px; border:1px solid #EEE; font-family:inherit; font-size:0.8rem;">
+                            <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
+                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregado</option>
+                        </select>
+                    </div>
                 </td>
             </tr>
         `).join('');
     }
+
+    window.viewOrder = (id) => {
+        const o = allOrders.find(order => order.id === id);
+        if (!o) return;
+        const modal = document.getElementById('orderDetailModal');
+        const body = document.getElementById('orderDetailBody');
+        const items = o.items ? o.items.map(i => `
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #F5F1EB;">
+                <span>${i.name} x${i.quantity}</span>
+                <span style="font-weight:700;">$${((i.price || 0) * i.quantity).toLocaleString()}</span>
+            </div>`).join('') : '<p style="color:var(--text-light);">Sin detalle de items</p>';
+
+        const c = o.customer || {};
+        body.innerHTML = `
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:25px;">
+                <div>
+                    <label style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; letter-spacing:1px;">Cliente</label>
+                    <p style="font-weight:700; margin:5px 0;">${c.nombre || '-'}</p>
+                </div>
+                <div>
+                    <label style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; letter-spacing:1px;">WhatsApp</label>
+                    <p style="font-weight:700; margin:5px 0;">${c.telefono || c.whatsapp || '-'}</p>
+                </div>
+                <div>
+                    <label style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; letter-spacing:1px;">Entrega</label>
+                    <p style="font-weight:700; margin:5px 0;">${o.metodoEntrega || o.delivery || '-'}</p>
+                </div>
+                <div>
+                    <label style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; letter-spacing:1px;">Pago</label>
+                    <p style="font-weight:700; margin:5px 0;">${o.metodoPago || o.payment || '-'}</p>
+                </div>
+            </div>
+            ${(o.direccion || c.direccion) ? `
+            <div style="margin-bottom:25px;">
+                <label style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; letter-spacing:1px;">Dirección</label>
+                <p style="font-weight:700; margin:5px 0;">${o.direccion || c.direccion || ''} ${o.ciudad || c.ciudad || ''}</p>
+            </div>` : ''}
+            <div style="margin-bottom:15px;">
+                <label style="font-size:0.75rem; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:10px;">Productos</label>
+                ${items}
+            </div>
+            <div style="text-align:right; margin-top:20px; padding-top:15px; border-top:2px solid #F0F0F0;">
+                <span style="font-size:1.6rem; font-weight:800;">Total: $${o.total?.toLocaleString() || 0}</span>
+            </div>
+            <div style="text-align:center; margin-top:10px;">
+                <span class="status ${o.status === 'pending' ? 'status-pending' : 'status-delivered'}" style="font-size:0.85rem; padding:8px 20px;">${o.status === 'pending' ? 'Pendiente' : 'Entregado'}</span>
+            </div>`;
+        modal.style.display = 'flex';
+    };
 
     function renderCategories() {
         const div = document.getElementById('categoriesList');
@@ -253,6 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
         productForm.badge.value = p.badge || '';
         productForm.description.value = p.description || '';
         productModal.style.display = 'flex';
+    };
+
+    window.animateBtn = (el) => {
+        el.classList.remove('clicked');
+        void el.offsetWidth;
+        el.classList.add('clicked');
     };
 
     window.deleteProduct = async (id) => {

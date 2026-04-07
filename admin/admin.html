@@ -208,6 +208,17 @@
         </div>
     </div>
 
+    <!-- MODAL DETALLE PEDIDO -->
+    <div id="orderDetailModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="font-family: 'Lora'; margin: 0;">Detalle del Pedido</h2>
+                <span onclick="document.getElementById('orderDetailModal').style.display='none'" style="cursor: pointer; font-size: 2rem;">&times;</span>
+            </header>
+            <div id="orderDetailBody"></div>
+        </div>
+    </div>
+
     <script src="admin.js"></script>
 </body>
 
