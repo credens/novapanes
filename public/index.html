@@ -162,6 +162,7 @@
     </footer>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/track-visit', { method: 'POST' }).catch(() => {});
             const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.1 });
             document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
             document.querySelectorAll('.faq-item').forEach(item => { item.addEventListener('click', () => { item.classList.toggle('active'); }); });

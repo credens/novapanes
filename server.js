@@ -101,6 +101,9 @@ function writeDatabase(filePath, data) {
 
 // --- SERVICIO DE ARCHIVOS ESTÁTICOS ---
 
+// Redirect /admin → /admin/admin.html
+app.get('/admin', (req, res) => res.redirect('/admin/admin.html'));
+
 // SEO TÉCNICO: Evitar indexación de la carpeta admin mediante Header
 app.use('/admin', (req, res, next) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow');

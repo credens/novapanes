@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/track-visit', { method: 'POST' }).catch(() => {});
     // ===================================================
     //      ESTADO GLOBAL Y CONFIGURACIÓN
     // ===================================================
