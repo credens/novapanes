@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Pan de papa con parmesano",
     "description": "Suave pan de papa con un toque de parmesano que le da un sabor único. Diametro 10cm, peso unitario 90g. Pack de 4u",
-    "price": 2500,
+    "price": 2299.99,
     "promo_price": null,
     "image": "productos/pan-de-papa-1.png",
     "category": "panificados",
@@ -27,7 +27,7 @@
     "price": 2500,
     "image": "productos/sesamo.jpg",
     "category": "panificados",
-    "stock": 99,
+    "stock": "99",
     "promo_price": null
   },
   {
@@ -37,7 +37,7 @@
     "price": 1200,
     "image": "productos/pancho-1.png",
     "category": "panificados",
-    "stock": 0,
+    "stock": "0",
     "promo_price": null
   },
   {
@@ -57,8 +57,7 @@
     "price": 2000,
     "image": "productos/pan-de-molde-1.png",
     "category": "panificados",
-    "stock": 0,
-    "promo_price": null
+    "stock": "0"
   },
   {
     "id": 7,
@@ -84,21 +83,23 @@
     "id": 9,
     "name": "Salsa Cheddar Benidorm x 500cc",
     "description": "Salsa Cheddar Benidorm x 500cc, cremosa y sabrosa, ideal para hamburguesas, papas fritas y snacks. Lista para usar y darle un toque irresistible a tus platos.",
-    "price": 2400,
+    "price": 2600,
     "promo_price": null,
     "stock": 50,
     "category": "salsas",
-    "image": "productos/1759423322747.png"
+    "image": "productos/1759423322747.png",
+    "badge": ""
   },
   {
     "id": 10,
     "name": "Ketchup Benidorm x 500cc",
     "description": "Ketchup Benidorm x 500cc, clásico y sabroso, ideal para hamburguesas, papas y snacks. Listo para acompañar todas tus comidas.",
-    "price": 1950,
+    "price": 2000,
     "promo_price": null,
     "stock": 12,
     "category": "salsas",
-    "image": "productos/1759423505758.png"
+    "image": "productos/1759423505758.png",
+    "badge": ""
   },
   {
     "id": 11,
@@ -144,21 +145,23 @@
     "id": 15,
     "name": "Queso Cheddar Milkaut 192 fetas",
     "description": "Queso Cheddar Milkaut en 192 fetas, cremoso y fundente. Ideal para hamburguesas, sándwiches y recetas con todo el sabor del cheddar.",
-    "price": 46350,
+    "price": 48000,
     "promo_price": null,
     "stock": 10,
     "category": "queso",
-    "image": "productos/1759438177864.png"
+    "image": "productos/1759438177864.png",
+    "badge": ""
   },
   {
     "id": 16,
     "name": "Queso Cheddar Milkaut Liquido x 3.5 Lts",
     "description": "Queso Cheddar Milkaut líquido x 3.5 L, cremoso y listo para usar. Perfecto para hamburguesas, nachos, papas fritas y recetas con todo el sabor cheddar.",
-    "price": 38400,
+    "price": 35000,
     "promo_price": null,
     "stock": 10,
     "category": "queso",
-    "image": "productos/1759438270320.png"
+    "image": "productos/1759438270320.png",
+    "badge": ""
   },
   {
     "id": 17,
@@ -194,11 +197,12 @@
     "id": 20,
     "name": "Salchicha Union Ganadera corta x 6u",
     "description": "Salchicha Unión Ganadera corta x 6u, sabrosas y prácticas. Ideales para panchos, picadas o comidas rápidas.",
-    "price": 1775,
+    "price": 2000,
     "promo_price": null,
     "stock": 100,
     "category": "salchichas",
-    "image": "productos/1759438989483.png"
+    "image": "productos/1759438989483.png",
+    "badge": ""
   },
   {
     "id": 21,
@@ -224,11 +228,12 @@
     "id": 23,
     "name": "Combo 30 panchos cortos",
     "description": "Combo de 30 panchos cortos con salchichas Unión Ganadera, pan y 2 aderezos. Práctico y delicioso, ideal para reuniones, eventos o delivery. Listo para servir y disfrutar.",
-    "price": 19000,
+    "price": 20000,
     "promo_price": null,
     "stock": 10,
     "category": "combos",
-    "image": "productos/1769703637864.png"
+    "image": "productos/1769703637864.png",
+    "badge": ""
   },
   {
     "id": 24,
@@ -244,41 +249,45 @@
     "id": 25,
     "name": "Combo 60 panchos cortos",
     "description": "Combo de 60 panchos cortos con salchichas Unión Ganadera y 3 aderezos. Ideal para eventos, fiestas o reuniones grandes. Práctico, rico y listo para disfrutar.",
-    "price": 35000,
+    "price": 39000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703649279.png"
+    "image": "productos/1769703649279.png",
+    "badge": ""
   },
   {
     "id": 26,
     "name": "Combo 18 panchos cortos",
     "description": "Combo 18 salchichas cortas Union Ganadera + Pan de panchos NOVA + 1 aderezo Benidorm a eleccion.",
-    "price": 9900,
+    "price": 11000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703692810.png"
+    "image": "productos/1769703692810.png",
+    "badge": ""
   },
   {
     "id": 27,
     "name": "Combo 18 superpanchos",
     "description": "Combo de 18 salchichas largas Unino Ganadera + Pan NOVA + 1 aderezo Benidorm a elección",
-    "price": 18000,
+    "price": 20000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703701535.png"
+    "image": "productos/1769703701535.png",
+    "badge": ""
   },
   {
     "id": 28,
     "name": "Combo 36 superpanchos",
     "description": "Combo 36 salchichas largas Union Ganadera + Pan NOVA + 2 aderezos Benidorm a elección",
-    "price": 36000,
+    "price": 39000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703711949.png"
+    "image": "productos/1769703711949.png",
+    "badge": ""
   },
   {
     "id": 29,
@@ -294,91 +303,100 @@
     "id": 30,
     "name": "Combo 20 hamburguesas Union Ganadera + Pan",
     "description": "20 hamburgeusas Union Ganadera 83grs + Pan de papa + 1 aderezo a elección.",
-    "price": 49000,
+    "price": 54000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703168135.png"
+    "image": "productos/1769703168135.png",
+    "badge": ""
   },
   {
     "id": 31,
     "name": "Combo 40 hamburguesas Union Ganadera + Pan",
     "description": "40 hamburguesas Union Ganadera 83 grs + Pan de papa + 2 aderezos a elección.",
-    "price": 95500,
+    "price": 104000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703179997.png"
+    "image": "productos/1769703179997.png",
+    "badge": ""
   },
   {
     "id": 32,
     "name": "Combo 60 hamburguesas Union Ganadera + Pan",
     "description": "60 hamburguesas Union Ganadera 83 grs + Pan de papa + 3 aderezos a elección.",
-    "price": 138000,
+    "price": 145000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703193584.png"
+    "image": "productos/1769703193584.png",
+    "badge": ""
   },
   {
     "id": 33,
     "name": "Combo 60 Hamburguesas Maximesa ",
     "description": "Combo 60 Hamburguesas Maximesa 84grs + Pan de papa tradicional + 3 aderezos a elección",
-    "price": 80000,
+    "price": 88000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703234303.png"
+    "image": "productos/1769703234303.png",
+    "badge": ""
   },
   {
     "id": 34,
     "name": "Combo 40 Hamburguesas Maximesa\t",
     "description": "Combo 40 Hamburguesas Maximesa\t+ Pan de papa tradicional + 2 aderezos a elección",
-    "price": 54000,
+    "price": 59000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703264466.png"
+    "image": "productos/1769703264466.png",
+    "badge": ""
   },
   {
     "id": 35,
     "name": "Combo 20 hamburguesas Maximesa",
     "description": "Combo 20 Hamburguesas Maximesa + Pan de papa tradicional + 1 aderezo a elección",
-    "price": 27000,
+    "price": 30000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703273733.png"
+    "image": "productos/1769703273733.png",
+    "badge": ""
   },
   {
     "id": 36,
     "name": "Combo 18 panchos Delosan",
     "description": "Combo panchos cortos x 18 unidades. Salchicha Delosan + Pan NOVA + 1 aderezo a elección",
-    "price": 7500,
+    "price": 8500,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703283720.png"
+    "image": "productos/1769703283720.png",
+    "badge": ""
   },
   {
     "id": 37,
     "name": "Combo 30 panchos Delosan",
     "description": "Combo panchos cortos x 30 unidades. Salchicha Delosan + Pan NOVA + 2 aderezo a elección",
-    "price": 13500,
+    "price": 15000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703306297.png"
+    "image": "productos/1769703306297.png",
+    "badge": ""
   },
   {
     "id": 38,
     "name": "Combo 60 panchos Delosan",
     "description": "Combo panchos cortos x 60 unidades. Salchicha Delosan + Pan NOVA + 3 aderezo a elección",
-    "price": 26000,
+    "price": 28000,
     "promo_price": null,
     "stock": 100,
     "category": "combos",
-    "image": "productos/1769703314848.png"
+    "image": "productos/1769703314848.png",
+    "badge": ""
   },
   {
     "id": 39,
