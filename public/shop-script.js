@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===================================================
     //      CARGA DE DATOS
     // ===================================================
+    // Verificar retorno de MercadoPago
+    checkMercadoPagoReturn();
+
     Promise.all([
         fetch('/products').then(res => res.json()),
         fetch('/data/categories.json').then(res => res.json()),
@@ -239,18 +242,165 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (ef) { if (isEnvio) { ef.disabled = true; if (paymentMethodSelect.value === 'efectivo') paymentMethodSelect.value = 'transferencia'; } else { ef.disabled = false; } }
             });
         });
-        document.getElementById('checkoutForm').addEventListener('submit', (e) => {
-            e.preventDefault(); const fData = new FormData(e.target); const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
-            let msg = `*🍞 NUEVO PEDIDO - NOVA PANES*\n*Cliente:* ${fData.get('nombre')}\n----------\n`;
-            cart.forEach(i => msg += `• ${i.name} (x${i.quantity})\n`);
-            msg += `----------\n*TOTAL: $${total.toLocaleString()}*`;
-            window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(msg)}`, '_blank');
-            cart = []; updateCartDisplay(); checkoutModal.style.display = 'none'; showWaBtn();
+        // Toggle datos bancarios según método de pago
+        paymentMethodSelect?.addEventListener('change', () => {
+            const bankInfo = document.getElementById('bankInfoContainer');
+            if (bankInfo) bankInfo.style.display = paymentMethodSelect.value === 'transferencia' ? 'block' : 'none';
+        });
+
+        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fData = new FormData(e.target);
+            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const nombre = fData.get('nombre');
+            const telefono = fData.get('telefono');
+            const entrega = fData.get('metodoEntrega');
+            const direccion = fData.get('direccion') || '';
+            const ciudad = fData.get('ciudad') || '';
+            const pago = fData.get('metodoPago');
+
+            const orderData = {
+                customer: { nombre, telefono },
+                metodoEntrega: entrega,
+                direccion, ciudad,
+                metodoPago: pago,
+                items: cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price })),
+                total
+            };
+
+            // --- FLUJO MERCADO PAGO ---
+            if (pago === 'mercadopago') {
+                try {
+                    const btn = e.target.querySelector('button[type="submit"]');
+                    btn.disabled = true; btn.textContent = 'Conectando con Mercado Pago...';
+                    const mpRes = await fetch('/create-preference', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            items: cart.map(i => ({ title: i.name, quantity: i.quantity, unit_price: i.price }))
+                        })
+                    });
+                    const mpData = await mpRes.json();
+                    if (mpData.init_point) {
+                        // Guardar pedido pendiente para enviar después del pago
+                        localStorage.setItem('novaPanesPendingOrder', JSON.stringify(orderData));
+                        localStorage.setItem('novaPanesPendingCart', JSON.stringify(cart));
+                        window.location.href = mpData.init_point;
+                        return;
+                    } else {
+                        alert('Error al conectar con Mercado Pago. Probá de nuevo.');
+                        btn.disabled = false; btn.textContent = 'CONFIRMAR PEDIDO';
+                    }
+                } catch (err) {
+                    console.error('Error MP:', err);
+                    alert('Error al conectar con Mercado Pago.');
+                    e.target.querySelector('button[type="submit"]').disabled = false;
+                    e.target.querySelector('button[type="submit"]').textContent = 'CONFIRMAR PEDIDO';
+                }
+                return;
+            }
+
+            // --- FLUJO TRANSFERENCIA / EFECTIVO ---
+            // Enviar pedido al servidor
+            try {
+                await fetch('/api/submit-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+            } catch (err) { console.error('Error guardando pedido:', err); }
+
+            // Enviar comprobante si existe
+            const comprobanteFile = document.getElementById('comprobanteInput')?.files[0];
+            if (comprobanteFile && pago === 'transferencia') {
+                try {
+                    const compData = new FormData();
+                    compData.append('comprobante', comprobanteFile);
+                    compData.append('nombre', nombre);
+                    compData.append('telefono', telefono);
+                    compData.append('total', total);
+                    await fetch('/api/upload-comprobante', { method: 'POST', body: compData });
+                } catch (err) { console.error('Error subiendo comprobante:', err); }
+            }
+
+            // Mensaje completo de WhatsApp
+            sendWhatsAppOrder(orderData, cart);
+
+            cart = []; updateCartDisplay(); checkoutModal.classList.remove('active');
+            setTimeout(() => checkoutModal.style.display = 'none', 400); showWaBtn();
         });
         window.onclick = (event) => { if (event.target == cartModal) { cartModal.classList.remove('active'); setTimeout(() => cartModal.style.display="none", 400); showWaBtn(); if (cart.length > 0) document.getElementById('mobileCartBar')?.classList.add('visible'); } if (event.target == checkoutModal) { checkoutModal.classList.remove('active'); setTimeout(() => checkoutModal.style.display="none", 400); showWaBtn(); } }
     }
 
     function updateCartDisplayFromStorage() { const s = localStorage.getItem('novaPanesCart'); if (s) { cart = JSON.parse(s); updateCartDisplay(); } }
+
+    function sendWhatsAppOrder(orderData, cartItems) {
+        let msg = `*🍞 NUEVO PEDIDO - NOVA PANES*\n\n`;
+        msg += `*Cliente:* ${orderData.customer.nombre}\n`;
+        msg += `*WhatsApp:* ${orderData.customer.telefono}\n`;
+        msg += `*Entrega:* ${orderData.metodoEntrega}\n`;
+        if (orderData.metodoEntrega === 'Envío a Domicilio' && orderData.direccion) msg += `*Dirección:* ${orderData.direccion}, ${orderData.ciudad}\n`;
+        msg += `*Pago:* ${orderData.metodoPago}\n`;
+        msg += `\n----------\n`;
+        cartItems.forEach(i => msg += `• ${i.name} x${i.quantity} — $${(i.price * i.quantity).toLocaleString()}\n`);
+        msg += `----------\n*TOTAL: $${orderData.total.toLocaleString()}*`;
+        window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function checkMercadoPagoReturn() {
+        const params = new URLSearchParams(window.location.search);
+        const paymentStatus = params.get('payment') || params.get('status');
+        const pendingOrder = localStorage.getItem('novaPanesPendingOrder');
+
+        if (paymentStatus === 'success' && pendingOrder) {
+            const orderData = JSON.parse(pendingOrder);
+            const pendingCart = JSON.parse(localStorage.getItem('novaPanesPendingCart') || '[]');
+
+            // Limpiar datos pendientes
+            localStorage.removeItem('novaPanesPendingOrder');
+            localStorage.removeItem('novaPanesPendingCart');
+            localStorage.removeItem('novaPanesCart');
+
+            // Guardar pedido en el servidor
+            fetch('/api/submit-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            }).catch(err => console.error('Error guardando pedido:', err));
+
+            // Enviar WhatsApp con datos completos
+            orderData.metodoPago = 'Mercado Pago ✅ PAGADO';
+            sendWhatsAppOrder(orderData, pendingCart);
+
+            // Limpiar URL
+            window.history.replaceState({}, '', '/shop.html');
+
+            // Mostrar confirmación
+            setTimeout(() => alert('¡Pago recibido! Tu pedido fue enviado por WhatsApp.'), 500);
+        } else if (paymentStatus === 'failure' && pendingOrder) {
+            localStorage.removeItem('novaPanesPendingOrder');
+            localStorage.removeItem('novaPanesPendingCart');
+            window.history.replaceState({}, '', '/shop.html');
+            alert('El pago no se completó. Podés intentar de nuevo.');
+        } else if (paymentStatus === 'pending' && pendingOrder) {
+            const orderData = JSON.parse(pendingOrder);
+            const pendingCart = JSON.parse(localStorage.getItem('novaPanesPendingCart') || '[]');
+            localStorage.removeItem('novaPanesPendingOrder');
+            localStorage.removeItem('novaPanesPendingCart');
+            localStorage.removeItem('novaPanesCart');
+
+            fetch('/api/submit-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            }).catch(err => console.error('Error guardando pedido:', err));
+
+            orderData.metodoPago = 'Mercado Pago ⏳ PENDIENTE';
+            sendWhatsAppOrder(orderData, pendingCart);
+            window.history.replaceState({}, '', '/shop.html');
+            setTimeout(() => alert('Tu pago está pendiente de confirmación. El pedido fue enviado por WhatsApp.'), 500);
+        }
+    }
 
     window.openQuickView = (id) => {
         const p = products.find(prod => prod.id === id);

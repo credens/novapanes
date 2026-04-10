@@ -205,16 +205,67 @@ app.post('/api/submit-order', orderLimiter, [
             auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_APP_PASSWORD }
         });
 
-        const itemsList = orderData.items.map(i => `<li>${i.name} x${i.quantity}</li>`).join('');
+        const c = orderData.customer || {};
+        const itemsList = orderData.items.map(i => `<li>${i.name} x${i.quantity} — $${((i.price || 0) * i.quantity).toLocaleString()}</li>`).join('');
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: 'panes.nova@gmail.com',
-            subject: `🍞 Nuevo Pedido Recibido: ${orderData.customer.nombre}`,
-            html: `<h3>Resumen del Pedido</h3><ul>${itemsList}</ul><p>Total: $${orderData.total}</p>`
+            subject: `🍞 Nuevo Pedido: ${c.nombre} — $${orderData.total?.toLocaleString()}`,
+            html: `<h2>Nuevo Pedido Recibido</h2>
+                <table style="border-collapse:collapse; margin-bottom:15px;">
+                    <tr><td style="padding:5px 15px 5px 0; font-weight:bold;">Cliente:</td><td>${c.nombre || '-'}</td></tr>
+                    <tr><td style="padding:5px 15px 5px 0; font-weight:bold;">WhatsApp:</td><td>${c.telefono || '-'}</td></tr>
+                    <tr><td style="padding:5px 15px 5px 0; font-weight:bold;">Entrega:</td><td>${orderData.metodoEntrega || '-'}</td></tr>
+                    ${orderData.direccion ? `<tr><td style="padding:5px 15px 5px 0; font-weight:bold;">Dirección:</td><td>${orderData.direccion}, ${orderData.ciudad || ''}</td></tr>` : ''}
+                    <tr><td style="padding:5px 15px 5px 0; font-weight:bold;">Pago:</td><td>${orderData.metodoPago || '-'}</td></tr>
+                </table>
+                <h3>Productos</h3>
+                <ul>${itemsList}</ul>
+                <h3 style="margin-top:15px;">Total: $${orderData.total?.toLocaleString()}</h3>`
         });
 
         res.json({ success: true, orderId: newOrder.id });
     } catch (e) {
+        res.status(500).json({ success: false });
+    }
+});
+
+// --- UPLOAD DE COMPROBANTE DE TRANSFERENCIA ---
+const comprobanteStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const dir = path.join(__dirname, 'public', 'data', 'comprobantes');
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        cb(null, dir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+const uploadComprobante = multer({ storage: comprobanteStorage, limits: { fileSize: 5 * 1024 * 1024 } });
+
+app.post('/api/upload-comprobante', uploadComprobante.single('comprobante'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ success: false, error: 'No se adjuntó archivo.' });
+
+        // Enviar comprobante por email al admin
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_APP_PASSWORD }
+        });
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: 'panes.nova@gmail.com',
+            subject: `💰 Comprobante de Transferencia — ${req.body.nombre || 'Cliente'}`,
+            html: `<h2>Comprobante de Transferencia Recibido</h2>
+                <p><b>Cliente:</b> ${req.body.nombre || '-'}</p>
+                <p><b>WhatsApp:</b> ${req.body.telefono || '-'}</p>
+                <p><b>Total:</b> $${req.body.total || '-'}</p>`,
+            attachments: [{ filename: req.file.originalname, path: req.file.path }]
+        });
+
+        res.json({ success: true });
+    } catch (e) {
+        console.error('Error comprobante:', e);
         res.status(500).json({ success: false });
     }
 });
