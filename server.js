@@ -61,6 +61,7 @@ app.use(session({
     cookie: { 
         secure: process.env.NODE_ENV === 'production', 
         httpOnly: true, 
+        sameSite: 'lax',
         maxAge: 1000 * 60 * 60 * 24 
     }
 }));
@@ -306,32 +307,44 @@ app.post('/create-preference', [
 
 // --- API DE ADMINISTRACIÓN (PROTEGIDA) ---
 
-// Verificar password de admin
-app.post('/api/admin/verify', async (req, res) => {
+// Iniciar sesión de admin
+app.post('/api/admin/login', async (req, res) => {
     const { password } = req.body;
     try {
         const hash = process.env.ADMIN_PASSWORD_HASH;
         const match = await bcrypt.compare(password, hash);
-        res.json({ success: match });
+        if (match) {
+            req.session.isAdmin = true;
+            return res.json({ success: true });
+        }
+        res.status(401).json({ success: false, error: 'Contraseña incorrecta.' });
     } catch (e) {
-        res.status(500).json({ success: false });
+        res.status(500).json({ success: false, error: 'Error interno.' });
     }
+});
+
+app.post('/api/admin/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).json({ success: false, error: 'No se pudo cerrar sesión.' });
+        res.clearCookie('connect.sid');
+        res.json({ success: true });
+    });
+});
+
+app.get('/api/admin/me', (req, res) => {
+    res.json({ authenticated: !!req.session.isAdmin });
 });
 
 const adminRouter = express.Router();
 
 // Middleware de seguridad para el Router de Admin
-adminRouter.use(async (req, res, next) => {
-    const auth = req.headers['authorization'];
-    if (!auth) return res.status(401).json({ message: "No autorizado" });
-    
-    const match = await bcrypt.compare(auth, process.env.ADMIN_PASSWORD_HASH || "");
-    if (match) {
+adminRouter.use((req, res, next) => {
+    if (req.session && req.session.isAdmin) {
         // SEO TÉCNICO: Las respuestas de la API de admin no deben ser indexadas
         res.setHeader('X-Robots-Tag', 'noindex, nofollow');
         next();
     } else {
-        res.status(403).json({ message: "Acceso denegado" });
+        res.status(401).json({ message: "No autorizado" });
     }
 });
 
@@ -418,12 +431,24 @@ adminRouter.put('/orders/:id', (req, res) => {
     }
 });
 
+// Eliminar Pedido
+adminRouter.delete('/orders/:id', (req, res) => {
+    let orders = readDatabase(ORDERS_FILE);
+    orders = orders.filter(o => o.id !== req.params.id);
+    writeDatabase(ORDERS_FILE, orders);
+    res.json({ success: true });
+});
+
 app.use('/api/admin', adminRouter);
 
 // LANZAMIENTO DEL SERVIDOR
-app.listen(port, () => {
-    console.log(`\n--- NOVA PANES SERVER ---`);
-    console.log(`Servidor activo en: http://localhost:${port}`);
-    console.log(`Área administrativa: http://localhost:${port}/admin/admin.html`);
-    console.log(`--------------------------\n`);
-});
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`\n--- NOVA PANES SERVER ---`);
+        console.log(`Servidor activo en: http://localhost:${port}`);
+        console.log(`Área administrativa: http://localhost:${port}/admin/admin.html`);
+        console.log(`--------------------------\n`);
+    });
+}
+
+module.exports = app;

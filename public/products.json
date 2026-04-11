@@ -27,7 +27,7 @@
     "price": 2500,
     "image": "productos/sesamo.jpg",
     "category": "panificados",
-    "stock": "99",
+    "stock": 99,
     "promo_price": null
   },
   {
@@ -37,7 +37,7 @@
     "price": 1200,
     "image": "productos/pancho-1.png",
     "category": "panificados",
-    "stock": "0",
+    "stock": 0,
     "promo_price": null
   },
   {
@@ -57,7 +57,8 @@
     "price": 2000,
     "image": "productos/pan-de-molde-1.png",
     "category": "panificados",
-    "stock": "0"
+    "stock": 0,
+    "promo_price": null
   },
   {
     "id": 7,

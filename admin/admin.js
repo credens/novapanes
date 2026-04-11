@@ -10,14 +10,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const navItems = document.querySelectorAll('.nav-item');
 
     let allProducts = [], allCategories = [], allOrders = [], allVisits = [];
-    let salesChartInstance, visitsChartInstance;
+    let salesChartInstance, visitsChartInstance, dailyVisitsChartInstance;
 
     // --- AUTENTICACIÓN ---
-    function checkAuth() {
-        const savedPass = sessionStorage.getItem('adminPassword');
-        if (savedPass) {
-            passwordModal.style.display = 'none';
-            loadDashboardData();
+    async function checkAuth() {
+        try {
+            const res = await fetch('/api/admin/me', { credentials: 'include' });
+            const result = await res.json();
+            if (result.authenticated) {
+                passwordModal.style.display = 'none';
+                loadDashboardData();
+            } else {
+                passwordModal.style.display = 'flex';
+            }
+        } catch (error) {
+            console.error('Error verificando sesión admin:', error);
+            passwordModal.style.display = 'flex';
         }
     }
 
@@ -25,18 +33,18 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const password = document.getElementById('adminPassword').value;
         try {
-            const res = await fetch('/api/admin/verify', {
+            const res = await fetch('/api/admin/login', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ password })
             });
             const result = await res.json();
             if (result.success) {
-                sessionStorage.setItem('adminPassword', password);
                 passwordModal.style.display = 'none';
                 loadDashboardData();
             } else {
-                alert('Contraseña incorrecta.');
+                alert(result.error || 'Contraseña incorrecta.');
             }
         } catch (error) {
             alert('Error al conectar con el servidor.');
@@ -62,13 +70,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- API HELPER ---
     async function apiFetch(url, options = {}) {
-        const password = sessionStorage.getItem('adminPassword');
-        const headers = { 'Authorization': password };
+        const headers = {};
         if (!(options.body instanceof FormData)) {
             headers['Content-Type'] = 'application/json';
         }
-        const response = await fetch(`/api/admin${url}`, { ...options, headers });
-        if (!response.ok) throw new Error('Error en la petición');
+        const response = await fetch(`/api/admin${url}`, {
+            credentials: 'include',
+            ...options,
+            headers: { ...headers, ...(options.headers || {}) }
+        });
+        if (!response.ok) {
+            throw new Error('Error en la petición');
+        }
         return response.json();
     }
 
@@ -164,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>
                     <div class="actions-row" onclick="event.stopPropagation()">
                         <button class="btn-edit" onclick="animateBtn(this); viewOrder('${o.id}')" title="Ver detalle"><i class="fas fa-eye"></i></button>
+                        <button class="btn-delete" onclick="animateBtn(this); deleteOrder('${o.id}')" title="Eliminar pedido"><i class="fas fa-trash"></i></button>
                         <select class="status-select" onchange="updateOrderStatus('${o.id}', this.value)" style="padding:8px 12px; border-radius:10px; border:1px solid #EEE; font-family:inherit; font-size:0.8rem;">
                             <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
                             <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregado</option>
@@ -242,6 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCharts() {
         const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
         const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const dayLabels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString());
+
         const salesData = Array(12).fill(0);
         allOrders.forEach(o => {
             const d = new Date(o.date);
@@ -253,8 +271,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if(d.getFullYear() === currentYear) visitsData[d.getMonth()]++;
         });
 
+        const dailyVisitsData = Array(daysInMonth).fill(0);
+        allVisits.forEach(v => {
+            const d = new Date(v.date);
+            if(d.getFullYear() === currentYear && d.getMonth() === currentMonth) {
+                dailyVisitsData[d.getDate() - 1]++;
+            }
+        });
+
         if (salesChartInstance) salesChartInstance.destroy();
         if (visitsChartInstance) visitsChartInstance.destroy();
+        if (dailyVisitsChartInstance) dailyVisitsChartInstance.destroy();
 
         const ctxS = document.getElementById('salesChart').getContext('2d');
         salesChartInstance = new Chart(ctxS, {
@@ -267,6 +294,13 @@ document.addEventListener('DOMContentLoaded', () => {
         visitsChartInstance = new Chart(ctxV, {
             type: 'line',
             data: { labels: months, datasets: [{ label: 'Visitas', data: visitsData, borderColor: '#FFB300', tension: 0.4 }] },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        const ctxD = document.getElementById('dailyVisitsChart').getContext('2d');
+        dailyVisitsChartInstance = new Chart(ctxD, {
+            type: 'bar',
+            data: { labels: dayLabels, datasets: [{ label: 'Visitas Diarias', data: dailyVisitsData, backgroundColor: '#4CAF50' }] },
             options: { responsive: true, maintainAspectRatio: false }
         });
     }
@@ -338,12 +372,32 @@ document.addEventListener('DOMContentLoaded', () => {
         loadDashboardData();
     };
 
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+            await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' });
+        } catch (error) {
+            console.error('Error cerrando sesión:', error);
+        }
+        passwordModal.style.display = 'flex';
+        sections.forEach(s => s.style.display = 'none');
+    });
+
     window.updateOrderStatus = async (id, status) => {
         await apiFetch(`/orders/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ status })
         });
         loadDashboardData();
+    };
+
+    window.deleteOrder = async (id) => {
+        if (!confirm('¿Eliminar este pedido permanentemente?')) return;
+        try {
+            await apiFetch(`/orders/${id}`, { method: 'DELETE' });
+            loadDashboardData();
+        } catch (error) {
+            alert('Error al eliminar pedido');
+        }
     };
 
     checkAuth();

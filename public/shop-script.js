@@ -31,11 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
     ]).then(([pData, cData, lData]) => {
         products = pData; allCategories = cData;
         renderLogoScroller(lData); renderCategoryFilters(); renderProducts(); setupEventListeners(); updateCartDisplayFromStorage(); initInfiniteScrollFilters();
-    }).catch(err => console.error("Error cargando:", err));
+    }).catch(err => {
+        console.error("Error cargando datos:", err);
+        alert("Error al cargar los productos. Por favor, recarga la página.");
+    });
 
     function renderLogoScroller(logos) {
         const s = document.getElementById('shopLogoScroller');
-        if(s && logos) s.innerHTML = [...logos, ...logos, ...logos].map(l => `<img src="/logos/${l}" alt="Marca">`).join('');
+        if(s && logos) s.innerHTML = [...logos, ...logos, ...logos].map(l => `<img src="/logos/${l}" alt="Marca" loading="lazy" onerror="this.src='/productos/default.png'">`).join('');
     }
 
     function renderCategoryFilters() {
@@ -59,26 +62,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderProducts() {
         const f = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
-        const s = searchInput.value.toLowerCase().trim();
+        const query = searchInput.value.toLowerCase().trim();
         const filtered = f === 'all' ? products : products.filter(p => p.category === f);
-        const final = s ? filtered.filter(p => p.name.toLowerCase().includes(s)) : filtered;
+        const final = query ? filtered.filter(p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query)) : filtered;
         shopProductsContainer.innerHTML = '';
+
+        if (!final.length) {
+            shopProductsContainer.innerHTML = `
+                <div class="no-results-box">
+                    <h3>No encontramos productos para tu búsqueda.</h3>
+                    <p>Probá con otra palabra clave o navegá por las categorías disponibles.</p>
+                </div>`;
+            return;
+        }
+
         const grouped = final.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
         allCategories.forEach(cat => {
             if (grouped[cat.id]) {
                 let html = `<section class="category-group reveal active"><h2 class="category-group-title">${cat.name}</h2><div class="shop-products">`;
                 html += grouped[cat.id].map(p => {
                     const out = p.stock <= 0;
-                    // Lógica Opción 1: Detección de combos para clase CSS especial
                     const comboClass = p.category === 'combos' ? 'is-combo' : '';
+                    const priceHtml = p.promo_price && p.promo_price < p.price ?
+                        `<div class="premium-price"><span class="old-price">$${p.price.toLocaleString()}</span><span class="new-price">$${p.promo_price.toLocaleString()}</span></div>` :
+                        `<div class="premium-price"><span>$${p.price.toLocaleString()}</span></div>`;
+                    const stockBadge = out ? '<div class="stock-badge">SIN STOCK</div>' : '';
                     
-                    return `<article class="product-item ${comboClass}" style="${out?'opacity: 0.8;':''}">
+                    return `<article class="product-item ${comboClass}" style="${out?'opacity: 0.85;':''}">
+                        ${stockBadge}
                         ${p.badge?`<div class="product-badge">${p.badge}</div>`:''}
-                        <img src="/${p.image}" class="product-image" onclick="${out?'':`openQuickView(${p.id})`}" alt="${p.name} artesanal" style="${out?'filter: grayscale(1);':''}">
+                        <img src="/${p.image}" class="product-image" onclick="${out?'':`openQuickView(${p.id})`}" alt="${p.name} artesanal" style="${out?'filter: grayscale(1);':''}" loading="lazy" onerror="this.src='/productos/default.png'">
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
                             <p class="product-description">${p.description}</p>
-                            <div class="premium-price"><small>$</small>${p.price.toLocaleString()}</div>
+                            ${priceHtml}
                             <div class="product-controls">
                                 <div class="quantity-selector" style="${out?'opacity: 0.5;pointer-events: none;':''}">
                                     <button class="qty-btn" onclick="changeQty(${p.id},-1)">-</button>
@@ -303,12 +320,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // --- FLUJO TRANSFERENCIA / EFECTIVO ---
             // Enviar pedido al servidor
             try {
-                await fetch('/api/submit-order', {
+                const response = await fetch('/api/submit-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)
                 });
-            } catch (err) { console.error('Error guardando pedido:', err); }
+                if (!response.ok) throw new Error('Error en el servidor');
+            } catch (err) {
+                console.error('Error guardando pedido:', err);
+                alert('Error al enviar el pedido. Por favor, contactanos por WhatsApp.');
+                return;
+            }
 
             // Enviar comprobante si existe
             const comprobanteFile = document.getElementById('comprobanteInput')?.files[0];
@@ -319,8 +341,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     compData.append('nombre', nombre);
                     compData.append('telefono', telefono);
                     compData.append('total', total);
-                    await fetch('/api/upload-comprobante', { method: 'POST', body: compData });
-                } catch (err) { console.error('Error subiendo comprobante:', err); }
+                    const compResponse = await fetch('/api/upload-comprobante', { method: 'POST', body: compData });
+                    if (!compResponse.ok) throw new Error('Error subiendo comprobante');
+                } catch (err) {
+                    console.error('Error subiendo comprobante:', err);
+                    alert('Error al subir el comprobante, pero el pedido fue enviado.');
+                }
             }
 
             // Mensaje completo de WhatsApp

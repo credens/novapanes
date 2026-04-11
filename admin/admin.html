@@ -41,6 +41,7 @@
                     <span>Categorías</span>
                 </a>
             </nav>
+            <button id="logoutBtn" class="btn-primary" style="width: calc(100% - 40px); margin: 20px;">Cerrar sesión</button>
         </aside>
 
         <!-- CONTENIDO PRINCIPAL -->
@@ -77,9 +78,15 @@
                         </div>
                     </article>
                     <article class="admin-card">
-                        <div class="card-header"><h2>Visitas a Tienda</h2></div>
+                        <div class="card-header"><h2>Visitas Mensuales</h2></div>
                         <div style="padding: 30px; height: 350px;">
                             <canvas id="visitsChart"></canvas>
+                        </div>
+                    </article>
+                    <article class="admin-card">
+                        <div class="card-header"><h2>Visitas Diarias (Mes Actual)</h2></div>
+                        <div style="padding: 30px; height: 350px;">
+                            <canvas id="dailyVisitsChart"></canvas>
                         </div>
                     </article>
                 </div>
