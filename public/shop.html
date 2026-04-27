@@ -123,11 +123,21 @@
                 <div id="shippingMsg" class="shipping-bar-text">Calculando envío...</div>
                 <div class="shipping-bar-track"><div id="shippingFill" class="shipping-bar-fill"></div></div>
             </div>
+            <div id="wholesaleBar" class="wholesale-bar-container" style="display:none;">
+                <div id="wholesaleMsg" class="shipping-bar-text"></div>
+                <div class="shipping-bar-track"><div id="wholesaleFill" class="shipping-bar-fill"></div></div>
+            </div>
             <div id="cartItems"></div>
             <!-- SECCIÓN UP-SELLING DINÁMICA -->
             <div id="upsellSection"></div>
-            
-            <div class="cart-total-box"><strong>Total: $<span id="cartTotal">0</span></strong></div>
+
+            <div class="cart-total-box">
+                <div id="wholesaleDiscountRow" style="display:none; font-size:1rem; color:#2e7d32; margin-bottom:8px;">
+                    <span>Descuento mayorista (40% en pan)</span>
+                    <strong id="wholesaleDiscountAmt"></strong>
+                </div>
+                <strong>Total: $<span id="cartTotal">0</span></strong>
+            </div>
             <button id="goToCheckout" class="btn-primary">FINALIZAR COMPRA</button>
             <button id="clearCart" class="btn-vaciar">Vaciar carrito</button>
         </div>
@@ -162,6 +172,10 @@
                 </div>
 
                 <div id="orderItemsSummary" style="background:#F9F9F9; padding:15px; border-radius:15px; margin:10px 0; font-size:0.9rem;"></div>
+                <div id="checkoutWholesaleRow" style="display:none; background:#E8F5E9; border-radius:10px; padding:10px 15px; margin:5px 0; font-size:0.95rem; color:#2e7d32;">
+                    <span>🏪 Descuento mayorista (40% en pan)</span>
+                    <strong id="checkoutWholesaleAmt"></strong>
+                </div>
                 <div style="text-align:right; margin:15px 0; font-size: 1.4rem;"><strong>Total: $<span id="checkoutTotal">0</span></strong></div>
                 <button type="submit" class="btn-primary">CONFIRMAR PEDIDO</button>
             </form>

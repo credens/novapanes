@@ -6,6 +6,18 @@ document.addEventListener('DOMContentLoaded', function() {
     let products = []; let allCategories = []; let cart = [];
     const FREE_SHIPPING_MIN = 75000;
     const MINIMUM_PURCHASE = 15000;
+    const WHOLESALE_THRESHOLD = 90;
+    const WHOLESALE_DISCOUNT = 0.40;
+
+    function getWholesaleInfo() {
+        const panItems = cart.filter(i => i.category === 'panificados');
+        const qty = panItems.reduce((s, i) => s + i.quantity, 0);
+        const subtotal = panItems.reduce((s, i) => s + (i.price * i.quantity), 0);
+        const hasDiscount = qty >= WHOLESALE_THRESHOLD;
+        const discountAmount = hasDiscount ? Math.round(subtotal * WHOLESALE_DISCOUNT) : 0;
+        const remaining = hasDiscount ? 0 : WHOLESALE_THRESHOLD - qty;
+        return { qty, subtotal, hasDiscount, discountAmount, remaining };
+    }
 
     const filterContainer = document.getElementById('filter-container');
     const shopProductsContainer = document.getElementById('shopProducts');
@@ -131,11 +143,48 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function updateCartDisplay() {
-        const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+        const w = getWholesaleInfo();
+        const subtotal = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+        const total = subtotal - w.discountAmount;
         const count = cart.reduce((s, i) => s + i.quantity, 0);
+
         document.getElementById('cartCount').textContent = count;
         document.getElementById('cartTotal').textContent = total.toLocaleString();
-        if(document.getElementById('checkoutTotal')) document.getElementById('checkoutTotal').textContent = total.toLocaleString();
+
+        // Fila de descuento mayorista en carrito
+        const discRow = document.getElementById('wholesaleDiscountRow');
+        const discAmt = document.getElementById('wholesaleDiscountAmt');
+        if (discRow && discAmt) {
+            if (w.hasDiscount) {
+                discRow.style.display = 'flex';
+                discRow.style.justifyContent = 'space-between';
+                discAmt.textContent = `- $${w.discountAmount.toLocaleString()}`;
+            } else {
+                discRow.style.display = 'none';
+            }
+        }
+
+        // Barra de progreso mayorista
+        const wBar = document.getElementById('wholesaleBar');
+        const wMsg = document.getElementById('wholesaleMsg');
+        const wFill = document.getElementById('wholesaleFill');
+        const hasPanificados = cart.some(i => i.category === 'panificados');
+        if (wBar && wMsg && wFill) {
+            if (!hasPanificados) {
+                wBar.style.display = 'none';
+            } else {
+                wBar.style.display = 'block';
+                if (w.hasDiscount) {
+                    wMsg.innerHTML = '🏪 ¡Precio mayorista activo! 40% OFF en panificados';
+                    wFill.style.width = '100%';
+                } else {
+                    const perc = Math.min((w.qty / WHOLESALE_THRESHOLD) * 100, 100);
+                    wMsg.innerHTML = `🏪 Faltan <strong>${w.remaining} paq.</strong> de pan para precio mayorista (40% OFF)`;
+                    wFill.style.width = perc + '%';
+                }
+            }
+        }
+
         const fill = document.getElementById('shippingFill');
         const msg = document.getElementById('shippingMsg');
         if(fill && msg) {
@@ -245,7 +294,17 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.close-checkout').addEventListener('click', () => { checkoutModal.classList.remove('active'); setTimeout(() => checkoutModal.style.display='none', 400); showWaBtn(); });
         document.getElementById('goToCheckout').addEventListener('click', () => {
             cartModal.classList.remove('active'); setTimeout(() => { cartModal.style.display = 'none'; checkoutModal.style.display = 'flex'; setTimeout(() => checkoutModal.classList.add('active'), 10); }, 400);
+            const w = getWholesaleInfo();
+            const subtotal = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const total = subtotal - w.discountAmount;
             document.getElementById('orderItemsSummary').innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between;"><span>${i.name} x${i.quantity}</span><span>$${(i.price*i.quantity).toLocaleString()}</span></div>`).join('');
+            const cwRow = document.getElementById('checkoutWholesaleRow');
+            const cwAmt = document.getElementById('checkoutWholesaleAmt');
+            if (cwRow && cwAmt) {
+                if (w.hasDiscount) { cwRow.style.display = 'flex'; cwAmt.textContent = `- $${w.discountAmount.toLocaleString()}`; }
+                else { cwRow.style.display = 'none'; }
+            }
+            if(document.getElementById('checkoutTotal')) document.getElementById('checkoutTotal').textContent = total.toLocaleString();
             const isEnvio = document.querySelector('input[name="metodoEntrega"]:checked').value === 'Envío a Domicilio';
             const ef = paymentMethodSelect?.querySelector('option[value="efectivo"]');
             if (ef && isEnvio) { ef.disabled = true; if (paymentMethodSelect.value === 'efectivo') paymentMethodSelect.value = 'transferencia'; }
@@ -268,7 +327,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const fData = new FormData(e.target);
-            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const w = getWholesaleInfo();
+            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0) - w.discountAmount;
             const nombre = fData.get('nombre');
             const telefono = fData.get('telefono');
             const entrega = fData.get('metodoEntrega');
@@ -282,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 direccion, ciudad,
                 metodoPago: pago,
                 items: cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price })),
+                wholesaleDiscount: w.discountAmount || undefined,
                 total
             };
 
@@ -294,7 +355,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            items: cart.map(i => ({ title: i.name, quantity: i.quantity, unit_price: i.price }))
+                            items: [
+                                ...cart.map(i => ({ title: i.name, quantity: i.quantity, unit_price: i.price })),
+                                ...(w.discountAmount > 0 ? [{ title: 'Descuento mayorista (40% en pan)', quantity: 1, unit_price: -w.discountAmount }] : [])
+                            ]
                         })
                     });
                     const mpData = await mpRes.json();
@@ -369,6 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
         msg += `*Pago:* ${orderData.metodoPago}\n`;
         msg += `\n----------\n`;
         cartItems.forEach(i => msg += `• ${i.name} x${i.quantity} — $${(i.price * i.quantity).toLocaleString()}\n`);
+        if (orderData.wholesaleDiscount) msg += `🏪 Descuento mayorista (40% en pan): -$${orderData.wholesaleDiscount.toLocaleString()}\n`;
         msg += `----------\n*TOTAL: $${orderData.total.toLocaleString()}*`;
         window.open(`https://wa.me/5491164372200?text=${encodeURIComponent(msg)}`, '_blank');
     }

@@ -495,6 +495,19 @@
     transition: 0.8s cubic-bezier(0.22, 1, 0.36, 1); 
 }
 
+/* BARRA MAYORISTA */
+.wholesale-bar-container {
+    background: #F1F8E9;
+    padding: 20px;
+    border-radius: 25px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid #C5E1A5;
+}
+.wholesale-bar-container .shipping-bar-fill {
+    background: #66BB6A;
+}
+
 /* ELEMENTOS DEL CARRITO */
 .cart-header, .checkout-header { 
     display: flex; 
