@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="product-controls">
                                 <div class="quantity-selector" style="${out?'opacity: 0.5;pointer-events: none;':''}">
                                     <button class="qty-btn" onclick="changeQty(${p.id},-1)">-</button>
-                                    <input type="number" id="qty-input-${p.id}" class="qty-input" value="1" readonly>
+                                    <input type="number" id="qty-input-${p.id}" class="qty-input" value="1" min="1" onblur="if(!this.value||this.value<1)this.value=1">
                                     <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
                                 </div>
                                 <button onclick="${out?'':`addToCart(event,${p.id})`}" class="add-to-cart-btn ${out?'btn-disabled':''}" ${out?'disabled' : ''}>${out?'SIN STOCK':'AGREGAR'}</button>
