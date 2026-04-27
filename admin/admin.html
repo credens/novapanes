@@ -68,6 +68,13 @@
                             <span class="card-value" id="pendingOrders">-</span>
                         </div>
                     </div>
+                    <div class="stat-card">
+                        <div class="card-icon"><i class="fas fa-eye"></i></div>
+                        <div class="card-info">
+                            <span class="card-title">Visitas este Mes</span>
+                            <span class="card-value" id="totalVisitsMonth">-</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="charts-grid">
@@ -78,15 +85,15 @@
                         </div>
                     </article>
                     <article class="admin-card">
-                        <div class="card-header"><h2>Visitas Mensuales</h2></div>
+                        <div class="card-header">
+                            <h2>Visitas</h2>
+                            <div class="chart-toggle">
+                                <button class="toggle-btn active" id="btnVisitMonth" onclick="setVisitsMode('month')">Mes Actual</button>
+                                <button class="toggle-btn" id="btnVisitYear" onclick="setVisitsMode('year')">Anual</button>
+                            </div>
+                        </div>
                         <div style="padding: 30px; height: 350px;">
                             <canvas id="visitsChart"></canvas>
-                        </div>
-                    </article>
-                    <article class="admin-card">
-                        <div class="card-header"><h2>Visitas Diarias (Mes Actual)</h2></div>
-                        <div style="padding: 30px; height: 350px;">
-                            <canvas id="dailyVisitsChart"></canvas>
                         </div>
                     </article>
                 </div>

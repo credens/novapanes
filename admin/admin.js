@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const navItems = document.querySelectorAll('.nav-item');
 
     let allProducts = [], allCategories = [], allOrders = [], allVisits = [];
-    let salesChartInstance, visitsChartInstance, dailyVisitsChartInstance;
+    let salesChartInstance, visitsChartInstance;
+    let visitsMode = 'month';
 
     // --- AUTENTICACIÓN ---
     async function checkAuth() {
@@ -113,6 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('totalProducts').textContent = allProducts.length;
         const pending = allOrders.filter(o => o.status === 'pending').length;
         document.getElementById('pendingOrders').textContent = pending;
+        const now = new Date();
+        const visitsMonth = allVisits.filter(v => {
+            const d = new Date(v.date);
+            return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+        }).length;
+        document.getElementById('totalVisitsMonth').textContent = visitsMonth;
     }
 
     function renderProducts() {
@@ -257,32 +264,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
         const currentYear = new Date().getFullYear();
         const currentMonth = new Date().getMonth();
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        const dayLabels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString());
 
         const salesData = Array(12).fill(0);
         allOrders.forEach(o => {
             const d = new Date(o.date);
             if(d.getFullYear() === currentYear) salesData[d.getMonth()] += o.total;
         });
-        const visitsData = Array(12).fill(0);
-        allVisits.forEach(v => {
-            const d = new Date(v.date);
-            if(d.getFullYear() === currentYear) visitsData[d.getMonth()]++;
-        });
-
-        const dailyVisitsData = Array(daysInMonth).fill(0);
-        allVisits.forEach(v => {
-            const d = new Date(v.date);
-            if(d.getFullYear() === currentYear && d.getMonth() === currentMonth) {
-                dailyVisitsData[d.getDate() - 1]++;
-            }
-        });
 
         if (salesChartInstance) salesChartInstance.destroy();
-        if (visitsChartInstance) visitsChartInstance.destroy();
-        if (dailyVisitsChartInstance) dailyVisitsChartInstance.destroy();
-
         const ctxS = document.getElementById('salesChart').getContext('2d');
         salesChartInstance = new Chart(ctxS, {
             type: 'bar',
@@ -290,20 +279,51 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false }
         });
 
+        renderVisitsChart();
+    }
+
+    function renderVisitsChart() {
+        const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth();
+
+        let labels, data, chartType, color, label;
+
+        if (visitsMode === 'month') {
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString());
+            data = Array(daysInMonth).fill(0);
+            allVisits.forEach(v => {
+                const d = new Date(v.date);
+                if(d.getFullYear() === currentYear && d.getMonth() === currentMonth)
+                    data[d.getDate() - 1]++;
+            });
+            chartType = 'bar'; color = '#4CAF50'; label = `Visitas diarias — ${months[currentMonth]} ${currentYear}`;
+        } else {
+            labels = months;
+            data = Array(12).fill(0);
+            allVisits.forEach(v => {
+                const d = new Date(v.date);
+                if(d.getFullYear() === currentYear) data[d.getMonth()]++;
+            });
+            chartType = 'line'; color = '#FFB300'; label = `Visitas mensuales ${currentYear}`;
+        }
+
+        if (visitsChartInstance) visitsChartInstance.destroy();
         const ctxV = document.getElementById('visitsChart').getContext('2d');
         visitsChartInstance = new Chart(ctxV, {
-            type: 'line',
-            data: { labels: months, datasets: [{ label: 'Visitas', data: visitsData, borderColor: '#FFB300', tension: 0.4 }] },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-
-        const ctxD = document.getElementById('dailyVisitsChart').getContext('2d');
-        dailyVisitsChartInstance = new Chart(ctxD, {
-            type: 'bar',
-            data: { labels: dayLabels, datasets: [{ label: 'Visitas Diarias', data: dailyVisitsData, backgroundColor: '#4CAF50' }] },
+            type: chartType,
+            data: { labels, datasets: [{ label, data, backgroundColor: color, borderColor: color, tension: 0.4 }] },
             options: { responsive: true, maintainAspectRatio: false }
         });
     }
+
+    window.setVisitsMode = (mode) => {
+        visitsMode = mode;
+        document.getElementById('btnVisitMonth').classList.toggle('active', mode === 'month');
+        document.getElementById('btnVisitYear').classList.toggle('active', mode === 'year');
+        renderVisitsChart();
+    };
 
     showAddProductModalBtn.onclick = () => {
         productForm.reset();

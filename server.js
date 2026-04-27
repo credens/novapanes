@@ -242,7 +242,14 @@ const comprobanteStorage = multer.diskStorage({
         cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
-const uploadComprobante = multer({ storage: comprobanteStorage, limits: { fileSize: 5 * 1024 * 1024 } });
+const uploadComprobante = multer({
+    storage: comprobanteStorage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const allowed = /jpeg|jpg|png|webp|pdf/;
+        cb(null, allowed.test(path.extname(file.originalname).toLowerCase()));
+    }
+});
 
 app.post('/api/upload-comprobante', uploadComprobante.single('comprobante'), async (req, res) => {
     try {
@@ -277,7 +284,7 @@ app.post('/create-preference', [
     body('items').isArray({ min: 1 }),
     body('items.*.title').trim().notEmpty(),
     body('items.*.quantity').isInt({ min: 1 }),
-    body('items.*.unit_price').isFloat({ min: 0 })
+    body('items.*.unit_price').isFloat()
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ error: 'Items inválidos.' });
